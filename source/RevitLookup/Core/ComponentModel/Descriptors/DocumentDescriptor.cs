@@ -23,6 +23,7 @@ using Autodesk.Revit.DB.Lighting;
 #if REVIT2023_OR_GREATER
 using Autodesk.Revit.DB.Structure;
 #endif
+
 #if !REVIT2025_OR_GREATER
 using Autodesk.Revit.DB.Macros;
 #endif
@@ -32,13 +33,13 @@ namespace RevitLookup.Core.ComponentModel.Descriptors;
 public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension
 {
     private readonly Document _document;
-    
+
     public DocumentDescriptor(Document document)
     {
         _document = document;
         Name = document.Title;
     }
-    
+
     public Func<IVariants> Resolve(Document context, string target, ParameterInfo[] parameters)
     {
         return target switch
@@ -52,23 +53,24 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
 #endif
             _ => null
         };
-        
+
         IVariants ResolvePlanTopologies()
         {
             if (_document.IsReadOnly) return Variants.Empty<PlanTopologySet>();
-            
+
             var transaction = new Transaction(_document);
             transaction.Start("Calculating plan topologies");
             var topologies = _document.PlanTopologies;
             transaction.Commit();
-            
+
             return Variants.Single(topologies);
         }
+
         IVariants ResolveDefaultElementTypeId()
         {
             var values = Enum.GetValues(typeof(ElementTypeGroup));
             var variants = new Variants<ElementId>(values.Length);
-            
+
             foreach (ElementTypeGroup value in values)
             {
                 var result = _document.GetDefaultElementTypeId(value);
@@ -81,22 +83,23 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
                     variants.Add(result, $"{value.ToString()}: {result}");
                 }
             }
-            
+
             return variants;
         }
 #if REVIT2024_OR_GREATER
-        
+
         IVariants ResolveGetUnusedElements()
         {
             return Variants.Single(context.GetUnusedElements(new HashSet<ElementId>()));
         }
-        
+
         IVariants ResolveGetAllUnusedElements()
         {
             return Variants.Single(context.GetAllUnusedElements(new HashSet<ElementId>()));
         }
 #endif
     }
+
     public void RegisterExtensions(IExtensionManager manager)
     {
         manager.Register(nameof(GlobalParametersManager.GetAllGlobalParameters), GlobalParametersManager.GetAllGlobalParameters);
@@ -113,14 +116,14 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
 #endif
         if (_document.IsFamilyDocument)
         {
-            manager.Register(nameof(FamilySizeTableManager.GetFamilySizeTableManager), context =>
+            manager.Register(nameof(FamilySizeTableManager.CreateFamilySizeTableManager), context =>
             {
                 var familyTableId = new ElementId(BuiltInParameter.RBS_LOOKUP_TABLE_NAME);
                 return FamilySizeTableManager.GetFamilySizeTableManager(context, familyTableId);
             });
             manager.Register(nameof(LightFamily.GetLightFamily), LightFamily.GetLightFamily);
         }
-        
+
         // Disabled: slow performance.
         // manager.Register(nameof(WorksharingUtils.GetUserWorksetInfo), context =>
         // {

@@ -18,16 +18,9 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.Enums;
+namespace LookupEngine.Abstractions.ComponentModel;
 
-[Flags]
-public enum MemberAttributes
+public interface IExtensionManager
 {
-    Private = 0b1,
-    Static = 0b10,
-    Field = 0b100,
-    Property = 0b1000,
-    Method = 0b10000,
-    Extension = 0b100000,
-    Event = 0b1000000
+    void Register(string methodName, Func<object> context);
 }

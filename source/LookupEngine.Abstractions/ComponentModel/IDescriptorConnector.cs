@@ -18,37 +18,15 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.Engine;
+// using System.Windows.Controls;
+//
+// namespace RevitLookup.Core.Contracts;
+//
+// /// <summary>
+// ///     Indicates that additional members can be added to the descriptor
+// /// </summary>
+// public interface IDescriptorConnector
+// {
+//     void RegisterMenu(ContextMenu contextMenu);
+// }
 
-public sealed partial class DescriptorBuilder
-{
-    public static IList<Descriptor> Build(Type type)
-    {
-        var builder = new DescriptorBuilder
-        {
-            _obj = null,
-            Context = Nice3point.Revit.Toolkit.Context.ActiveDocument
-        };
-
-        return builder.BuildStaticObject(type);
-    }
-
-    public static IList<Descriptor> Build(object obj, Document context)
-    {
-        if (obj is null) return Array.Empty<Descriptor>();
-
-        var builder = new DescriptorBuilder();
-
-        switch (obj)
-        {
-            case Type staticObjectType:
-                builder._obj = null;
-                builder.Context = context;
-                return builder.BuildStaticObject(staticObjectType);
-            default:
-                builder._obj = obj;
-                builder.Context = context;
-                return builder.BuildInstanceObject(obj.GetType());
-        }
-    }
-}

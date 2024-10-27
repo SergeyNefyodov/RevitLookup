@@ -19,31 +19,29 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Reflection;
+using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Abstractions.Metadata;
 
-namespace RevitLookup.Core.Engine;
+namespace LookupEngine;
 
-public sealed partial class DescriptorBuilder
+public sealed partial class LookupComposer
 {
-    private void AddProperties(BindingFlags bindingFlags)
+    private void DecomposeProperties(Type type, Descriptor? descriptor, BindingFlags bindingFlags)
     {
-        var members = _type.GetProperties(bindingFlags);
+        var members = type.GetProperties(bindingFlags);
         foreach (var member in members)
         {
             if (member.IsSpecialName) continue;
-            
-            object value;
+
+            object? value;
             var parameters = member.CanRead ? member.GetMethod!.GetParameters() : null;
-            
+
             try
             {
-                if (!TryResolve(member, parameters, out value))
+                if (!TryResolve(member, parameters, descriptor, out value))
                 {
                     if (!IsPropertySupported(member, parameters, out value)) continue;
-                    
-                    if (value is null)
-                    {
-                        Evaluate(member, out value);
-                    }
+                    value ??= EvaluateValue(member);
                 }
             }
             catch (TargetInvocationException exception)
@@ -54,67 +52,74 @@ public sealed partial class DescriptorBuilder
             {
                 value = exception;
             }
-            
-            WriteDescriptor(member, value, parameters);
+
+            WriteDescriptor(value, type, member, parameters);
         }
     }
-    
-    private bool TryResolve(PropertyInfo member, ParameterInfo[] parameters, out object value)
+
+    private bool TryResolve(PropertyInfo member, ParameterInfo[]? parameters, Descriptor? descriptor, out object? value)
     {
         value = null;
-        if (_currentDescriptor is not IDescriptorResolver resolver) return false;
-        
-        var handler = resolver.Resolve(Context, member.Name, parameters);
+        if (descriptor is not IDescriptorResolver resolver) return false;
+
+        var handler = resolver.Resolve(member.Name, parameters);
         if (handler is null) return false;
-        
-        try
-        {
-            _clockDiagnoser.Start();
-            _memoryDiagnoser.Start();
-            value = handler.Invoke();
-        }
-        finally
-        {
-            _memoryDiagnoser.Stop();
-            _clockDiagnoser.Stop();
-        }
-        
+
+        value = EvaluateValue(handler);
+
         return true;
     }
-    
-    private void Evaluate(PropertyInfo member, out object value)
-    {
-        try
-        {
-            _clockDiagnoser.Start();
-            _memoryDiagnoser.Start();
-            value = member.GetValue(_obj);
-        }
-        finally
-        {
-            _memoryDiagnoser.Stop();
-            _clockDiagnoser.Stop();
-        }
-    }
-    
-    private bool IsPropertySupported(PropertyInfo member, ParameterInfo[] parameters, out object value)
+
+    private bool IsPropertySupported(PropertyInfo member, ParameterInfo[]? parameters, out object? value)
     {
         value = null;
-        
+
         if (!member.CanRead)
         {
             value = new InvalidOperationException("Property does not have a get accessor, it cannot be read");
             return true;
         }
-        
-        if (parameters.Length > 0)
+
+        if (parameters is not null && parameters.Length > 0)
         {
-            if (!_settings.IncludeUnsupported) return false;
-            
+            if (_options.IgnoreUnsupported) return false;
+
             value = new NotSupportedException("Unsupported property overload");
             return true;
         }
-        
+
         return true;
+    }
+
+    private object? EvaluateValue(PropertyInfo member)
+    {
+        try
+        {
+            _clockDiagnoser.Start();
+            _memoryDiagnoser.Start();
+
+            return member.GetValue(_obj);
+        }
+        finally
+        {
+            _memoryDiagnoser.Stop();
+            _clockDiagnoser.Stop();
+        }
+    }
+
+    private IVariants EvaluateValue(Func<IVariants> handler)
+    {
+        try
+        {
+            _clockDiagnoser.Start();
+            _memoryDiagnoser.Start();
+
+            return handler.Invoke();
+        }
+        finally
+        {
+            _memoryDiagnoser.Stop();
+            _clockDiagnoser.Stop();
+        }
     }
 }

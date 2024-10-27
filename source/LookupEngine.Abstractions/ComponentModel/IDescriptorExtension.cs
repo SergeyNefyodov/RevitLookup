@@ -18,12 +18,12 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.Contracts;
+namespace LookupEngine.Abstractions.ComponentModel;
 
 /// <summary>
-///     Indicates that the object can be redirected to another
+///     Indicates that the descriptor can interact with the UI and execute commands
 /// </summary>
-public interface IDescriptorRedirection
+public interface IDescriptorExtension : IDescriptorCollector
 {
-    bool TryRedirect(Document context, string target, out object output);
+    void RegisterExtensions(IExtensionManager manager);
 }

@@ -20,22 +20,22 @@
 
 using System.Collections;
 
-namespace RevitLookup.Core.Engine;
+namespace LookupEngine;
 
-public sealed partial class DescriptorBuilder
+public sealed partial class LookupComposer
 {
     private void AddEnumerableItems()
     {
         if (_obj is not IEnumerable enumerable) return;
-        
-        _type = typeof(IEnumerable);
+
+        var enumerableType = typeof(IEnumerable);
         var enumerator = enumerable.GetEnumerator();
-        
+
         while (enumerator.MoveNext())
         {
-            WriteDescriptor(enumerator.Current);
+            WriteDescriptor(enumerator.Current, enumerableType);
         }
-        
+
         if (enumerator is IDisposable disposable)
         {
             disposable.Dispose();

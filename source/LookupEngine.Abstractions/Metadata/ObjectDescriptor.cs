@@ -18,43 +18,16 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.Engine;
+namespace LookupEngine.Abstractions.Metadata;
 
-public sealed partial class DescriptorBuilder : IExtensionManager
+public sealed class ObjectDescriptor : Descriptor
 {
-    private void AddExtensions()
+    public ObjectDescriptor()
     {
-        if (!_settings.IncludeExtensions) return;
-        if (_currentDescriptor is not IDescriptorExtension extension) return;
-        
-        extension.RegisterExtensions(this);
     }
-    
-    public void Register(string methodName, Func<Document, object> handler)
+
+    public ObjectDescriptor(object? value)
     {
-        try
-        {
-            var result = Evaluate(handler);
-            WriteDescriptor(methodName, result);
-        }
-        catch (Exception exception)
-        {
-            WriteDescriptor(methodName, exception);
-        }
-    }
-    
-    private object Evaluate(Func<Document, object> handler)
-    {
-        try
-        {
-            _clockDiagnoser.Start();
-            _memoryDiagnoser.Start();
-            return handler.Invoke(Context);
-        }
-        finally
-        {
-            _memoryDiagnoser.Stop();
-            _clockDiagnoser.Stop();
-        }
+        Name = value is null ? string.Empty : value.ToString();
     }
 }

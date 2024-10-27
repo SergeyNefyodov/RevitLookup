@@ -18,33 +18,33 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.Diagnostic;
+namespace LookupEngine.Diagnostic;
 
 public sealed class MemoryDiagnoser
 {
     private long _initialAllocatedBytes;
     private long _finalAllocatedBytes;
-    
+
     public void Start()
     {
         _initialAllocatedBytes = GetTotalAllocatedBytes();
     }
-    
+
     public void Stop()
     {
         _finalAllocatedBytes = GetTotalAllocatedBytes();
     }
-    
+
     public long GetAllocatedBytes()
     {
         var allocatedBytes = _finalAllocatedBytes - _initialAllocatedBytes;
-        
+
         _finalAllocatedBytes = 0;
         _initialAllocatedBytes = 0;
-        
+
         return allocatedBytes;
     }
-    
+
     private static long GetTotalAllocatedBytes()
     {
         // Ref: https://github.com/dotnet/BenchmarkDotNet/blob/master/src/BenchmarkDotNet/Engines/GcStats.cs
@@ -52,7 +52,7 @@ public sealed class MemoryDiagnoser
         // GC.GetTotalAllocatedBytes() depends heavily on the garbage collection and gives inaccurate results;
         // AppDomain.MonitoringIsEnabled almost does not see memory changes when methods are called.
         // GetAllocatedBytesForCurrentThread is the perfect choice for reflexion calls
-        
+
         return GC.GetAllocatedBytesForCurrentThread();
     }
 }

@@ -18,16 +18,21 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.ComponentModel.Descriptors;
+using System.Diagnostics;
+using LookupEngine.Abstractions.Enums;
 
-public sealed class ObjectDescriptor : Descriptor
+namespace LookupEngine.Abstractions.Metadata;
+
+[DebuggerDisplay("Name = {Name} Value = {Value} Description = {Description}")]
+public abstract class Descriptor
 {
-    public ObjectDescriptor()
-    {
-    }
-
-    public ObjectDescriptor(object value)
-    {
-        Name = value.ToString();
-    }
+    public int Depth { get; set; }
+    public string? TypeFullName { get; set; }
+    public string? Type { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public double ComputationTime { get; set; }
+    public long AllocatedBytes { get; set; }
+    public MemberAttributes MemberAttributes { get; set; }
+    public object? Value { get; set; }
 }

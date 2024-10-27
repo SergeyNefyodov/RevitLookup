@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2024 by Autodesk, Inc.
+// Copyright 2003-2024 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -18,14 +18,14 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Windows.Controls;
+using System.Reflection;
 
-namespace RevitLookup.Core.Contracts;
+namespace LookupEngine.Abstractions.ComponentModel;
 
 /// <summary>
-///     Indicates that additional members can be added to the descriptor
+///     Indicates that the descriptor can decide to call methods/properties with parameters or override their values
 /// </summary>
-public interface IDescriptorConnector
+public interface IDescriptorResolver : IDescriptorCollector
 {
-    void RegisterMenu(ContextMenu contextMenu);
+    Func<IVariants>? Resolve(string target, ParameterInfo[]? parameters);
 }

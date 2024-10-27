@@ -19,31 +19,29 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Reflection;
+using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Abstractions.Metadata;
 
-namespace RevitLookup.Core.Engine;
+namespace LookupEngine;
 
-public sealed partial class DescriptorBuilder
+public sealed partial class LookupComposer
 {
-    private void AddMethods(BindingFlags bindingFlags)
+    private void DecomposeMethods(Type type, Descriptor? descriptor, BindingFlags bindingFlags)
     {
-        var members = _type.GetMethods(bindingFlags);
+        var members = type.GetMethods(bindingFlags);
         foreach (var member in members)
         {
             if (member.IsSpecialName) continue;
-            
-            object value;
+
+            object? value;
             var parameters = member.GetParameters();
-            
+
             try
             {
-                if (!TryResolve(member, parameters, out value))
+                if (!TryResolve(member, parameters, descriptor, out value))
                 {
                     if (!IsMethodSupported(member, parameters, out value)) continue;
-                    
-                    if (value is null)
-                    {
-                        Evaluate(member, out value);
-                    }
+                    value ??= EvaluateValue(member);
                 }
             }
             catch (TargetInvocationException exception)
@@ -54,68 +52,59 @@ public sealed partial class DescriptorBuilder
             {
                 value = exception;
             }
-            
-            WriteDescriptor(member, value, parameters);
+
+            WriteDescriptor(value, type, member, parameters);
         }
     }
-    
-    private bool TryResolve(MethodInfo member, ParameterInfo[] parameters, out object value)
+
+    private bool TryResolve(MethodInfo member, ParameterInfo[] parameters, Descriptor? descriptor, out object? value)
     {
         value = null;
-        if (_currentDescriptor is not IDescriptorResolver resolver) return false;
-        
-        var handler = resolver.Resolve(Context, member.Name, parameters);
+        if (descriptor is not IDescriptorResolver resolver) return false;
+
+        var handler = resolver.Resolve(member.Name, parameters);
         if (handler is null) return false;
-        
-        try
-        {
-            _clockDiagnoser.Start();
-            _memoryDiagnoser.Start();
-            value = handler.Invoke();
-        }
-        finally
-        {
-            _memoryDiagnoser.Stop();
-            _clockDiagnoser.Stop();
-        }
-        
+
+        value = EvaluateValue(handler);
+
         return true;
     }
-    
-    private void Evaluate(MethodInfo member, out object value)
-    {
-        try
-        {
-            _clockDiagnoser.Start();
-            _memoryDiagnoser.Start();
-            value = member.Invoke(_obj, null);
-        }
-        finally
-        {
-            _memoryDiagnoser.Stop();
-            _clockDiagnoser.Stop();
-        }
-    }
-    
-    private bool IsMethodSupported(MethodInfo member, ParameterInfo[] parameters, out object value)
+
+    private bool IsMethodSupported(MethodInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
         if (member.ReturnType.Name == "Void")
         {
-            if (!_settings.IncludeUnsupported) return false;
-            
+            if (_options.IgnoreUnsupported) return false;
+
             value = new InvalidOperationException("Method doesn't return a value");
             return true;
         }
-        
+
         if (parameters.Length > 0)
         {
-            if (!_settings.IncludeUnsupported) return false;
-            
+            if (_options.IgnoreUnsupported) return false;
+
             value = new NotSupportedException("Unsupported method overload");
             return true;
         }
-        
+
         return true;
+    }
+
+    private object? EvaluateValue(MethodInfo member)
+    {
+        try
+        {
+            _clockDiagnoser.Start();
+            _memoryDiagnoser.Start();
+
+            return member.Invoke(_obj, null);
+        }
+        finally
+        {
+            _memoryDiagnoser.Stop();
+            _clockDiagnoser.Stop();
+        }
     }
 }

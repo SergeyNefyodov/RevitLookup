@@ -18,9 +18,36 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.Contracts;
+using System.Reflection;
 
-/// <summary>
-///     Indicates that the descriptor can retrieve object members by reflection
-/// </summary>
-public interface IDescriptorCollector;
+namespace LookupEngine;
+
+public sealed partial class LookupComposer
+{
+    private void DecomposeFields(Type type, BindingFlags bindingFlags)
+    {
+        if (_options.IgnoreFields) return;
+
+        var members = type.GetFields(bindingFlags);
+        foreach (var member in members)
+        {
+            if (member.IsSpecialName) continue;
+
+            var value = EvaluateValue(member);
+            WriteDescriptor(value, type, member);
+        }
+    }
+
+    private object? EvaluateValue(FieldInfo member)
+    {
+        _clockDiagnoser.Start();
+        _memoryDiagnoser.Start();
+
+        var value = member.GetValue(_obj);
+
+        _memoryDiagnoser.Stop();
+        _clockDiagnoser.Stop();
+
+        return value;
+    }
+}

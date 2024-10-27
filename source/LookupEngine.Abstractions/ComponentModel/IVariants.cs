@@ -18,29 +18,17 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using RevitLookup.Core.Diagnostic;
-using RevitLookup.Models.Settings;
-using RevitLookup.Services.Contracts;
+using LookupEngine.Abstractions.Collections;
 
-namespace RevitLookup.Core.Engine;
+namespace LookupEngine.Abstractions.ComponentModel;
 
-public sealed partial class DescriptorBuilder
+public interface IVariants : IReadOnlyCollection<Variant>
 {
-    private readonly List<Descriptor> _descriptors;
-    private readonly GeneralSettings _settings;
-    private Descriptor _currentDescriptor;
-    private object _obj;
-    private Type _type;
-    private int _depth;
-    
-    private readonly ClockDiagnoser _clockDiagnoser = new();
-    private readonly MemoryDiagnoser _memoryDiagnoser = new();
-    
-    private DescriptorBuilder()
-    {
-        _descriptors = new List<Descriptor>(16);
-        _settings = Host.GetService<ISettingsService>().GeneralSettings;
-    }
-    
-    public Document Context { get; private set; }
+    Variant Single();
+}
+
+public interface IVariants<T> : IVariants
+{
+    Variants<T> Add(T result);
+    Variants<T> Add(T result, string description);
 }

@@ -27,10 +27,10 @@ public class PipeDescriptor(Pipe pipe) : ElementDescriptor(pipe)
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(PlumbingUtils.HasOpenConnector), _ => PlumbingUtils.HasOpenConnector(pipe.Document, pipe.Id));
+        manager.Register(nameof(PlumbingUtils.PlaceCapOnOpenEnds), _ => PlumbingUtils.HasOpenConnector(pipe.Document, pipe.Id));
     }
-    
-    
+
+
     public override Func<IVariants> Resolve(Document context, string target, ParameterInfo[] parameters)
     {
         return null;

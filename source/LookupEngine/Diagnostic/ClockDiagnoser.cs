@@ -18,33 +18,29 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Reflection;
+using System.Diagnostics;
 
-namespace RevitLookup.Core.Engine;
+namespace LookupEngine.Diagnostic;
 
-public sealed partial class DescriptorBuilder
+public sealed class ClockDiagnoser
 {
-    private void AddFields(BindingFlags bindingFlags)
+    private readonly Stopwatch _clock = new();
+
+    public void Start()
     {
-        if (!_settings.IncludeFields) return;
-        
-        var members = _type.GetFields(bindingFlags);
-        foreach (var member in members)
-        {
-            if (member.IsSpecialName) continue;
-            
-            var value = Evaluate(member);
-            WriteDescriptor(member, value, null);
-        }
+        _clock.Start();
     }
-    
-    private object Evaluate(FieldInfo member)
+
+    public void Stop()
     {
-        _clockDiagnoser.Start();
-        _memoryDiagnoser.Start();
-        var value = member.GetValue(_obj);
-        _memoryDiagnoser.Stop();
-        _clockDiagnoser.Stop();
-        return value;
+        _clock.Stop();
+    }
+
+    public TimeSpan GetElapsed()
+    {
+        var elapsed = _clock.Elapsed;
+        _clock.Reset();
+
+        return elapsed;
     }
 }
