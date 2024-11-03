@@ -18,10 +18,9 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.Objects;
+namespace LookupEngine.Abstractions.Configuration;
 
-public sealed class Variant
-{
-    public string Description { get; init; }
-    public object Object { get; init; }
-}
+/// <summary>
+///     Indicates that the descriptor can retrieve object members by reflection
+/// </summary>
+public interface IDescriptorCollector;

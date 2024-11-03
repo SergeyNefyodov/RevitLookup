@@ -18,12 +18,14 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using System.Diagnostics;
+using JetBrains.Annotations;
+
 namespace LookupEngine.Abstractions.ComponentModel;
 
-/// <summary>
-///     Indicates that the object can be redirected to another
-/// </summary>
-public interface IDescriptorRedirection
+[PublicAPI]
+[DebuggerDisplay("Name = {Name}")]
+public abstract class Descriptor
 {
-    bool TryRedirect(string target, out object output);
+    public string? Name { get; set; }
 }

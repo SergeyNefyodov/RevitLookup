@@ -18,75 +18,66 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using System.Collections;
 using System.Reflection;
+using LookupEngine.Abstractions;
 using LookupEngine.Abstractions.Enums;
-using LookupEngine.Abstractions.Metadata;
 using LookupEngine.Formaters;
 
+// ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
 public sealed partial class LookupComposer
 {
-    private void WriteDescriptor(object? value, Type inputType)
+    private void WriteEnumerableResult(object? value, int index)
     {
-        var descriptor = new ObjectDescriptor
+        var descriptor = new DecompositionMemberData
         {
             Depth = _depth,
-            // Value = EvaluateValue(value),
-            TypeFullName = ReflexionFormater.FormatTypeFullName(inputType),
+            Value = value,
+            // Value = RedirectValue(value),
+            Name = $"{Subtype.Name}[{index}]",
+            TypeFullName = "System.Runtime.IEnumerable",
             MemberAttributes = MemberAttributes.Property,
-            Type = ReflexionFormater.FormatTypeName(inputType)
+            Type = nameof(IEnumerable)
         };
 
-        // descriptor.Name = descriptor.Value.Descriptor.Type;
         _descriptors.Add(descriptor);
     }
 
-    private void WriteDescriptor(object? value, Type inputType, string name)
+    private void WriteExtensionResult(object? value, string name)
     {
-        var descriptor = new ObjectDescriptor
+        var descriptor = new DecompositionMemberData
         {
             Depth = _depth,
             Name = name,
-            // Value = EvaluateValue(value),
-            TypeFullName = ReflexionFormater.FormatTypeFullName(inputType),
+            Value = value,
+            // Value = RedirectValue(value),
+            Type = ReflexionFormater.FormatTypeName(Subtype),
+            TypeFullName = ReflexionFormater.FormatTypeFullName(Subtype),
             MemberAttributes = MemberAttributes.Extension,
-            Type = ReflexionFormater.FormatTypeName(inputType),
-            ComputationTime = _clockDiagnoser.GetElapsed().TotalMilliseconds,
+            ComputationTime = _timeDiagnoser.GetElapsed().TotalMilliseconds,
             AllocatedBytes = _memoryDiagnoser.GetAllocatedBytes()
         };
 
         _descriptors.Add(descriptor);
     }
 
-    private void WriteDescriptor(object? value, Type inputType, MemberInfo member, ParameterInfo[]? parameters = null)
+    private void WriteDecompositionResult(object? value, MemberInfo member, ParameterInfo[]? parameters = null)
     {
-        var descriptor = new ObjectDescriptor
+        var descriptor = new DecompositionMemberData
         {
             Depth = _depth,
-            TypeFullName = ReflexionFormater.FormatTypeFullName(inputType),
-            // Value = EvaluateValue(member, value),
+            Value = value,
+            // Value = RedirectValue(member, value),
             Name = ReflexionFormater.FormatMemberName(member, parameters),
+            Type = ReflexionFormater.FormatTypeName(Subtype),
+            TypeFullName = ReflexionFormater.FormatTypeFullName(Subtype),
             MemberAttributes = ModifiersFormater.FormatAttributes(member),
-            Type = ReflexionFormater.FormatTypeName(inputType),
-            ComputationTime = _clockDiagnoser.GetElapsed().TotalMilliseconds,
+            ComputationTime = _timeDiagnoser.GetElapsed().TotalMilliseconds,
             AllocatedBytes = _memoryDiagnoser.GetAllocatedBytes()
         };
 
         _descriptors.Add(descriptor);
     }
-
-    // private SnoopableObject EvaluateValue(MemberInfo member, object? value)
-    // {
-    //     var snoopableObject = new SnoopableObject(value, Context);
-    //     SnoopUtils.Redirect(member.Name, snoopableObject);
-    //     return snoopableObject;
-    // }
-    //
-    // private SnoopableObject EvaluateValue(object? value)
-    // {
-    //     var snoopableObject = new SnoopableObject(value, Context);
-    //     SnoopUtils.Redirect(snoopableObject);
-    //     return snoopableObject;
-    // }
 }

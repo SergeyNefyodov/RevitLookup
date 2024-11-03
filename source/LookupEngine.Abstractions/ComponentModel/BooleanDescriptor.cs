@@ -18,29 +18,12 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Diagnostics;
+namespace LookupEngine.Abstractions.ComponentModel;
 
-namespace LookupEngine.Diagnostic;
-
-public sealed class ClockDiagnoser
+public sealed class BooleanDescriptor : Descriptor
 {
-    private readonly Stopwatch _clock = new();
-
-    public void Start()
+    public BooleanDescriptor(bool value)
     {
-        _clock.Start();
-    }
-
-    public void Stop()
-    {
-        _clock.Stop();
-    }
-
-    public TimeSpan GetElapsed()
-    {
-        var elapsed = _clock.Elapsed;
-        _clock.Reset();
-
-        return elapsed;
+        Name = value ? "True" : "False";
     }
 }

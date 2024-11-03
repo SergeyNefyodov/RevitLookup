@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using LookupEngine.Abstractions.Metadata;
 
 namespace LookupEngine.Formaters;
 
@@ -33,28 +32,20 @@ public static class ReflexionFormater
         return type.IsGenericType ? fullName[..fullName.IndexOf('[')] : fullName;
     }
 
-    public static string FormatMemberName(MemberInfo member, ParameterInfo[]? types)
+    public static string FormatMemberName(MemberInfo member, ParameterInfo[]? parameters)
     {
-        if (types is null) return member.Name;
-        if (types.Length == 0) return member.Name;
+        if (parameters is null) return member.Name;
+        if (parameters.Length == 0) return member.Name;
 
-        var parameterNames = types.Select(info =>
+        var formatedParameters = parameters.Select(info =>
         {
             return info.ParameterType.IsByRef switch
             {
                 true => $"ref {FormatTypeName(info.ParameterType).Replace("&", string.Empty)}",
-                _ => FormatTypeName(info.ParameterType)
+                false => FormatTypeName(info.ParameterType)
             };
         });
 
-        var parameters = string.Join(", ", parameterNames);
-        return $"{member.Name} ({parameters})";
-    }
-
-    internal static void FormatDefaultProperties(Type type, Descriptor descriptor)
-    {
-        descriptor.Type = FormatTypeName(type);
-        descriptor.Name ??= descriptor.Type;
-        descriptor.TypeFullName = FormatTypeFullName(type);
+        return $"{member.Name} ({string.Join(", ", formatedParameters)})";
     }
 }

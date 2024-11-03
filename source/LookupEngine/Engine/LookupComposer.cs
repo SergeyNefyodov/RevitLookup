@@ -19,23 +19,23 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using JetBrains.Annotations;
-using LookupEngine.Abstractions.Metadata;
-using LookupEngine.Diagnostic;
-using LookupEngine.Options;
+using LookupEngine.Abstractions;
+using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Exceptions;
 
+// ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
 [PublicAPI]
 public sealed partial class LookupComposer
 {
     private readonly DecomposeOptions _options;
-    private readonly List<Descriptor> _descriptors = new(32);
+    private readonly List<DecompositionMemberData> _descriptors = new(32);
 
     private int _depth;
-    private object? _obj;
-
-    private readonly ClockDiagnoser _clockDiagnoser = new();
-    private readonly MemoryDiagnoser _memoryDiagnoser = new();
+    private object? _inputObject;
+    private Type? _subtype;
+    private Descriptor? _subtypeDescriptor;
 
     private LookupComposer(DecomposeOptions options)
     {
@@ -43,7 +43,7 @@ public sealed partial class LookupComposer
     }
 
     [Pure]
-    public static IList<Descriptor> Decompose(object? value, DecomposeOptions? options = null)
+    public static List<DecompositionMemberData> Decompose(object? value, DecomposeOptions? options = null)
     {
         if (value is null) return [];
 
@@ -56,47 +56,46 @@ public sealed partial class LookupComposer
             _ => composer.DecomposeInstanceObject(value)
         };
     }
-}
 
-// private Descriptor FindSuitableDescriptor(object? obj)
-// {
-//     var descriptor = _options.TypeResolver.Invoke(obj, null);
-//
-//     if (obj is null)
-//     {
-//         descriptor.Type = nameof(Object);
-//         descriptor.TypeFullName = "System.Object";
-//     }
-//     else
-//     {
-//         var type = obj.GetType();
-//         FormatDefaultProperties(descriptor, type);
-//     }
-//
-//     return descriptor;
-// }
-//
-// private Descriptor FindSuitableDescriptor(Type? type)
-// {
-//     var descriptor = new ObjectDescriptor();
-//
-//     if (type is null)
-//     {
-//         descriptor.Type = nameof(Object);
-//         descriptor.TypeFullName = "System.Object";
-//     }
-//     else
-//     {
-//         FormatDefaultProperties(descriptor, type);
-//     }
-//
-//     return descriptor;
-// }
-//
-// private Descriptor FindSuitableDescriptor(object obj, Type type)
-// {
-//     var descriptor = _options.TypeResolver.Invoke(obj, type);
-//
-//     FormatDefaultProperties(descriptor, type);
-//     return descriptor;
-// }
+    internal object InputObject
+    {
+        get
+        {
+            if (_inputObject is null)
+            {
+                EngineException.ThrowIfEngineNotInitialized(nameof(InputObject));
+            }
+
+            return _inputObject;
+        }
+        set => _inputObject = value;
+    }
+
+    internal Type Subtype
+    {
+        get
+        {
+            if (_subtype is null)
+            {
+                EngineException.ThrowIfEngineNotInitialized(nameof(Subtype));
+            }
+
+            return _subtype;
+        }
+        set => _subtype = value;
+    }
+
+    internal Descriptor SubtypeDescriptor
+    {
+        get
+        {
+            if (_subtypeDescriptor is null)
+            {
+                EngineException.ThrowIfEngineNotInitialized(nameof(SubtypeDescriptor));
+            }
+
+            return _subtypeDescriptor;
+        }
+        set => _subtypeDescriptor = value;
+    }
+}

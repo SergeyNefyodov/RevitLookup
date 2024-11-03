@@ -1,4 +1,4 @@
-// Copyright 2003-2024 by Autodesk, Inc.
+﻿// Copyright 2003-2024 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -18,14 +18,36 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Reflection;
+using System.Diagnostics;
 
-namespace LookupEngine.Abstractions.ComponentModel;
+namespace LookupEngine.Diagnostic;
 
-/// <summary>
-///     Indicates that the descriptor can decide to call methods/properties with parameters or override their values
-/// </summary>
-public interface IDescriptorResolver : IDescriptorCollector
+public sealed class TimeDiagnoser : IEngineDiagnoser
 {
-    Func<IVariants>? Resolve(string target, ParameterInfo[]? parameters);
+    private long _startTimeStamp;
+    private long _endTimeStamp;
+
+    public void StartMonitoring()
+    {
+        _startTimeStamp = Stopwatch.GetTimestamp();
+    }
+
+    public void StopMonitoring()
+    {
+        _endTimeStamp = Stopwatch.GetTimestamp();
+    }
+
+    public TimeSpan GetElapsed()
+    {
+#if NETCOREAPP
+        var elapsed = Stopwatch.GetElapsedTime(_startTimeStamp, _endTimeStamp);
+#else
+        var tickFrequency = (double) TimeSpan.TicksPerSecond / Stopwatch.Frequency;
+        var elapsed = new TimeSpan((long)((_startTimeStamp - _endTimeStamp) * tickFrequency));
+#endif
+        _startTimeStamp = default;
+        _endTimeStamp = default;
+
+        return elapsed;
+    }
 }

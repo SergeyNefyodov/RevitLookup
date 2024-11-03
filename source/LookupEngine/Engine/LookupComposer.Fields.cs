@@ -18,9 +18,24 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace LookupEngine.Abstractions.ComponentModel;
+using System.Reflection;
 
-public interface IExtensionManager
+// ReSharper disable once CheckNamespace
+namespace LookupEngine;
+
+public sealed partial class LookupComposer
 {
-    void Register(string methodName, Func<object> context);
+    private void DecomposeFields(BindingFlags bindingFlags)
+    {
+        if (!_options.IncludeFields) return;
+
+        var members = Subtype.GetFields(bindingFlags);
+        foreach (var member in members)
+        {
+            if (member.IsSpecialName) continue;
+
+            var value = EvaluateValue(member);
+            WriteDecompositionResult(value, member);
+        }
+    }
 }

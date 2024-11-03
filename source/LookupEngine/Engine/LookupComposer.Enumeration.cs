@@ -20,13 +20,27 @@
 
 using System.Collections;
 
-namespace LookupEngine.Abstractions.ComponentModel;
+// ReSharper disable once CheckNamespace
+namespace LookupEngine;
 
-/// <summary>
-///     Indicates that the descriptor is handled as a collection of descriptors
-/// </summary>
-public interface IDescriptorEnumerator : IDescriptorCollector
+public sealed partial class LookupComposer
 {
-    bool IsEmpty { get; }
-    public IEnumerator Enumerator { get; }
+    private void AddEnumerableItems()
+    {
+        if (InputObject is not IEnumerable enumerable) return;
+
+        var enumerator = enumerable.GetEnumerator();
+
+        var index = 0;
+        while (enumerator.MoveNext())
+        {
+            WriteEnumerableResult(enumerator.Current, index);
+            index++;
+        }
+
+        if (enumerator is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+    }
 }

@@ -18,16 +18,15 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace LookupEngine.Abstractions.Metadata;
+namespace LookupEngine.Abstractions.Collections;
 
-public sealed class ObjectDescriptor : Descriptor
+public interface IVariants : IReadOnlyCollection<Variant>
 {
-    public ObjectDescriptor()
-    {
-    }
+    Variant Single();
+}
 
-    public ObjectDescriptor(object? value)
-    {
-        Name = value is null ? string.Empty : value.ToString();
-    }
+public interface IVariants<T> : IVariants
+{
+    Variants<T> Add(T result);
+    Variants<T> Add(T result, string description);
 }

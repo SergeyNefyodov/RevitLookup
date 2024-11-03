@@ -18,12 +18,15 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Core.ComponentModel.Descriptors;
+using System.Collections;
 
-public sealed class BoolDescriptor : Descriptor
+namespace LookupEngine.Abstractions.Configuration;
+
+/// <summary>
+///     Indicates that the descriptor is handled as a collection of descriptors
+/// </summary>
+public interface IDescriptorEnumerator : IDescriptorCollector
 {
-    public BoolDescriptor(bool value)
-    {
-        Name = value ? "True" : "False";
-    }
+    bool IsEmpty { get; }
+    public IEnumerator Enumerator { get; }
 }

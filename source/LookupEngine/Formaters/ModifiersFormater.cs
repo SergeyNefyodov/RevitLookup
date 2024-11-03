@@ -9,22 +9,22 @@ internal static class ModifiersFormater
     {
         return member switch
         {
-            MethodInfo info => MemberAttributes.Method.AddModifiers(info.Attributes),
-            PropertyInfo info => MemberAttributes.Property.AddModifiers(info.CanRead ? info.GetMethod!.Attributes : info.SetMethod!.Attributes),
-            FieldInfo info => MemberAttributes.Field.AddModifiers(info.Attributes),
-            EventInfo info => MemberAttributes.Event.AddModifiers(info.AddMethod!.Attributes),
+            MethodInfo info => CombineModifiers(MemberAttributes.Method, info.Attributes),
+            PropertyInfo info => CombineModifiers(MemberAttributes.Property, info.CanRead ? info.GetMethod!.Attributes : info.SetMethod!.Attributes),
+            FieldInfo info => CombineModifiers(MemberAttributes.Field, info.Attributes),
+            EventInfo info => CombineModifiers(MemberAttributes.Event, info.AddMethod!.Attributes),
             _ => throw new ArgumentOutOfRangeException(nameof(member))
         };
     }
 
-    private static MemberAttributes AddModifiers(this MemberAttributes attributes, MethodAttributes methodAttributes)
+    private static MemberAttributes CombineModifiers(MemberAttributes attributes, MethodAttributes methodAttributes)
     {
         if ((methodAttributes & MethodAttributes.Static) != 0) attributes |= MemberAttributes.Static;
         if ((methodAttributes & MethodAttributes.Private) != 0) attributes |= MemberAttributes.Private;
         return attributes;
     }
 
-    private static MemberAttributes AddModifiers(this MemberAttributes attributes, FieldAttributes fieldAttributes)
+    private static MemberAttributes CombineModifiers(MemberAttributes attributes, FieldAttributes fieldAttributes)
     {
         if ((fieldAttributes & FieldAttributes.Static) != 0) attributes |= MemberAttributes.Static;
         if ((fieldAttributes & FieldAttributes.Private) != 0) attributes |= MemberAttributes.Private;

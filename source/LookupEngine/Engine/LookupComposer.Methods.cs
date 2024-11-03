@@ -19,28 +19,28 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Reflection;
-using LookupEngine.Abstractions.ComponentModel;
-using LookupEngine.Abstractions.Metadata;
+using LookupEngine.Abstractions.Configuration;
 
+// ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
 public sealed partial class LookupComposer
 {
-    private void DecomposeProperties(Type type, Descriptor? descriptor, BindingFlags bindingFlags)
+    private void DecomposeMethods(BindingFlags bindingFlags)
     {
-        var members = type.GetProperties(bindingFlags);
+        var members = Subtype.GetMethods(bindingFlags);
         foreach (var member in members)
         {
             if (member.IsSpecialName) continue;
 
             object? value;
-            var parameters = member.CanRead ? member.GetMethod!.GetParameters() : null;
+            var parameters = member.GetParameters();
 
             try
             {
-                if (!TryResolve(member, parameters, descriptor, out value))
+                if (!TryResolve(member, parameters, out value))
                 {
-                    if (!IsPropertySupported(member, parameters, out value)) continue;
+                    if (!TryGetValue(member, parameters, out value)) continue;
                     value ??= EvaluateValue(member);
                 }
             }
@@ -53,14 +53,14 @@ public sealed partial class LookupComposer
                 value = exception;
             }
 
-            WriteDescriptor(value, type, member, parameters);
+            WriteDecompositionResult(value, member, parameters);
         }
     }
 
-    private bool TryResolve(PropertyInfo member, ParameterInfo[]? parameters, Descriptor? descriptor, out object? value)
+    private bool TryResolve(MethodInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
-        if (descriptor is not IDescriptorResolver resolver) return false;
+        if (SubtypeDescriptor is not IDescriptorResolver resolver) return false;
 
         var handler = resolver.Resolve(member.Name, parameters);
         if (handler is null) return false;
@@ -70,56 +70,25 @@ public sealed partial class LookupComposer
         return true;
     }
 
-    private bool IsPropertySupported(PropertyInfo member, ParameterInfo[]? parameters, out object? value)
+    private bool TryGetValue(MethodInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
-
-        if (!member.CanRead)
+        if (member.ReturnType.Name == "Void")
         {
-            value = new InvalidOperationException("Property does not have a get accessor, it cannot be read");
+            if (!_options.IncludeUnsupported) return false;
+
+            value = new InvalidOperationException("Method doesn't return a value");
             return true;
         }
 
-        if (parameters is not null && parameters.Length > 0)
+        if (parameters.Length > 0)
         {
-            if (_options.IgnoreUnsupported) return false;
+            if (!_options.IncludeUnsupported) return false;
 
-            value = new NotSupportedException("Unsupported property overload");
+            value = new NotSupportedException("Unsupported method overload");
             return true;
         }
 
         return true;
-    }
-
-    private object? EvaluateValue(PropertyInfo member)
-    {
-        try
-        {
-            _clockDiagnoser.Start();
-            _memoryDiagnoser.Start();
-
-            return member.GetValue(_obj);
-        }
-        finally
-        {
-            _memoryDiagnoser.Stop();
-            _clockDiagnoser.Stop();
-        }
-    }
-
-    private IVariants EvaluateValue(Func<IVariants> handler)
-    {
-        try
-        {
-            _clockDiagnoser.Start();
-            _memoryDiagnoser.Start();
-
-            return handler.Invoke();
-        }
-        finally
-        {
-            _memoryDiagnoser.Stop();
-            _clockDiagnoser.Stop();
-        }
     }
 }

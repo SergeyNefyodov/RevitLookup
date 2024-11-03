@@ -18,17 +18,12 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using LookupEngine.Abstractions.Collections;
+namespace LookupEngine.Abstractions.Configuration;
 
-namespace LookupEngine.Abstractions.ComponentModel;
-
-public interface IVariants : IReadOnlyCollection<Variant>
+/// <summary>
+///     Indicates that the object can be redirected to another
+/// </summary>
+public interface IDescriptorRedirection
 {
-    Variant Single();
-}
-
-public interface IVariants<T> : IVariants
-{
-    Variants<T> Add(T result);
-    Variants<T> Add(T result, string description);
+    bool TryRedirect(string target, out object output);
 }

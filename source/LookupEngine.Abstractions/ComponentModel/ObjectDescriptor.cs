@@ -18,27 +18,12 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Collections;
+namespace LookupEngine.Abstractions.ComponentModel;
 
-namespace LookupEngine;
-
-public sealed partial class LookupComposer
+public sealed class ObjectDescriptor : Descriptor
 {
-    private void AddEnumerableItems()
+    public ObjectDescriptor(object? value)
     {
-        if (_obj is not IEnumerable enumerable) return;
-
-        var enumerableType = typeof(IEnumerable);
-        var enumerator = enumerable.GetEnumerator();
-
-        while (enumerator.MoveNext())
-        {
-            WriteDescriptor(enumerator.Current, enumerableType);
-        }
-
-        if (enumerator is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
+        Name = value is null ? string.Empty : value.ToString();
     }
 }

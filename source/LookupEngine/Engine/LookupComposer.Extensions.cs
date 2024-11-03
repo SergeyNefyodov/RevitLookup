@@ -18,9 +18,32 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Abstractions.Collections;
+using LookupEngine.Abstractions.Configuration;
 
-/// <summary>
-///     Indicates that the descriptor can retrieve object members by reflection
-/// </summary>
-public interface IDescriptorCollector;
+//ReSharper disable once CheckNamespace
+namespace LookupEngine;
+
+public sealed partial class LookupComposer : IExtensionManager
+{
+    private void ExecuteExtensions()
+    {
+        if (!_options.EnableExtensions) return;
+        if (SubtypeDescriptor is not IDescriptorExtension extension) return;
+
+        extension.RegisterExtensions(this);
+    }
+
+    public void Register(string methodName, Func<IVariants> handler)
+    {
+        try
+        {
+            var result = EvaluateValue(handler);
+            WriteExtensionResult(result, methodName);
+        }
+        catch (Exception exception)
+        {
+            WriteExtensionResult(exception, methodName);
+        }
+    }
+}

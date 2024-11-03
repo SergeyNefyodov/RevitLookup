@@ -20,17 +20,17 @@
 
 namespace LookupEngine.Diagnostic;
 
-public sealed class MemoryDiagnoser
+public sealed class MemoryDiagnoser : IEngineDiagnoser
 {
     private long _initialAllocatedBytes;
     private long _finalAllocatedBytes;
 
-    public void Start()
+    public void StartMonitoring()
     {
         _initialAllocatedBytes = GetTotalAllocatedBytes();
     }
 
-    public void Stop()
+    public void StopMonitoring()
     {
         _finalAllocatedBytes = GetTotalAllocatedBytes();
     }

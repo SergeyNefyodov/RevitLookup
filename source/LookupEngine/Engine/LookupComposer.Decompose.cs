@@ -19,49 +19,54 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Reflection;
-using LookupEngine.Abstractions.Metadata;
+using LookupEngine.Abstractions;
 
+// ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
 public sealed partial class LookupComposer
 {
-    private IList<Descriptor> DecomposeInstanceObject(object instance)
+    private List<DecompositionMemberData> DecomposeInstanceObject(object instance)
     {
-        _obj = instance;
-        var objectType = _obj.GetType();
+        InputObject = instance;
+        var objectType = instance.GetType();
         var objectTypeHierarchy = GetTypeHierarchy(objectType);
 
         for (var i = objectTypeHierarchy.Count - 1; i >= 0; i--)
         {
-            var type = objectTypeHierarchy[i];
-            var descriptor = _options.TypeResolver.Invoke(_obj, type);
+            Subtype = objectTypeHierarchy[i];
+            SubtypeDescriptor = _options.TypeResolver.Invoke(instance, Subtype);
 
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            if (!_options.IgnoreStatic) flags |= BindingFlags.Static;
-            if (!_options.IgnorePrivate) flags |= BindingFlags.NonPublic;
+            if (!_options.IgnoreStaticMembers) flags |= BindingFlags.Static;
+            if (!_options.IgnorePrivateMembers) flags |= BindingFlags.NonPublic;
 
-            DecomposeFields(type, flags);
-            DecomposeProperties(type, descriptor, flags);
-            DecomposeMethods(type, descriptor, flags);
-            DecomposeEvents(type, descriptor, flags);
-            // AddExtensions(descriptor);
+            DecomposeFields(flags);
+            DecomposeProperties(flags);
+            DecomposeMethods(flags);
+            DecomposeEvents(flags);
+            ExecuteExtensions();
 
             _depth--;
         }
 
+        Subtype = objectType;
         AddEnumerableItems();
 
         return _descriptors;
     }
 
-    private IList<Descriptor> DecomposeStaticObject(Type objectType)
+    private List<DecompositionMemberData> DecomposeStaticObject(Type objectType)
     {
         var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly;
-        if (!_options.IgnorePrivate) flags |= BindingFlags.NonPublic;
+        if (!_options.IgnorePrivateMembers) flags |= BindingFlags.NonPublic;
 
-        DecomposeFields(objectType, flags);
-        DecomposeProperties(objectType, null, flags);
-        DecomposeMethods(objectType, null, flags);
+        Subtype = objectType;
+        SubtypeDescriptor = _options.TypeResolver.Invoke(null, Subtype);
+
+        DecomposeFields(flags);
+        DecomposeProperties(flags);
+        DecomposeMethods(flags);
 
         return _descriptors;
     }
@@ -75,7 +80,7 @@ public sealed partial class LookupComposer
             inputType = inputType.BaseType;
         }
 
-        if (!_options.IgnoreRoot) types.Add(inputType);
+        if (_options.IncludeRoot) types.Add(inputType);
 
         return types;
     }

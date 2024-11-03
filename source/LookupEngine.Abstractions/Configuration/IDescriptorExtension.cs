@@ -18,36 +18,12 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Reflection;
+namespace LookupEngine.Abstractions.Configuration;
 
-namespace LookupEngine;
-
-public sealed partial class LookupComposer
+/// <summary>
+///     Indicates that the descriptor can interact with the UI and execute commands
+/// </summary>
+public interface IDescriptorExtension : IDescriptorCollector
 {
-    private void DecomposeFields(Type type, BindingFlags bindingFlags)
-    {
-        if (_options.IgnoreFields) return;
-
-        var members = type.GetFields(bindingFlags);
-        foreach (var member in members)
-        {
-            if (member.IsSpecialName) continue;
-
-            var value = EvaluateValue(member);
-            WriteDescriptor(value, type, member);
-        }
-    }
-
-    private object? EvaluateValue(FieldInfo member)
-    {
-        _clockDiagnoser.Start();
-        _memoryDiagnoser.Start();
-
-        var value = member.GetValue(_obj);
-
-        _memoryDiagnoser.Stop();
-        _clockDiagnoser.Stop();
-
-        return value;
-    }
+    void RegisterExtensions(IExtensionManager manager);
 }

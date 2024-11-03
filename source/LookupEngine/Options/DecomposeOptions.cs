@@ -1,7 +1,10 @@
-﻿using LookupEngine.Abstractions.Metadata;
+﻿using JetBrains.Annotations;
+using LookupEngine.Abstractions.ComponentModel;
 
-namespace LookupEngine.Options;
+// ReSharper disable once CheckNamespace
+namespace LookupEngine;
 
+[PublicAPI]
 public sealed class DecomposeOptions
 {
     private Func<object?, Type?, Descriptor>? _typeResolver;
@@ -12,13 +15,15 @@ public sealed class DecomposeOptions
         set => _typeResolver = value;
     }
 
-    public bool IgnoreFields { get; set; } = true;
-    public bool IgnoreRoot { get; set; } = false;
-    public bool IgnorePrivate { get; set; } = true;
-    public bool IgnoreStatic { get; set; } = false;
-    public bool IgnoreEvents { get; set; } = false;
-    public bool IgnoreUnsupported { get; set; } = true;
-    public bool HandleExtensions { get; set; } = false;
+    public IRedirect[]? RedirectMap { get; set; }
+
+    public bool IncludeRoot { get; set; }
+    public bool IncludeFields { get; set; }
+    public bool IncludeEvents { get; set; }
+    public bool IncludeUnsupported { get; set; }
+    public bool IgnorePrivateMembers { get; set; } = true;
+    public bool IgnoreStaticMembers { get; set; } = true;
+    public bool EnableExtensions { get; set; }
 
     public static DecomposeOptions Default => new();
 
@@ -26,8 +31,9 @@ public sealed class DecomposeOptions
     {
         return obj switch
         {
-            null when type is null => new ObjectDescriptor(),
-            _ => new ObjectDescriptor(obj),
+            bool value when type is null || type == typeof(bool) => new BooleanDescriptor(value),
+            Exception value when type is null || type == typeof(Exception) => new ExceptionDescriptor(value),
+            _ => new ObjectDescriptor(obj)
         };
     }
 }
