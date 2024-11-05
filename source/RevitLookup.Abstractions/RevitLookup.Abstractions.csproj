@@ -17,10 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ViewModels\Pages\"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <Reference Include="PresentationFramework" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
         <Reference Include="WindowsBase" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
     </ItemGroup>

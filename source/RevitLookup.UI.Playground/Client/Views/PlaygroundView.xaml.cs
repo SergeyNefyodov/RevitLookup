@@ -1,4 +1,5 @@
 using System.Windows;
+using RevitLookup.Abstractions.Services;
 using RevitLookup.UI.Playground.Client.ViewModels;
 using RevitLookup.UI.Playground.Client.Views.Pages;
 using Wpf.Ui;
@@ -14,7 +15,8 @@ public sealed partial class PlaygroundView
     public PlaygroundView(PlaygroundViewModel viewModel,
         INavigationService navigationService,
         IContentDialogService dialogService,
-        ISnackbarService snackbarService)
+        ISnackbarService snackbarService,
+        IWindowIntercomService intercomService)
     {
         _navigationService = navigationService;
         DataContext = viewModel;
@@ -24,6 +26,7 @@ public sealed partial class PlaygroundView
         navigationService.SetNavigationControl(NavigationView);
         dialogService.SetDialogHost(RootContentDialog);
         snackbarService.SetSnackbarPresenter(SnackbarPresenter);
+        intercomService.SetHost(this);
 
         Loaded += (sender, _) =>
         {

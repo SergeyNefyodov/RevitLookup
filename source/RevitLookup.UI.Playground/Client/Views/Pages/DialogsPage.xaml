@@ -22,6 +22,21 @@
             Icon="{ui:SymbolIcon HandOpenHeart32}"
             Content="Open source dialog"
             Command="{Binding ViewModel.ShowOpenSourceDialogCommand}" />
+
+        <ui:TextBlock
+            Margin="0 12 0 0"
+            Text="Tools"
+            FontTypography="Subtitle" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon SlideSearch24}"
+            Content="Search elements dialog"
+            Command="{Binding ViewModel.ShowSearchElementsDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon BroadActivityFeed24}"
+            Content="Modules dialog"
+            Command="{Binding ViewModel.ShowModulesDialogCommand}" />
     </StackPanel>
 
 </Page>

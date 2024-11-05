@@ -18,13 +18,20 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace RevitLookup.Models;
+using RevitLookup.Abstractions.ViewModels.Tools;
+using Wpf.Ui;
 
-public sealed class ModuleInfo
+namespace RevitLookup.UI.Framework.Views.Tools;
+
+public sealed partial class ModulesDialog
 {
-    public required string Name { get; init; }
-    public required string Path { get; init; }
-    public required int Order { get; init; }
-    public required string Version { get; init; }
-    public required string Container { get; init; }
+    public ModulesDialog(IContentDialogService dialogService, IModulesViewModel viewModel) : base(dialogService.GetDialogHost())
+    {
+        DataContext = viewModel;
+        InitializeComponent();
+
+#if NETFRAMEWORK
+        ContainerColumn.Header = "Domain";
+#endif
+    }
 }

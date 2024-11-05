@@ -14,12 +14,9 @@
     mc:Ignorable="d"
     d:DesignHeight="440"
     d:DesignWidth="550">
-    
+
     <rl:ContentDialog.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <rl:ControlsDictionary />
-            </ResourceDictionary.MergedDictionaries>
             <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
             <Style
                 BasedOn="{StaticResource DefaultContentDialogStyle}"
@@ -27,7 +24,7 @@
             <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
         </ResourceDictionary>
     </rl:ContentDialog.Resources>
-    
+
     <StackPanel>
         <CheckBox
             x:Name="GeneralBox"
@@ -36,5 +33,5 @@
             x:Name="RenderBox"
             Content="Visualisation settings" />
     </StackPanel>
-    
+
 </rl:ContentDialog>

@@ -17,9 +17,6 @@
 
     <rl:ContentDialog.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <rl:ControlsDictionary />
-            </ResourceDictionary.MergedDictionaries>
             <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
             <Style
                 BasedOn="{StaticResource DefaultContentDialogStyle}"
@@ -37,6 +34,7 @@
         CanUserReorderColumns="False"
         CanUserResizeColumns="False"
         CanUserSortColumns="False"
+        VerticalScrollBarVisibility="Visible"
         ItemsSource="{Binding Software}">
         <DataGrid.Columns>
             <DataGridHyperlinkColumn
