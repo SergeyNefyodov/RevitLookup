@@ -8,12 +8,12 @@ sealed partial class Build
         .Executes(() =>
         {
             CleanDirectory(ArtifactsDirectory);
-            foreach (var project in Solution.AllProjects.Where(project => project != Solution.Build))
+            foreach (var project in Solution.AllProjects.Where(project => project != Solution.Build.Build))
             {
                 CleanDirectory(project.Directory / "bin");
                 CleanDirectory(project.Directory / "obj");
             }
-            
+
             foreach (var configuration in GlobBuildConfigurations())
                 DotNetClean(settings => settings
                     .SetConfiguration(configuration)

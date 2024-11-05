@@ -13,7 +13,7 @@
 
         InstallersMap = new()
         {
-            { Solution.Installer, Solution.RevitLookup }
+            { Solution.Build.Installer, Solution.RevitLookup }
         };
 
         VersionMap = new()
