@@ -7,4 +7,22 @@
         <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>
+        <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="ViewModels\Pages\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="PresentationFramework" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
+        <Reference Include="WindowsBase" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
+    </ItemGroup>
+
 </Project>

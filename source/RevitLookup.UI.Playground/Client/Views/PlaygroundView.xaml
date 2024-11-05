@@ -1,0 +1,64 @@
+<ui:FluentWindow
+    x:Class="RevitLookup.UI.Playground.Client.Views.PlaygroundView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://revitlookup.com/xaml"
+    xmlns:viewModels="clr-namespace:RevitLookup.UI.Playground.Client.ViewModels"
+    mc:Ignorable="d"
+    Width="1260"
+    Height="770"
+    d:DesignHeight="400"
+    d:DesignWidth="500"
+    WindowBackdropType="Mica"
+    WindowStartupLocation="CenterScreen"
+    ExtendsContentIntoTitleBar="True"
+    Icon="/Client/Resources/Images/ProductIcon.png"
+    d:DataContext="{d:DesignInstance viewModels:PlaygroundViewModel}">
+
+    <ui:FluentWindow.InputBindings>
+        <KeyBinding
+            Key="F"
+            Command="{Binding ElementName=AutoSuggestBox, Path=FocusCommand}"
+            Modifiers="Control" />
+    </ui:FluentWindow.InputBindings>
+
+    <Grid>
+        <ui:NavigationView
+            x:Name="NavigationView"
+            Padding="24 0 24 0"
+            OpenPaneLength="200"
+            IsBackButtonVisible="Collapsed"
+            MenuItemsSource="{Binding MenuItems}"
+            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}"
+            BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
+            SelectionChanged="OnNavigationSelectionChanged">
+            <ui:NavigationView.Header>
+                <ui:BreadcrumbBar
+                    Margin="24"
+                    x:Name="BreadcrumbBar" />
+            </ui:NavigationView.Header>
+            <ui:NavigationView.AutoSuggestBox>
+                <ui:AutoSuggestBox
+                    x:Name="AutoSuggestBox"
+                    PlaceholderText="Search">
+                </ui:AutoSuggestBox>
+            </ui:NavigationView.AutoSuggestBox>
+            <ui:NavigationView.ContentOverlay>
+                <Grid>
+                    <ui:SnackbarPresenter
+                        x:Name="SnackbarPresenter" />
+                </Grid>
+            </ui:NavigationView.ContentOverlay>
+        </ui:NavigationView>
+        <ui:TitleBar
+            x:Name="TitleBar"
+            Height="40"
+            Background="Transparent"
+            Title="Playground"
+            Icon="{ui:ImageIcon '/Client/Resources/Images/ProductIcon.png'}" />
+        <ContentPresenter
+            x:Name="RootContentDialog" />
+    </Grid>
+</ui:FluentWindow>
