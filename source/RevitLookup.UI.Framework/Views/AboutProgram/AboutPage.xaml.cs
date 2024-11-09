@@ -28,8 +28,8 @@ public sealed partial class AboutPage : INavigableView<IAboutViewModel>
     public AboutPage(IAboutViewModel viewModel)
     {
         ViewModel = viewModel;
-        InitializeComponent();
         DataContext = this;
+        InitializeComponent();
     }
 
     public IAboutViewModel ViewModel { get; }

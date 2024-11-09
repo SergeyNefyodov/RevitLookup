@@ -15,7 +15,7 @@
         Margin="0 24 0 0">
         <ui:TextBlock
             Text="Navigation elements"
-            FontTypography="Subtitle" />
+            FontTypography="BodyStrong" />
         <ui:CardAction
             Margin="0 8 0 0"
             Icon="{ui:SymbolIcon Settings24}"

@@ -3,7 +3,6 @@ using RevitLookup.Abstractions.Services;
 using RevitLookup.UI.Playground.Client.ViewModels;
 using RevitLookup.UI.Playground.Client.Views.Pages;
 using Wpf.Ui;
-using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace RevitLookup.UI.Playground.Client.Views;
@@ -22,7 +21,6 @@ public sealed partial class PlaygroundView
         DataContext = viewModel;
         InitializeComponent();
 
-        ApplicationThemeManager.Apply(this);
         navigationService.SetNavigationControl(NavigationView);
         dialogService.SetDialogHost(RootContentDialog);
         snackbarService.SetSnackbarPresenter(SnackbarPresenter);

@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using RevitLookup.UI.Playground.Client.Views.Pages;
 using RevitLookup.UI.Playground.Client.Views.Pages.DesignGuidance;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace RevitLookup.UI.Playground.Client.ViewModels;
@@ -26,4 +28,15 @@ public sealed class PlaygroundViewModel : ObservableObject
         },
         // new NavigationViewItemSeparator(),
     ];
+
+    public List<object> FooterItems { get; } =
+    [
+        new NavigationViewItem("Switch theme", SymbolRegular.DarkTheme24, null!) { Command = new RelayCommand(SwitchApplicationTheme) }
+    ];
+
+    private static void SwitchApplicationTheme()
+    {
+        var applicationTheme = ApplicationThemeManager.GetAppTheme();
+        ApplicationThemeManager.Apply(applicationTheme == ApplicationTheme.Light ? ApplicationTheme.Dark : ApplicationTheme.Light);
+    }
 }

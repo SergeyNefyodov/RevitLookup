@@ -64,9 +64,6 @@
                 </DataGridHyperlinkColumn.ElementStyle>
             </DataGridHyperlinkColumn>
         </DataGrid.Columns>
-        <DataGrid.Resources>
-            <rl:ControlsDictionary />
-        </DataGrid.Resources>
         <DataGrid.CellStyle>
             <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
             <Style

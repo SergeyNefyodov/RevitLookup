@@ -15,15 +15,14 @@
     <rl:DynamicScrollViewer>
         <StackPanel
             Margin="12">
-            <TextBlock
-                FontSize="16"
-                FontWeight="Medium"
+            <rl:TextBlock
+                FontTypography="BodyStrong"
                 Text="User interface" />
-            <StackPanel
-                Margin="0,8,0,0">
+            <StackPanel>
                 <rl:CardControl
                     Header="Theme"
-                    Icon="{rl:SymbolIcon Color24}">
+                    Icon="{rl:SymbolIcon Color24}"
+                    Margin="0,8,0,0">
                     <ComboBox
                         MinWidth="150"
                         IsEnabled="True"
@@ -117,13 +116,11 @@
                         IsChecked="{Binding ViewModel.UseSizeRestoring}" />
                 </rl:CardControl>
             </StackPanel>
-            <TextBlock
-                FontSize="16"
-                FontWeight="Medium"
+            <rl:TextBlock
+                FontTypography="BodyStrong"
                 Text="Ribbon"
-                Margin="0,17,0,0" />
-            <StackPanel
-                Margin="0,8,0,0">
+                Margin="0,12,0,0" />
+            <StackPanel>
                 <rl:CardControl
                     Icon="{rl:SymbolIcon PanelRightCursor24}"
                     Margin="0,8,0,0">
@@ -142,13 +139,11 @@
                         IsChecked="{Binding ViewModel.UseModifyTab}" />
                 </rl:CardControl>
             </StackPanel>
-            <TextBlock
-                FontSize="16"
-                FontWeight="Medium"
+            <rl:TextBlock
+                FontTypography="BodyStrong"
                 Text="Other"
-                Margin="0,17,0,0" />
-            <StackPanel
-                Margin="0,8,0,0">
+                Margin="0,12,0,0" />
+            <StackPanel>
                 <rl:CardAction
                     Icon="{rl:SymbolIcon ArrowReset24}"
                     Margin="0,8,0,0"

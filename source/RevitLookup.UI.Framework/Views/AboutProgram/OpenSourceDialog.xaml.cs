@@ -30,13 +30,13 @@ public sealed partial class OpenSourceDialog
 {
     public OpenSourceDialog(IContentDialogService dialogService, IOpenSourceViewModel viewModel) : base(dialogService.GetDialogHost())
     {
-        InitializeComponent();
         DataContext = viewModel;
+        InitializeComponent();
     }
 
     private void OpenLink(object sender, RoutedEventArgs args)
     {
-        var link = (Hyperlink) args.OriginalSource;
+        var link = (Hyperlink)args.OriginalSource;
         ProcessTasks.StartShell(link.NavigateUri.OriginalString);
     }
 }

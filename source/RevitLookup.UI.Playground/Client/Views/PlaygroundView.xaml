@@ -31,6 +31,7 @@
             OpenPaneLength="200"
             IsBackButtonVisible="Collapsed"
             MenuItemsSource="{Binding MenuItems}"
+            FooterMenuItemsSource="{Binding FooterItems}"
             TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}"
             BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
             SelectionChanged="OnNavigationSelectionChanged">

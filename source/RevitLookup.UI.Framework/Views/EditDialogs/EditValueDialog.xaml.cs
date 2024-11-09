@@ -18,19 +18,37 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using RevitLookup.Abstractions.ViewModels.Settings;
-using Wpf.Ui.Abstractions.Controls;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
-namespace RevitLookup.UI.Framework.Views.Settings;
+namespace RevitLookup.UI.Framework.Views.EditDialogs;
 
-public sealed partial class SettingsPage : INavigableView<ISettingsViewModel>
+public sealed partial class EditValueDialog
 {
-    public SettingsPage(ISettingsViewModel viewModel)
+    public EditValueDialog(IContentDialogService dialogService) : base(dialogService.GetDialogHost())
     {
-        ViewModel = viewModel;
-        DataContext = this;
         InitializeComponent();
     }
 
-    public ISettingsViewModel ViewModel { get; }
+    public async Task<ContentDialogResult> ShowAsync(string name, string value)
+    {
+        ValueLabel.Content = name;
+        ValueBox.Text = value;
+        ValueBox.PlaceholderText = value;
+
+        return await ShowAsync();
+    }
+
+    public async Task<ContentDialogResult> ShowAsync(string name, string value, string caption)
+    {
+        Title = caption;
+
+        ValueLabel.Content = name;
+        ValueBox.Text = value;
+        ValueBox.PlaceholderText = value;
+
+        return await ShowAsync();
+    }
+
+    public string Value => ValueBox.Text;
 }

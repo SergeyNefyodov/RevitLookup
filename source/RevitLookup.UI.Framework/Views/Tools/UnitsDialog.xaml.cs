@@ -82,7 +82,7 @@ public sealed partial class UnitsDialog
     {
         var contextMenu = new ContextMenu
         {
-            Resources = Window.GetWindow(row)!.Resources,
+            Resources = UiApplication.Current.Resources,
             PlacementTarget = row
         };
 

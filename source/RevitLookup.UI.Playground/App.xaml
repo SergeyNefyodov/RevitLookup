@@ -11,7 +11,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
                     Source="pack://application:,,,/RevitLookup.UI.Playground;component/Client/Controls/ControlExample.xaml" />
-                <ui:ThemesDictionary />
+                <ui:ThemesDictionary
+                    Theme="Light" />
                 <ui:ControlsDictionary />
                 <menu:MenusDictionary />
             </ResourceDictionary.MergedDictionaries>
