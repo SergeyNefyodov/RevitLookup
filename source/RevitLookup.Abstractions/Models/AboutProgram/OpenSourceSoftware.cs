@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Models;
+﻿namespace RevitLookup.Abstractions.Models.AboutProgram;
 
 public sealed class OpenSourceSoftware
 {

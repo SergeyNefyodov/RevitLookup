@@ -21,7 +21,7 @@
 
 using System.Runtime.Loader;
 using CommunityToolkit.Mvvm.ComponentModel;
-using RevitLookup.Abstractions.Models;
+using RevitLookup.Abstractions.Models.Tools;
 using RevitLookup.Abstractions.ViewModels.Tools;
 
 namespace RevitLookup.UI.Playground.ViewModels.Tools;

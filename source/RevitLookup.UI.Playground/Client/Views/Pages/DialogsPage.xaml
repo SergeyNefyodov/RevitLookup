@@ -37,6 +37,21 @@
             Icon="{ui:SymbolIcon BroadActivityFeed24}"
             Content="Modules dialog"
             Command="{Binding ViewModel.ShowModulesDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon LeafOne24}"
+            Content="BuiltIn parameters dialog"
+            Command="{Binding ViewModel.ShowParametersDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon LeafTwo24}"
+            Content="BuiltIn categories dialog"
+            Command="{Binding ViewModel.ShowCategoriesDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon LeafThree24}"
+            Content="Forge schema dialog"
+            Command="{Binding ViewModel.ShowForgeSchemaDialogCommand}" />
     </StackPanel>
 
 </Page>

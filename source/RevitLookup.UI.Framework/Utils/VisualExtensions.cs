@@ -68,4 +68,29 @@ public static class VisualExtensions
 
         return null;
     }
+
+    public static T? FindLogicalChild<T>(this Visual visual) where T : Visual
+    {
+        foreach (Visual child in LogicalTreeHelper.GetChildren(visual))
+        {
+            if (child is T correctlyTyped) return correctlyTyped;
+
+            var descendent = FindLogicalChild<T>(child);
+            if (descendent != null) return descendent;
+        }
+
+        return null;
+    }
+
+    public static T? FindLogicalParent<T>(this DependencyObject dependencyObject) where T : DependencyObject
+    {
+        var parentObject = LogicalTreeHelper.GetParent(dependencyObject);
+        while (parentObject != null)
+        {
+            if (parentObject is T parent) return parent;
+            parentObject = LogicalTreeHelper.GetParent(parentObject);
+        }
+
+        return null;
+    }
 }

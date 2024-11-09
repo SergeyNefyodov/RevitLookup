@@ -20,7 +20,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
-using RevitLookup.Abstractions.Models;
+using RevitLookup.Abstractions.Models.AboutProgram;
 using RevitLookup.Abstractions.ViewModels.AboutProgram;
 
 namespace RevitLookup.UI.Playground.ViewModels.AboutProgram;

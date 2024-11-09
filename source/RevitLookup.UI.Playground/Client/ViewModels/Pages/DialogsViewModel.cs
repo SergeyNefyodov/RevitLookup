@@ -11,23 +11,44 @@ namespace RevitLookup.UI.Playground.Client.ViewModels.Pages;
 public sealed partial class DialogsViewModel(IServiceProvider serviceProvider) : ObservableObject
 {
     [RelayCommand]
-    private async Task ShowOpenSourceDialog()
+    private async Task ShowOpenSourceDialogAsync()
     {
         var dialog = serviceProvider.GetRequiredService<OpenSourceDialog>();
         await dialog.ShowAsync();
     }
 
     [RelayCommand]
-    private async Task ShowSearchElementsDialog()
+    private async Task ShowSearchElementsDialogAsync()
     {
         var dialog = serviceProvider.GetRequiredService<SearchElementsDialog>();
         await dialog.ShowAsync();
     }
 
     [RelayCommand]
-    private async Task ShowModulesDialog()
+    private async Task ShowModulesDialogAsync()
     {
         var dialog = serviceProvider.GetRequiredService<ModulesDialog>();
         await dialog.ShowAsync();
+    }
+
+    [RelayCommand]
+    private async Task ShowParametersDialogAsync()
+    {
+        var dialog = serviceProvider.GetRequiredService<UnitsDialog>();
+        await dialog.ShowParametersDialogAsync();
+    }
+
+    [RelayCommand]
+    private async Task ShowCategoriesDialogAsync()
+    {
+        var dialog = serviceProvider.GetRequiredService<UnitsDialog>();
+        await dialog.ShowCategoriesDialogAsync();
+    }
+
+    [RelayCommand]
+    private async Task ShowForgeSchemaDialogAsync()
+    {
+        var dialog = serviceProvider.GetRequiredService<UnitsDialog>();
+        await dialog.ShowForgeSchemaDialogAsync();
     }
 }
