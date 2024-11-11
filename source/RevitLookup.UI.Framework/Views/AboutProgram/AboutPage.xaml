@@ -10,7 +10,8 @@
     xmlns:aboutProgram="clr-namespace:RevitLookup.UI.Framework.Views.AboutProgram"
     mc:Ignorable="d"
     d:DesignWidth="800"
-    d:DataContext="{d:DesignInstance aboutProgram:AboutPage}">
+    d:DataContext="{d:DesignInstance aboutProgram:AboutPage}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
     <rl:DynamicScrollViewer>
         <DockPanel

@@ -10,7 +10,8 @@
     mc:Ignorable="d"
     d:DesignHeight="1100"
     d:DesignWidth="500"
-    d:DataContext="{d:DesignInstance settings:SettingsPage}">
+    d:DataContext="{d:DesignInstance settings:SettingsPage}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
     <rl:DynamicScrollViewer>
         <StackPanel
