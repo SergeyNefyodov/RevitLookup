@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Reference Include="PresentationCore" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
         <Reference Include="PresentationFramework" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
         <Reference Include="WindowsBase" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
     </ItemGroup>

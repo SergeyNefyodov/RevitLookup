@@ -12,8 +12,7 @@
     d:DataContext="{d:DesignInstance pages:DialogsPage}">
 
     <StackPanel
-        Margin="0 24 0 0">
-
+        Margin="0 24">
         <ui:TextBlock
             Text="About program"
             FontTypography="BodyStrong" />
@@ -52,6 +51,41 @@
             Icon="{ui:SymbolIcon LeafThree24}"
             Content="Forge schema dialog"
             Command="{Binding ViewModel.ShowForgeSchemaDialogCommand}" />
+
+        <ui:TextBlock
+            Margin="0 12 0 0"
+            Text="Visualization"
+            FontTypography="BodyStrong" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Wallpaper24}"
+            Content="BoundingBox visualization dialog"
+            Command="{Binding ViewModel.ShowBoundingBoxVisualizationDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Wallpaper24}"
+            Content="Face visualization dialog"
+            Command="{Binding ViewModel.ShowFaceVisualizationDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Wallpaper24}"
+            Content="Mesh visualization dialog"
+            Command="{Binding ViewModel.ShowMeshVisualizationDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Wallpaper24}"
+            Content="Polyline visualization dialog"
+            Command="{Binding ViewModel.ShowPolylineVisualizationDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Wallpaper24}"
+            Content="Solid visualization dialog"
+            Command="{Binding ViewModel.ShowSolidVisualizationDialogCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Wallpaper24}"
+            Content="XYZ visualization dialog"
+            Command="{Binding ViewModel.ShowXyzVisualizationDialogCommand}" />
 
         <ui:TextBlock
             Margin="0 12 0 0"

@@ -12,7 +12,7 @@
     d:DataContext="{d:DesignInstance pages:DashboardViewModel}">
 
     <StackPanel
-        Margin="0 24 0 0">
+        Margin="0 24">
         <Grid
             HorizontalAlignment="Center">
             <StackPanel

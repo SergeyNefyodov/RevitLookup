@@ -12,7 +12,7 @@
     d:DataContext="{d:DesignInstance pages:PagesPage}">
 
     <StackPanel
-        Margin="0 24 0 0">
+        Margin="0 24">
         <ui:TextBlock
             Text="Navigation elements"
             FontTypography="BodyStrong" />
