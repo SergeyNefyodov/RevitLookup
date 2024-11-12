@@ -79,9 +79,10 @@ public sealed class NotificationService(ISnackbarService snackbarService, IWindo
 
     private void PushSuccessMessage(string title, string message)
     {
-        if (!intercomService.Host.IsLoaded)
+        var host = intercomService.GetHost();
+        if (!host.IsLoaded)
         {
-            if (_pendingNotifications is null) intercomService.Host.Loaded += ShowPendingNotifications;
+            if (_pendingNotifications is null) host.Loaded += ShowPendingNotifications;
             _pendingNotifications += () => ShowSuccessBar(title, message);
         }
         else
@@ -92,9 +93,10 @@ public sealed class NotificationService(ISnackbarService snackbarService, IWindo
 
     private void PushWarningMessage(string title, string message)
     {
-        if (!intercomService.Host.IsLoaded)
+        var host = intercomService.GetHost();
+        if (!host.IsLoaded)
         {
-            if (_pendingNotifications is null) intercomService.Host.Loaded += ShowPendingNotifications;
+            if (_pendingNotifications is null) host.Loaded += ShowPendingNotifications;
             _pendingNotifications += () => ShowWarningBar(title, message);
         }
         else
@@ -105,9 +107,10 @@ public sealed class NotificationService(ISnackbarService snackbarService, IWindo
 
     private void PushErrorMessage(string title, string message)
     {
-        if (!intercomService.Host.IsLoaded)
+        var host = intercomService.GetHost();
+        if (!host.IsLoaded)
         {
-            if (_pendingNotifications is null) intercomService.Host.Loaded += ShowPendingNotifications;
+            if (_pendingNotifications is null) host.Loaded += ShowPendingNotifications;
             _pendingNotifications += () => ShowErrorBar(title, message);
         }
         else
@@ -148,9 +151,10 @@ public sealed class NotificationService(ISnackbarService snackbarService, IWindo
 
     private void ShowPendingNotifications(object sender, RoutedEventArgs args)
     {
-        intercomService.Host.Loaded -= ShowPendingNotifications;
+        var host = intercomService.GetHost();
+        host.Loaded -= ShowPendingNotifications;
         if (_pendingNotifications is null) return;
-        
+
         _pendingNotifications.Invoke();
         _pendingNotifications = null;
     }

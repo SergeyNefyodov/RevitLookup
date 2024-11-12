@@ -6,7 +6,6 @@ namespace RevitLookup.Abstractions.ViewModels.AboutProgram;
 public interface IAboutViewModel
 {
     SoftwareUpdateState State { get; set; }
-    bool IsUpdateChecked { get; set; }
     Version CurrentVersion { get; set; }
     string NewVersion { get; set; }
     string ErrorMessage { get; set; }

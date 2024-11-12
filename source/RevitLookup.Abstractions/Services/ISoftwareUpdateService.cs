@@ -18,19 +18,15 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using RevitLookup.Abstractions.States;
-
 namespace RevitLookup.Abstractions.Services;
 
 public interface ISoftwareUpdateService
 {
-    public SoftwareUpdateState State { get; }
-    public string NewVersion { get; }
-    public string LatestCheckDate { get; }
-    public string ReleaseNotesUrl { get; }
-    public string ErrorMessage { get; }
-    public string LocalFilePath { get; }
+    public string? NewVersion { get; }
+    public string? ReleaseNotesUrl { get; }
+    public string? LocalFilePath { get; }
+    public string? LatestCheckDate { get; }
 
-    Task CheckUpdatesAsync();
+    Task<bool> CheckUpdatesAsync();
     Task DownloadUpdate();
 }

@@ -17,7 +17,7 @@ public sealed class PlaygroundViewModel : ObservableObject
         new NavigationViewItem
         {
             Content = "Design guidance",
-            Icon = new SymbolIcon(SymbolRegular.DesignIdeas24),
+            Icon = new SymbolIcon(SymbolRegular.DesignIdeas24, 18),
             MenuItemsSource = new object[]
             {
                 new NavigationViewItem("Typography", SymbolRegular.TextFont24, typeof(TypographyPage)),

@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:pages="clr-namespace:RevitLookup.UI.Playground.Client.Views.Pages"
+    xmlns:ui="http://revitlookup.com/xaml"
     mc:Ignorable="d"
     d:DesignHeight="700"
     d:DesignWidth="500"
@@ -13,14 +14,14 @@
 
     <StackPanel
         Margin="0 24">
-        <!-- <ui:TextBlock -->
-        <!--     Text="Updater module" -->
-        <!--     FontTypography="BodyStrong" /> -->
-        <!-- <ui:CardAction -->
-        <!--     Margin="0 8 0 0" -->
-        <!--     Icon="{ui:SymbolIcon ArrowCircleDown24}" -->
-        <!--     Content="Updater window" -->
-        <!--     Command="{Binding ViewModel.ShowUpdaterCommand}" /> -->
+        <ui:TextBlock
+            Text="Application"
+            FontTypography="BodyStrong" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon AirplaneTakeOff24}"
+            Content="RevitLookup window"
+            Command="{Binding ViewModel.ShowRevitLookupWindowCommand}" />
     </StackPanel>
 
 </Page>

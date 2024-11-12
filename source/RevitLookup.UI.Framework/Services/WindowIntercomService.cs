@@ -7,21 +7,34 @@ namespace RevitLookup.UI.Framework.Services;
 public sealed class WindowIntercomService : IWindowIntercomService
 {
     private Window? _host;
+    private static readonly List<Window> SharedWindows = [];
 
-    public Window Host
+    public void SetHost(Window host)
+    {
+        _host = host;
+    }
+
+    public void SetSharedHost(Window host)
+    {
+        SetHost(host);
+        SharedWindows.Add(host);
+        host.Closed += (sender, _) => { SharedWindows.Remove((Window)sender!); };
+    }
+
+    public List<Window> OpenedWindows => SharedWindows;
+
+    public Window GetHost()
+    {
+        if (_host is null) throw new InvalidOperationException("The Host was never set.");
+        return _host;
+    }
+
+    public Dispatcher Dispatcher
     {
         get
         {
             if (_host is null) throw new InvalidOperationException("The Host was never set.");
-            return _host;
+            return _host.Dispatcher;
         }
-        private set => _host = value;
-    }
-
-    public Dispatcher Dispatcher => Host.Dispatcher;
-
-    public void SetHost(Window host)
-    {
-        Host = host;
     }
 }

@@ -1,0 +1,38 @@
+﻿using Bogus;
+using RevitLookup.Abstractions.Services;
+
+namespace RevitLookup.UI.Playground.Services;
+
+public sealed class MockSoftwareUpdateService : ISoftwareUpdateService
+{
+    public string? NewVersion { get; private set; }
+    public string? ReleaseNotesUrl { get; private set; }
+    public string? LocalFilePath { get; private set; }
+    public string? LatestCheckDate { get; private set; }
+
+    public async Task<bool> CheckUpdatesAsync()
+    {
+        await Task.Delay(1000);
+        LatestCheckDate = DateTime.Now.ToString("yyyy.MM.dd HH:mm:ss");
+
+        var faker = new Faker();
+        var factor = faker.Random.Int(0, 100);
+        if (factor < 20) throw new OperationCanceledException();
+        if (factor < 50) return false;
+
+        NewVersion = faker.System.Version().ToString(3);
+        ReleaseNotesUrl = "https://github.com/";
+        LocalFilePath = faker.System.FilePath().OrNull(faker);
+
+        return true;
+    }
+
+    public async Task DownloadUpdate()
+    {
+        await Task.Delay(1000);
+
+        var faker = new Faker();
+        var factor = faker.Random.Int(0, 100);
+        if (factor < 60) throw new OperationCanceledException();
+    }
+}

@@ -133,7 +133,7 @@
                                 Appearance="Secondary"
                                 FontTypography="Caption"
                                 TextTrimming="CharacterEllipsis"
-                                Text="Integrate the RevitLookup panel on the Modify tab" />
+                                Text="Integrate the RevitLookup panel into the Modify tab" />
                         </StackPanel>
                     </rl:CardControl.Header>
                     <rl:ToggleSwitch
@@ -157,7 +157,7 @@
                                 Appearance="Secondary"
                                 FontTypography="Caption"
                                 TextTrimming="CharacterEllipsis"
-                                Text="Reset RevitLookup settings to default" />
+                                Text="Reset application settings to default" />
                         </StackPanel>
                     </rl:CardAction.Content>
                 </rl:CardAction>

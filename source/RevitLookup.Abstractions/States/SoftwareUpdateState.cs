@@ -23,8 +23,7 @@ namespace RevitLookup.Abstractions.States;
 public enum SoftwareUpdateState
 {
     UpToDate,
-    ErrorDownloading,
-    ErrorChecking,
     ReadyToDownload,
-    ReadyToInstall
+    ReadyToInstall,
+    Error
 }

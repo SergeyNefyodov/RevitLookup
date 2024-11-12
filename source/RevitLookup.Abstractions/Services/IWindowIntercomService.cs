@@ -6,7 +6,9 @@ namespace RevitLookup.Abstractions.Services;
 public interface IWindowIntercomService
 {
     Dispatcher Dispatcher { get; }
-    Window Host { get; }
+    List<Window> OpenedWindows { get; }
 
+    Window GetHost();
     void SetHost(Window host);
+    void SetSharedHost(Window host);
 }

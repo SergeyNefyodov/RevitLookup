@@ -18,29 +18,36 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Globalization;
-using System.Windows.Data;
-using System.Windows.Markup;
-using RevitLookup.Abstractions.States;
-using Visibility = System.Windows.Visibility;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
-namespace RevitLookup.UI.Framework.Converters.ValueConverters;
+namespace RevitLookup.UI.Framework.Views.Windows;
 
-public sealed class ErrorCardVisibilityConverter : MarkupExtension, IValueConverter
+public sealed partial class RevitLookupView
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    private void AddShortcuts()
     {
-        var state = (SoftwareUpdateState) value!;
-        return state is SoftwareUpdateState.ErrorChecking or SoftwareUpdateState.ErrorDownloading ? Visibility.Visible : Visibility.Collapsed;
+        AddCloseShortcut();
+        AddCloseAllShortcut();
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    private void AddCloseShortcut()
     {
-        throw new NotSupportedException();
+        var command = new RelayCommand(Close);
+        InputBindings.Add(new KeyBinding(command, new KeyGesture(Key.Escape)));
     }
 
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    private void AddCloseAllShortcut()
     {
-        return this;
+        var command = new RelayCommand(() =>
+        {
+            for (var i = _intercomService.OpenedWindows.Count - 1; i >= 0; i--)
+            {
+                var window = _intercomService.OpenedWindows[i];
+                window.Close();
+            }
+        });
+
+        InputBindings.Add(new KeyBinding(command, new KeyGesture(Key.Escape, ModifierKeys.Shift)));
     }
 }

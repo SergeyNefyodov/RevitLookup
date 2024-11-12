@@ -8,6 +8,7 @@
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
     xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
     xmlns:aboutProgram="clr-namespace:RevitLookup.UI.Framework.Views.AboutProgram"
+    xmlns:states="clr-namespace:RevitLookup.Abstractions.States;assembly=RevitLookup.Abstractions"
     mc:Ignorable="d"
     d:DesignWidth="800"
     d:DataContext="{d:DesignInstance aboutProgram:AboutPage}"
@@ -59,23 +60,24 @@
                     <rl:CardControl.Header>
                         <StackPanel>
                             <TextBlock
-                                VerticalAlignment="Center"
                                 Text="{Binding ViewModel.CurrentVersion, FallbackValue='1.0.0'}" />
                             <TextBlock
-                                VerticalAlignment="Center"
                                 Visibility="{Binding ViewModel.LatestCheckDate, Converter={converters:StringVisibilityConverter}}"
                                 Text="{Binding ViewModel.LatestCheckDate, StringFormat='Latest check: {0}', FallbackValue='Latest check: 2030.01.01'}" />
                             <rl:HyperlinkButton
                                 Margin="0 3 0 0"
                                 Padding="0"
                                 Content="Release Notes"
+                                TextElement.FontSize="12"
                                 NavigateUri="https://github.com/jeremytammik/RevitLookup/releases" />
                         </StackPanel>
                     </rl:CardControl.Header>
                 </rl:CardControl>
                 <rl:CardControl
                     Margin="0,4,0,0"
-                    Visibility="{Binding ViewModel.State, Converter={valueConverters:UpdateAvailableCardVisibilityConverter}}">
+                    Visibility="{Binding ViewModel.State, 
+                        Converter={valueConverters:SoftwareUpdateStateCollapsedVisibilityConverter},
+                        ConverterParameter={x:Static states:SoftwareUpdateState.ReadyToDownload}}">
                     <StackPanel
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
@@ -110,12 +112,11 @@
                                 FontSize="16"
                                 Symbol="CheckmarkCircle24"
                                 Foreground="{DynamicResource InfoBarSuccessSeverityIconBackground}" />
-                            <TextBlock
+                            <rl:TextBlock
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Margin="20,0,0,0"
-                                FontWeight="Medium"
-                                VerticalAlignment="Center"
+                                FontTypography="BodyStrong"
                                 Text="An update is available" />
                             <StackPanel
                                 Grid.Row="1"
@@ -124,7 +125,6 @@
                                 Orientation="Horizontal">
                                 <TextBlock
                                     Margin="10,0,0,0"
-                                    VerticalAlignment="Center"
                                     Text="{Binding ViewModel.NewVersion, FallbackValue='1.0.0'}" />
                                 <rl:HyperlinkButton
                                     Margin="10,0,0,0"
@@ -135,65 +135,34 @@
                         </Grid>
                     </rl:CardControl.Header>
                 </rl:CardControl>
-                <rl:Card
+                <rl:InfoBar
+                    Severity="Success"
+                    Message="The new version has been downloaded and will be installed when Revit is closed"
                     Margin="0 4 0 0"
-                    Background="{DynamicResource PaletteGreenBrush}"
-                    Visibility="{Binding ViewModel.State, Converter={valueConverters:UpdateDownloadedVisibilityConverter}}">
-                    <DockPanel
-                        Margin="8,0,0,0">
-                        <rl:SymbolIcon
-                            Symbol="CheckmarkCircle24"
-                            Foreground="White" />
-                        <rl:TextBlock
-                            Margin="20,0,0,0"
-                            Foreground="White"
-                            TextWrapping="WrapWithOverflow"
-                            Text="The new version has been downloaded and will be installed when Revit is closed" />
-                    </DockPanel>
-                </rl:Card>
-                <rl:Card
+                    IsOpen="{Binding ViewModel.State, 
+                        Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
+                        ConverterParameter={x:Static states:SoftwareUpdateState.ReadyToInstall},
+                        FallbackValue=True}">
+                </rl:InfoBar>
+                <rl:InfoBar
+                    Severity="Success"
                     Margin="0,4,0,0"
-                    Background="{DynamicResource PaletteGreenBrush}">
-                    <rl:Card.Visibility>
-                        <MultiBinding
-                            Converter="{valueConverters:UpToDateVisibilityConverter}">
-                            <Binding
-                                Path="ViewModel.State" />
-                            <Binding
-                                Path="ViewModel.CheckUpdatesCommand.IsRunning" />
-                            <Binding
-                                Path="ViewModel.IsUpdateChecked" />
-                        </MultiBinding>
-                    </rl:Card.Visibility>
-                    <DockPanel
-                        Margin="4,0,0,0">
-                        <rl:SymbolIcon
-                            FontSize="16"
-                            Foreground="White"
-                            Symbol="CheckmarkCircle24" />
-                        <rl:TextBlock
-                            Margin="20,0,0,0"
-                            Foreground="White"
-                            Text="RevitLookup is up to date" />
-                    </DockPanel>
-                </rl:Card>
-                <rl:Card
+                    Message="RevitLookup is up to date"
+                    IsOpen="{Binding ViewModel.State, 
+                        Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
+                        ConverterParameter={x:Static states:SoftwareUpdateState.UpToDate},
+                        FallbackValue=True}">
+                </rl:InfoBar>
+                <rl:InfoBar
                     Margin="0,4,0,0"
-                    Background="{DynamicResource PaletteRedBrush}"
-                    Visibility="{Binding ViewModel.State, Converter={valueConverters:ErrorCardVisibilityConverter}}">
-                    <DockPanel
-                        Margin="4,0,0,0">
-                        <rl:SymbolIcon
-                            FontSize="16"
-                            Foreground="White"
-                            Symbol="ErrorCircle24" />
-                        <rl:TextBlock
-                            Margin="20,0,0,0"
-                            Foreground="White"
-                            TextWrapping="WrapWithOverflow"
-                            Text="{Binding ViewModel.ErrorMessage, FallbackValue='Error message'}" />
-                    </DockPanel>
-                </rl:Card>
+                    Severity="Error"
+                    Message="{Binding ViewModel.ErrorMessage, 
+                        FallbackValue='Error message'}"
+                    IsOpen="{Binding ViewModel.State, 
+                        Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
+                        ConverterParameter={x:Static states:SoftwareUpdateState.Error},
+                        FallbackValue=True}">
+                </rl:InfoBar>
                 <rl:TextBlock
                     Margin="0,12,0,0"
                     FontTypography="Caption"

@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!--XAML designer preview support-->
         <ApplicationDefinition Remove="App.xaml"/>
         <Page Include="App.xaml"/>
     </ItemGroup>
@@ -16,13 +17,13 @@
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2024.*"/>
         <PackageReference Include="Microsoft.Extensions.Options" Version="8.*"/>
-        <PackageReference Include="System.Drawing.Common" Version="8.*" Condition="$(DefineConstants.Contains('NETCOREAPP'))"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.*"/>
+        <PackageReference Include="System.Drawing.Common" Version="8.*" Condition="$(DefineConstants.Contains('NETCOREAPP'))"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\RevitLookup.Abstractions\RevitLookup.Abstractions.csproj"/>
-        <ProjectReference Include="..\RevitLookup.Common\RevitLookup.Common.csproj" />
+        <ProjectReference Include="..\RevitLookup.Common\RevitLookup.Common.csproj"/>
         <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
     </ItemGroup>
 

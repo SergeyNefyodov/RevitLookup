@@ -1,6 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
+using RevitLookup.UI.Framework.Views.Windows;
 
 namespace RevitLookup.UI.Playground.Client.ViewModels.Pages;
 
@@ -8,9 +10,10 @@ namespace RevitLookup.UI.Playground.Client.ViewModels.Pages;
 public sealed partial class WindowsViewModel : ObservableObject
 {
     [RelayCommand]
-    private void ShowUpdater()
+    private void ShowRevitLookupWindow()
     {
-        // var view = Host.CreateScope<UpdaterView>();
-        // view.ShowDialog();
+        var view = Host.CreateScope<RevitLookupView>();
+        view.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        view.Show();
     }
 }

@@ -55,7 +55,6 @@
         </ui:NavigationView>
         <ui:TitleBar
             x:Name="TitleBar"
-            Height="40"
             Background="Transparent"
             Title="Playground"
             Icon="{ui:ImageIcon '/Client/Resources/Images/ProductIcon.png'}" />

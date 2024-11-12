@@ -4,6 +4,7 @@ using RevitLookup.Abstractions.Services;
 using RevitLookup.UI.Framework.Services;
 using RevitLookup.UI.Playground.Client.Services;
 using RevitLookup.UI.Playground.Config;
+using RevitLookup.UI.Playground.Services;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 
@@ -21,7 +22,7 @@ public static class Host
         var services = new ServiceCollection();
 
         services.AddSerializerOptions();
-        
+
         //Frontend services
         services.AddScoped<INavigationViewPageProvider, DependencyInjectionNavigationViewPageProvider>();
         services.AddScoped<INavigationService, NavigationService>();
@@ -29,10 +30,13 @@ public static class Host
         services.AddScoped<ISnackbarService, SnackbarService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IWindowIntercomService, WindowIntercomService>();
-        
+
         //MVVM services
         services.RegisterViews();
         services.RegisterViewModels();
+
+        //Services
+        services.AddSingleton<ISoftwareUpdateService, MockSoftwareUpdateService>();
 
         return services.BuildServiceProvider();
     }
