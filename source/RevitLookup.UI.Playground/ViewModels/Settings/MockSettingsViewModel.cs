@@ -27,6 +27,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Settings;
 using RevitLookup.UI.Framework.Views.Settings;
+using RevitLookup.UI.Framework.Views.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Animations;
 using Wpf.Ui.Appearance;
@@ -134,6 +135,17 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
     partial void OnUseSizeRestoringChanged(bool value)
     {
         _settingsService.GeneralSettings.UseSizeRestoring = value;
+
+        if (_intercomService.GetHost() is not RevitLookupView lookupView) return;
+
+        if (value)
+        {
+            lookupView.EnableSizeTracking();
+        }
+        else
+        {
+            lookupView.DisableSizeTracking();
+        }
     }
 
     partial void OnUseModifyTabChanged(bool value)
@@ -143,6 +155,7 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
 
     private void ApplySettings()
     {
+        //TODO disable for initialization
         Theme = _settingsService.GeneralSettings.Theme;
         Background = _settingsService.GeneralSettings.Background;
         UseTransition = _settingsService.GeneralSettings.Transition != Transition.None;

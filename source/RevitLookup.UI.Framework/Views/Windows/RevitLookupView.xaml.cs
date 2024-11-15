@@ -21,6 +21,7 @@
 using System.Windows;
 using RevitLookup.Abstractions.Services;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
 
 namespace RevitLookup.UI.Framework.Views.Windows;
 
@@ -42,20 +43,17 @@ public sealed partial class RevitLookupView
         _updateService = updateService;
         _settingsService = settingsService;
 
-        // RootNavigation.TransitionDuration = _settings.TransitionDuration;
-        // WindowBackdropType = _settings.Background;
-
         InitializeComponent();
-        AddShortcuts();
-        AddBadges();
 
         intercomService.SetSharedHost(this);
         navigationService.SetNavigationControl(RootNavigation);
         dialogService.SetDialogHost(RootContentDialog);
         snackbarService.SetSnackbarPresenter(RootSnackbar);
 
-        // ApplyTheme();
-        // RestoreSize();
+        AddShortcuts();
+        AddBadges();
+        ApplyTheme();
+        ApplyWindowSize();
     }
 
     private void AddBadges()
@@ -65,46 +63,38 @@ public sealed partial class RevitLookupView
 
         UpdatesNotifier.Visibility = Visibility.Visible;
     }
-//     private void ApplyTheme()
-//     {
-//         if (_settings.Theme == ApplicationTheme.Auto)
-//         {
-// #if REVIT2024_OR_GREATER
-//             RevitThemeWatcher.Watch(_settings.Background);
-// #else
-//             throw new NotSupportedException("Auto theme is not supported for current Revit version");
-// #endif
-//         }
-//         else
-//         {
-//             ApplicationThemeManager.Apply(_settings.Theme, _settings.Background);
-//         }
-//     }
 
-    // private void RestoreSize()
-    // {
-    //     if (!_settings.UseSizeRestoring) return;
-    //
-    //     if (_settings.WindowWidth >= MinWidth) Width = _settings.WindowWidth;
-    //     if (_settings.WindowHeight >= MinHeight) Height = _settings.WindowHeight;
-    //
-    //     EnableSizeTracking();
-    // }
+    private void ApplyTheme()
+    {
+        WindowBackdropType = _settingsService.GeneralSettings.Background;
+        RootNavigation.Transition = _settingsService.GeneralSettings.Transition;
+        ApplicationThemeManager.Apply(_settingsService.GeneralSettings.Theme, _settingsService.GeneralSettings.Background);
+    }
 
-    //
-    // public void EnableSizeTracking()
-    // {
-    //     SizeChanged += OnSizeChanged;
-    // }
-    //
-    // public void DisableSizeTracking()
-    // {
-    //     SizeChanged -= OnSizeChanged;
-    // }
-    //
-    // private void OnSizeChanged(object sender, SizeChangedEventArgs args)
-    // {
-    //     _settings.WindowWidth = args.NewSize.Width;
-    //     _settings.WindowHeight = args.NewSize.Height;
-    // }
+    private void ApplyWindowSize()
+    {
+        if (!_settingsService.GeneralSettings.UseSizeRestoring) return;
+
+        if (_settingsService.GeneralSettings.WindowWidth >= MinWidth) Width = _settingsService.GeneralSettings.WindowWidth;
+        if (_settingsService.GeneralSettings.WindowHeight >= MinHeight) Height = _settingsService.GeneralSettings.WindowHeight;
+
+        EnableSizeTracking();
+    }
+
+    public void EnableSizeTracking()
+    {
+        SizeChanged += OnSizeChanged;
+    }
+
+    public void DisableSizeTracking()
+    {
+        SizeChanged -= OnSizeChanged;
+    }
+
+    private static void OnSizeChanged(object sender, SizeChangedEventArgs args)
+    {
+        var self = (RevitLookupView)sender;
+        self._settingsService.GeneralSettings.WindowWidth = args.NewSize.Width;
+        self._settingsService.GeneralSettings.WindowHeight = args.NewSize.Height;
+    }
 }

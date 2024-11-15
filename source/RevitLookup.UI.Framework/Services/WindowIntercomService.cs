@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Threading;
+using JetBrains.Annotations;
 using RevitLookup.Abstractions.Services;
 
 namespace RevitLookup.UI.Framework.Services;
@@ -23,6 +24,7 @@ public sealed class WindowIntercomService : IWindowIntercomService
 
     public List<Window> OpenedWindows => SharedWindows;
 
+    [Pure]
     public Window GetHost()
     {
         if (_host is null) throw new InvalidOperationException("The Host was never set.");
