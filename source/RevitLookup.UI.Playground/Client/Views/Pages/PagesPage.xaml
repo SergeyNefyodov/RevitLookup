@@ -19,6 +19,11 @@
             FontTypography="BodyStrong" />
         <ui:CardAction
             Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon AppGeneric24}"
+            Content="Dashboard page"
+            Command="{Binding ViewModel.ShowDashboardPageCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon Settings24}"
             Content="Settings page"
             Command="{Binding ViewModel.ShowSettingsPageCommand}" />

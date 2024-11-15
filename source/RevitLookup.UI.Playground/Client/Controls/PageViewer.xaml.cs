@@ -36,12 +36,19 @@ public sealed partial class PageViewer
     private void OnViewerFrameResized(object sender, SizeChangedEventArgs args)
     {
         if (args.PreviousSize.Height == 0 || args.PreviousSize.Width == 0) return;
-        
+
         var self = (Frame)sender;
         self.SizeChanged -= OnViewerFrameResized;
 
         //Move the owner to the screen center after navigation
-        Left -= (ActualWidth - MinWidth) / 2;
-        Top -= (ActualHeight - MinHeight) / 2;
+        if (SizeToContent is SizeToContent.WidthAndHeight or SizeToContent.Width)
+        {
+            Left -= (ActualWidth - MinWidth) / 2;
+        }
+
+        if (SizeToContent is SizeToContent.WidthAndHeight or SizeToContent.Height)
+        {
+            Top -= (ActualHeight - MinHeight) / 2;
+        }
     }
 }

@@ -7,6 +7,7 @@
     xmlns:rl="http://revitlookup.com/xaml"
     xmlns:settings="clr-namespace:RevitLookup.UI.Framework.Views.Settings"
     xmlns:aboutProgram="clr-namespace:RevitLookup.UI.Framework.Views.AboutProgram"
+    xmlns:dashboard="clr-namespace:RevitLookup.UI.Framework.Views.Dashboard"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="200"
@@ -31,10 +32,10 @@
             BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
             TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
             <rl:NavigationView.MenuItems>
-                <!-- <rl:NavigationViewItem -->
-                <!--     Content="Dashboard" -->
-                <!--     TargetPageType="{x:Type pages:DashboardPage}" -->
-                <!--     Icon="{rl:SymbolIcon AppGeneric24}" /> -->
+                <rl:NavigationViewItem
+                    Content="Dashboard"
+                    TargetPageType="{x:Type dashboard:DashboardPage}"
+                    Icon="{rl:SymbolIcon AppGeneric24}" />
                 <!-- <rl:NavigationViewItem -->
                 <!--     Content="Snoop summary" -->
                 <!--     TargetPageType="{x:Type pages:SnoopPage}" -->
