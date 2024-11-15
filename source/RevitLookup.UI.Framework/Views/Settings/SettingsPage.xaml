@@ -21,9 +21,19 @@
                 Text="User interface" />
             <StackPanel>
                 <rl:CardControl
-                    Header="Theme"
                     Icon="{rl:SymbolIcon Color24}"
                     Margin="0,8,0,0">
+                    <rl:CardControl.Header>
+                        <StackPanel>
+                            <rl:TextBlock
+                                Text="Theme" />
+                            <rl:TextBlock
+                                Appearance="Secondary"
+                                FontTypography="Caption"
+                                TextTrimming="CharacterEllipsis"
+                                Text="Customise the application theme" />
+                        </StackPanel>
+                    </rl:CardControl.Header>
                     <ComboBox
                         MinWidth="150"
                         IsEnabled="True"

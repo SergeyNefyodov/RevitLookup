@@ -18,12 +18,15 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using System.Runtime;
 using System.Text;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using RevitLookup.Abstractions.Options;
 using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.States;
 using RevitLookup.Abstractions.ViewModels.AboutProgram;
@@ -45,20 +48,18 @@ public sealed partial class MockAboutViewModel : ObservableObject, IAboutViewMod
     [ObservableProperty] private string? _errorMessage;
     [ObservableProperty] private string _runtime;
 
-    public MockAboutViewModel(IServiceProvider serviceProvider, ISoftwareUpdateService updateService)
+    public MockAboutViewModel(IServiceProvider serviceProvider, ISoftwareUpdateService updateService, IOptions<AssemblyOptions> assemblyOptions)
     {
         _serviceProvider = serviceProvider;
         _updateService = updateService;
 
-        var faker = new Faker();
-        CurrentVersion = faker.System.Version();
+        CurrentVersion = assemblyOptions.Value.Version;
         Runtime = new StringBuilder()
-            .Append(".NET")
-            .Append(faker.Random.Int(1, 10))
+            .Append(assemblyOptions.Value.Framework)
             .Append(' ')
-            .Append(faker.Random.Bool() ? "x64" : "x86")
+            .Append(Environment.Is64BitProcess ? "x64" : "x86")
             .Append(" (")
-            .Append(faker.Random.Bool() ? "Server" : "Workstation")
+            .Append(GCSettings.IsServerGC ? "Server" : "Workstation")
             .Append(" GC)")
             .ToString();
 

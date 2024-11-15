@@ -28,20 +28,20 @@ public sealed partial class RevitLookupView
 {
     private readonly IWindowIntercomService _intercomService;
     private readonly ISoftwareUpdateService _updateService;
-    // private readonly GeneralSettings _settings;
+    private readonly ISettingsService _settingsService;
 
     public RevitLookupView(
-            INavigationService navigationService,
-            IContentDialogService dialogService,
-            ISnackbarService snackbarService,
-            IWindowIntercomService intercomService,
-            ISoftwareUpdateService updateService)
-        // ISettingsService settingsService,
+        INavigationService navigationService,
+        IContentDialogService dialogService,
+        ISnackbarService snackbarService,
+        IWindowIntercomService intercomService,
+        ISoftwareUpdateService updateService,
+        ISettingsService settingsService)
     {
         _intercomService = intercomService;
         _updateService = updateService;
+        _settingsService = settingsService;
 
-        // _settings = settingsService.GeneralSettings;
         // RootNavigation.TransitionDuration = _settings.TransitionDuration;
         // WindowBackdropType = _settings.Background;
 

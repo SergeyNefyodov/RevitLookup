@@ -26,8 +26,8 @@
             x:Name="RootNavigation"
             IsBackButtonVisible="Collapsed"
             PaneDisplayMode="Left"
-            IsPaneOpen="False"
             OpenPaneLength="160"
+            IsPaneOpen="False"
             BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
             TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
             <rl:NavigationView.MenuItems>

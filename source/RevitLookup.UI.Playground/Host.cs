@@ -21,6 +21,11 @@ public static class Host
     {
         var services = new ServiceCollection();
 
+        services.AddLogging(builder => builder.AddSerilogConfiguration());
+
+        services.AddApplicationOptions();
+        services.AddAssemblyOptions();
+        services.AddFolderOptions();
         services.AddSerializerOptions();
 
         //Frontend services
@@ -37,6 +42,7 @@ public static class Host
 
         //Services
         services.AddSingleton<ISoftwareUpdateService, MockSoftwareUpdateService>();
+        services.AddSingleton<ISettingsService, MockSettingsService>();
 
         return services.BuildServiceProvider();
     }

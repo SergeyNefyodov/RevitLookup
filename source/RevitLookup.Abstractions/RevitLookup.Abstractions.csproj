@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>
+        <PackageReference Include="System.Text.Json" Version="9.*" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
         <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
     </ItemGroup>
 

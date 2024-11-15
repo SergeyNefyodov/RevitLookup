@@ -18,6 +18,8 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using System.Windows.Interop;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
@@ -26,14 +28,21 @@ using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Settings;
 using RevitLookup.UI.Framework.Views.Settings;
 using Wpf.Ui;
+using Wpf.Ui.Animations;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace RevitLookup.UI.Playground.ViewModels.Settings;
 
 [UsedImplicitly]
-public sealed partial class MockSettingsViewModel(IServiceProvider serviceProvider, INotificationService notificationService) : ObservableObject, ISettingsViewModel
+public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsViewModel
 {
+    private readonly IServiceProvider _serviceProvider;
+    private readonly INavigationService _navigationService;
+    private readonly INotificationService _notificationService;
+    private readonly ISettingsService _settingsService;
+    private readonly IWindowIntercomService _intercomService;
+
     [ObservableProperty] private ApplicationTheme _theme;
     [ObservableProperty] private WindowBackdropType _background;
 
@@ -41,6 +50,22 @@ public sealed partial class MockSettingsViewModel(IServiceProvider serviceProvid
     [ObservableProperty] private bool _useHardwareRendering;
     [ObservableProperty] private bool _useSizeRestoring;
     [ObservableProperty] private bool _useModifyTab;
+
+    public MockSettingsViewModel(
+        IServiceProvider serviceProvider,
+        INavigationService navigationService,
+        INotificationService notificationService,
+        ISettingsService settingsService,
+        IWindowIntercomService intercomService)
+    {
+        _serviceProvider = serviceProvider;
+        _navigationService = navigationService;
+        _notificationService = notificationService;
+        _settingsService = settingsService;
+        _intercomService = intercomService;
+
+        ApplySettings();
+    }
 
     public List<ApplicationTheme> Themes { get; } =
     [
@@ -61,11 +86,68 @@ public sealed partial class MockSettingsViewModel(IServiceProvider serviceProvid
     [RelayCommand]
     private async Task ResetSettings()
     {
-        var dialog = serviceProvider.GetRequiredService<ResetSettingsDialog>();
-        var result = await dialog.ShowAsync();
-        if (result != ContentDialogResult.Primary) return;
+        try
+        {
+            var dialog = _serviceProvider.GetRequiredService<ResetSettingsDialog>();
+            var result = await dialog.ShowAsync();
+            if (result != ContentDialogResult.Primary) return;
 
-        notificationService.ShowSuccess("Reset was successful", "Some changes will be applied after closing the window");
-        await Task.CompletedTask;
+            _settingsService.ResetSettings();
+            ApplySettings();
+            _notificationService.ShowSuccess("Reset settings", "Settings successfully reset to default");
+        }
+        catch (Exception exception)
+        {
+            _notificationService.ShowError("Reset settings error", exception);
+        }
+    }
+
+    partial void OnThemeChanged(ApplicationTheme value)
+    {
+        _settingsService.GeneralSettings.Theme = value;
+        ApplicationThemeManager.Apply(value, Background);
+    }
+
+    partial void OnBackgroundChanged(WindowBackdropType value)
+    {
+        _settingsService.GeneralSettings.Background = value;
+        ApplicationThemeManager.Apply(Theme, value);
+    }
+
+    partial void OnUseTransitionChanged(bool value)
+    {
+        var navigationControl = _navigationService.GetNavigationControl();
+        var transition = _settingsService.GeneralSettings.Transition = value
+            ? (Transition)NavigationView.TransitionProperty.DefaultMetadata.DefaultValue
+            : Transition.None;
+
+        _settingsService.GeneralSettings.Transition = transition;
+        navigationControl.Transition = transition;
+    }
+
+    partial void OnUseHardwareRenderingChanged(bool value)
+    {
+        _settingsService.GeneralSettings.UseHardwareRendering = value;
+        RenderOptions.ProcessRenderMode = value ? RenderMode.Default : RenderMode.SoftwareOnly;
+    }
+
+    partial void OnUseSizeRestoringChanged(bool value)
+    {
+        _settingsService.GeneralSettings.UseSizeRestoring = value;
+    }
+
+    partial void OnUseModifyTabChanged(bool value)
+    {
+        _settingsService.GeneralSettings.UseModifyTab = value;
+    }
+
+    private void ApplySettings()
+    {
+        Theme = _settingsService.GeneralSettings.Theme;
+        Background = _settingsService.GeneralSettings.Background;
+        UseTransition = _settingsService.GeneralSettings.Transition != Transition.None;
+        UseHardwareRendering = _settingsService.GeneralSettings.UseHardwareRendering;
+        UseSizeRestoring = _settingsService.GeneralSettings.UseSizeRestoring;
+        UseModifyTab = _settingsService.GeneralSettings.UseModifyTab;
     }
 }
