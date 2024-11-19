@@ -58,7 +58,7 @@
         </ui:CardAction>
 
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon TabDesktop24}"
             Command="{Binding NavigateToPagesPageCommand}">
             <StackPanel>
@@ -72,7 +72,7 @@
         </ui:CardAction>
 
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon SlideText24}"
             Command="{Binding NavigateToDialogsPageCommand}">
             <StackPanel>

@@ -18,17 +18,22 @@
             Text="Navigation elements"
             FontTypography="BodyStrong" />
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon AppGeneric24}"
             Content="Dashboard page"
             Command="{Binding ViewModel.ShowDashboardPageCommand}" />
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon SlideSearch24}"
+            Content="Snoop summary page"
+            Command="{Binding ViewModel.ShowSnoopSummaryPageCommand}" />
+        <ui:CardAction
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Settings24}"
             Content="Settings page"
             Command="{Binding ViewModel.ShowSettingsPageCommand}" />
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Info24}"
             Content="About page"
             Command="{Binding ViewModel.ShowAboutPageCommand}" />
