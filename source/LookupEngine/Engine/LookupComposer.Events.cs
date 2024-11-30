@@ -13,7 +13,7 @@ public sealed partial class LookupComposer
         var members = Subtype.GetEvents(bindingFlags);
         foreach (var member in members)
         {
-            WriteDecompositionResult(ReflexionFormater.FormatTypeName(member.EventHandlerType), member);
+            WriteDecompositionMember(ReflexionFormater.FormatTypeName(member.EventHandlerType ?? typeof(object)), member);
         }
     }
 }

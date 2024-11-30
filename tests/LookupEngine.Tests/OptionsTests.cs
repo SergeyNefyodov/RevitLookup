@@ -9,7 +9,7 @@ public sealed class LookupEngineTests
         var descriptors = LookupComposer.Decompose("Hello World");
 
         //Assert
-        await Assert.That(descriptors).IsNotEmpty();
+        await Assert.That(descriptors.Members).IsNotEmpty();
     }
 
     [Test]
@@ -26,7 +26,7 @@ public sealed class LookupEngineTests
         var optionalDescriptors = LookupComposer.Decompose("Hello World", options);
 
         //Assert
-        await Assert.That(() => optionalDescriptors.Count > defaultDescriptors.Count).ThrowsNothing();
+        await Assert.That(() => optionalDescriptors.Members.Count > defaultDescriptors.Members.Count).ThrowsNothing();
     }
 
     [Test]
@@ -46,7 +46,7 @@ public sealed class LookupEngineTests
         var optionalDescriptors = LookupComposer.Decompose(69, options);
 
         //Assert
-        await Assert.That(optionalDescriptors.Count(data => data.Value is string))
-            .IsGreaterThan(defaultDescriptors.Count(data => data.Value is string));
+        await Assert.That(optionalDescriptors.Members.Count(data => data.Value is string))
+            .IsGreaterThan(defaultDescriptors.Members.Count(data => data.Value is string));
     }
 }

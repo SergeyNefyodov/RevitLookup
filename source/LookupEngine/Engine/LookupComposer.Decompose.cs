@@ -26,11 +26,12 @@ namespace LookupEngine;
 
 public sealed partial class LookupComposer
 {
-    private List<DecompositionMemberData> DecomposeInstanceObject(object instance)
+    private DecomposedObject DecomposeInstanceObject(object instance)
     {
-        InputObject = instance;
         var objectType = instance.GetType();
         var objectTypeHierarchy = GetTypeHierarchy(objectType);
+        var instanceDescriptor = _options.TypeResolver.Invoke(instance, null);
+        _decomposedObject = CreateInstanceDecomposition(instance, objectType, instanceDescriptor);
 
         for (var i = objectTypeHierarchy.Count - 1; i >= 0; i--)
         {
@@ -53,22 +54,25 @@ public sealed partial class LookupComposer
         Subtype = objectType;
         AddEnumerableItems();
 
-        return _descriptors;
+        return _decomposedObject;
     }
 
-    private List<DecompositionMemberData> DecomposeStaticObject(Type objectType)
+    private DecomposedObject DecomposeStaticObject(Type objectType)
     {
         var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly;
         if (!_options.IgnorePrivateMembers) flags |= BindingFlags.NonPublic;
 
+        var staticDescriptor = _options.TypeResolver.Invoke(null, objectType);
+        _decomposedObject = CreateStaticDecomposition(objectType, staticDescriptor);
+
         Subtype = objectType;
-        SubtypeDescriptor = _options.TypeResolver.Invoke(null, Subtype);
+        SubtypeDescriptor = staticDescriptor;
 
         DecomposeFields(flags);
         DecomposeProperties(flags);
         DecomposeMethods(flags);
 
-        return _descriptors;
+        return _decomposedObject;
     }
 
     private List<Type> GetTypeHierarchy(Type inputType)

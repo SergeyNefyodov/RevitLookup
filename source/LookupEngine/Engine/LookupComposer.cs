@@ -30,45 +30,29 @@ namespace LookupEngine;
 public sealed partial class LookupComposer
 {
     private readonly DecomposeOptions _options;
-    private readonly List<DecompositionMemberData> _descriptors = new(32);
 
     private int _depth;
-    private object? _inputObject;
     private Type? _subtype;
     private Descriptor? _subtypeDescriptor;
+    private DecomposedObject? _decomposedObject;
 
     private LookupComposer(DecomposeOptions options)
     {
         _options = options;
     }
 
-    [Pure]
-    public static List<DecompositionMemberData> Decompose(object? value, DecomposeOptions? options = null)
-    {
-        if (value is null) return [];
-
-        options ??= DecomposeOptions.Default;
-        var composer = new LookupComposer(options);
-
-        return value switch
-        {
-            Type staticObjectType => composer.DecomposeStaticObject(staticObjectType),
-            _ => composer.DecomposeInstanceObject(value)
-        };
-    }
-
-    internal object InputObject
+    internal DecomposedObject DecomposedObject
     {
         get
         {
-            if (_inputObject is null)
+            if (_decomposedObject is null)
             {
-                EngineException.ThrowIfEngineNotInitialized(nameof(InputObject));
+                EngineException.ThrowIfEngineNotInitialized(nameof(DecomposedObject));
             }
 
-            return _inputObject;
+            return _decomposedObject;
         }
-        set => _inputObject = value;
+        set => _decomposedObject = value;
     }
 
     internal Type Subtype
@@ -97,5 +81,20 @@ public sealed partial class LookupComposer
             return _subtypeDescriptor;
         }
         set => _subtypeDescriptor = value;
+    }
+
+    [Pure]
+    public static DecomposedObject Decompose(object? value, DecomposeOptions? options = null)
+    {
+        if (value is null) return CreateNullableDecomposition();
+
+        options ??= DecomposeOptions.Default;
+        var composer = new LookupComposer(options);
+
+        return value switch
+        {
+            Type staticObjectType => composer.DecomposeStaticObject(staticObjectType),
+            _ => composer.DecomposeInstanceObject(value)
+        };
     }
 }

@@ -35,7 +35,7 @@ public sealed partial class LookupComposer
             if (member.IsSpecialName) continue;
 
             var value = EvaluateValue(member);
-            WriteDecompositionResult(value, member);
+            WriteDecompositionMember(value, member);
         }
     }
 }

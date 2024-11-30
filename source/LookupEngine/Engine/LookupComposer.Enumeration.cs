@@ -27,14 +27,14 @@ public sealed partial class LookupComposer
 {
     private void AddEnumerableItems()
     {
-        if (InputObject is not IEnumerable enumerable) return;
+        if (DecomposedObject.Value is not IEnumerable enumerable) return;
 
         var enumerator = enumerable.GetEnumerator();
 
         var index = 0;
         while (enumerator.MoveNext())
         {
-            WriteEnumerableResult(enumerator.Current, index);
+            WriteEnumerableMember(enumerator.Current, index);
             index++;
         }
 

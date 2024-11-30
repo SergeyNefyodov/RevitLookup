@@ -55,7 +55,7 @@ public sealed partial class LookupComposer
                 value = exception;
             }
 
-            WriteDecompositionResult(value, member, parameters);
+            WriteDecompositionMember(value, member, parameters);
         }
     }
 

@@ -39,11 +39,11 @@ public sealed partial class LookupComposer : IExtensionManager
         try
         {
             var result = EvaluateValue(handler);
-            WriteExtensionResult(result, methodName);
+            WriteExtensionMember(result, methodName);
         }
         catch (Exception exception)
         {
-            WriteExtensionResult(exception, methodName);
+            WriteExtensionMember(exception, methodName);
         }
     }
 }

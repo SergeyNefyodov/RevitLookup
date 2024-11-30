@@ -21,6 +21,7 @@
 using System.Collections;
 using System.Reflection;
 using LookupEngine.Abstractions;
+using LookupEngine.Abstractions.ComponentModel;
 using LookupEngine.Abstractions.Enums;
 using LookupEngine.Formaters;
 
@@ -29,25 +30,61 @@ namespace LookupEngine;
 
 public sealed partial class LookupComposer
 {
-    private void WriteEnumerableResult(object? value, int index)
+    private static DecomposedObject CreateNullableDecomposition()
     {
-        var descriptor = new DecompositionMemberData
+        return new DecomposedObject
+        {
+            Name = $"{nameof(System)}.{nameof(Object)}",
+            Value = null,
+            Members = [],
+            Type = nameof(Object),
+            TypeFullName = $"{nameof(System)}.{nameof(Object)}"
+        };
+    }
+
+    private static DecomposedObject CreateInstanceDecomposition(object instance, Type type, Descriptor descriptor)
+    {
+        return new DecomposedObject
+        {
+            Name = descriptor.Name ?? type.Name,
+            Value = instance,
+            Type = ReflexionFormater.FormatTypeName(type),
+            TypeFullName = ReflexionFormater.FormatTypeFullName(type),
+            Members = new List<DecomposedMember>(32)
+        };
+    }
+
+    private static DecomposedObject CreateStaticDecomposition(Type type, Descriptor descriptor)
+    {
+        return new DecomposedObject
+        {
+            Name = descriptor.Name ?? type.Name,
+            Value = type,
+            Type = ReflexionFormater.FormatTypeName(type),
+            TypeFullName = ReflexionFormater.FormatTypeFullName(type),
+            Members = new List<DecomposedMember>(32)
+        };
+    }
+
+    private void WriteEnumerableMember(object? value, int index)
+    {
+        var member = new DecomposedMember
         {
             Depth = _depth,
             Value = value,
             // Value = RedirectValue(value),
             Name = $"{Subtype.Name}[{index}]",
-            TypeFullName = "System.Runtime.IEnumerable",
             MemberAttributes = MemberAttributes.Property,
-            Type = nameof(IEnumerable)
+            Type = nameof(IEnumerable),
+            TypeFullName = $"{nameof(System)}.{nameof(System.Collections)}.{nameof(IEnumerable)}",
         };
 
-        _descriptors.Add(descriptor);
+        DecomposedObject.Members.Add(member);
     }
 
-    private void WriteExtensionResult(object? value, string name)
+    private void WriteExtensionMember(object? value, string name)
     {
-        var descriptor = new DecompositionMemberData
+        var member = new DecomposedMember
         {
             Depth = _depth,
             Name = name,
@@ -60,24 +97,24 @@ public sealed partial class LookupComposer
             AllocatedBytes = _memoryDiagnoser.GetAllocatedBytes()
         };
 
-        _descriptors.Add(descriptor);
+        DecomposedObject.Members.Add(member);
     }
 
-    private void WriteDecompositionResult(object? value, MemberInfo member, ParameterInfo[]? parameters = null)
+    private void WriteDecompositionMember(object? value, MemberInfo memberInfo, ParameterInfo[]? parameters = null)
     {
-        var descriptor = new DecompositionMemberData
+        var member = new DecomposedMember
         {
             Depth = _depth,
             Value = value,
             // Value = RedirectValue(member, value),
-            Name = ReflexionFormater.FormatMemberName(member, parameters),
+            Name = ReflexionFormater.FormatMemberName(memberInfo, parameters),
             Type = ReflexionFormater.FormatTypeName(Subtype),
             TypeFullName = ReflexionFormater.FormatTypeFullName(Subtype),
-            MemberAttributes = ModifiersFormater.FormatAttributes(member),
+            MemberAttributes = ModifiersFormater.FormatAttributes(memberInfo),
             ComputationTime = _timeDiagnoser.GetElapsed().TotalMilliseconds,
             AllocatedBytes = _memoryDiagnoser.GetAllocatedBytes()
         };
 
-        _descriptors.Add(descriptor);
+        DecomposedObject.Members.Add(member);
     }
 }

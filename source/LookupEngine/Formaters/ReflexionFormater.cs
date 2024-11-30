@@ -4,9 +4,8 @@ namespace LookupEngine.Formaters;
 
 public static class ReflexionFormater
 {
-    public static string FormatTypeName(Type? type)
+    public static string FormatTypeName(Type type)
     {
-        if (type is null) return string.Empty;
         if (!type.IsGenericType) return type.Name;
 
         var typeName = type.Name;
@@ -24,10 +23,10 @@ public static class ReflexionFormater
         return typeName;
     }
 
-    public static string? FormatTypeFullName(Type type)
+    public static string FormatTypeFullName(Type type)
     {
         var fullName = type.FullName;
-        if (fullName is null) return null;
+        if (fullName is null) return string.Empty;
 
         return type.IsGenericType ? fullName[..fullName.IndexOf('[')] : fullName;
     }
