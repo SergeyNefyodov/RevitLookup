@@ -2,9 +2,6 @@
 
     <PropertyGroup>
         <UseWpf>true</UseWpf>
-        <Nullable>enable</Nullable>
-        <LangVersion>latest</LangVersion>
-        <ImplicitUsings>enable</ImplicitUsings>
         <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
         <RootNamespace>Wpf.Ui.Abstractions</RootNamespace>
     </PropertyGroup>

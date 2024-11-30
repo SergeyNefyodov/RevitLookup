@@ -2,9 +2,6 @@
 
     <PropertyGroup>
         <UseWpf>true</UseWpf>
-        <Nullable>enable</Nullable>
-        <LangVersion>latest</LangVersion>
-        <ImplicitUsings>enable</ImplicitUsings>
         <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
     </PropertyGroup>
 
@@ -12,11 +9,6 @@
         <!--XAML designer preview support-->
         <ApplicationDefinition Remove="App.xaml"/>
         <Page Include="App.xaml"/>
-        <Page Update="Views\Dashboard\DashboardPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <XamlRuntime>Wpf</XamlRuntime>
-            <SubType>Designer</SubType>
-        </Page>
     </ItemGroup>
 
     <ItemGroup>
@@ -24,16 +16,13 @@
         <PackageReference Include="Microsoft.Extensions.Options" Version="8.*"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.*"/>
         <PackageReference Include="System.Drawing.Common" Version="8.*" Condition="$(DefineConstants.Contains('NETCOREAPP'))"/>
+        <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\RevitLookup.Abstractions\RevitLookup.Abstractions.csproj"/>
         <ProjectReference Include="..\RevitLookup.Common\RevitLookup.Common.csproj"/>
         <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="FallbackValues\"/>
     </ItemGroup>
 
     <ItemGroup>

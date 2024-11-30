@@ -2,9 +2,6 @@
 
     <PropertyGroup>
         <UseWpf>true</UseWpf>
-        <Nullable>enable</Nullable>
-        <LangVersion>latest</LangVersion>
-        <ImplicitUsings>enable</ImplicitUsings>
         <TargetFramework>net8.0-windows</TargetFramework>
     </PropertyGroup>
 

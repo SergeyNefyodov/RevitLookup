@@ -2,20 +2,20 @@
 
     <PropertyGroup>
         <UseWpf>true</UseWpf>
-        <Nullable>enable</Nullable>
         <OutputType>WinExe</OutputType>
-        <LangVersion>latest</LangVersion>
-        <ImplicitUsings>enable</ImplicitUsings>
         <TargetFramework>net8.0-windows</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\LookupEngine\LookupEngine.csproj"/>
         <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
         <ProjectReference Include="..\RevitLookup.UI.Framework\RevitLookup.UI.Framework.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Bogus" Version="35.*"/>
+
+        <!--IOC-->
         <PackageReference Include="Scrutor" Version="5.*"/>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*"/>
 
@@ -30,5 +30,5 @@
         <Resource Include="Client\Resources\Images\ProductLogo.png"/>
         <EmbeddedResource Include="Client\Models\FontIcons.json"/>
     </ItemGroup>
-    
+
 </Project>
