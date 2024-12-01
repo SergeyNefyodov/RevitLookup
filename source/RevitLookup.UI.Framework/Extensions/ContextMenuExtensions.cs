@@ -144,4 +144,11 @@ public static class ContextMenuExtensions
 
         return item;
     }
+
+    public static MenuItem SetStaysOpenOnClick(this MenuItem item, bool condition)
+    {
+        item.SetCurrentValue(MenuItem.StaysOpenOnClickProperty, condition);
+
+        return item;
+    }
 }

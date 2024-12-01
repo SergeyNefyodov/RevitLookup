@@ -36,6 +36,7 @@ public sealed partial class LookupComposer
         {
             WriteEnumerableMember(enumerator.Current, index);
             index++;
+            _depth--;
         }
 
         if (enumerator is IDisposable disposable)

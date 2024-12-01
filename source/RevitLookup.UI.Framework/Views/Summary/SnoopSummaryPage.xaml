@@ -57,7 +57,7 @@
                     VirtualizingPanel.VirtualizationMode="Recycling">
                 </rl:TreeView>
             </DockPanel>
-            <DataGrid
+            <rl:DataGrid
                 x:Name="SummaryDataGrid"
                 Grid.Column="2"
                 ColumnHeaderHeight="30"
@@ -170,7 +170,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
-            </DataGrid>
+            </rl:DataGrid>
         </Grid>
     </Grid>
 

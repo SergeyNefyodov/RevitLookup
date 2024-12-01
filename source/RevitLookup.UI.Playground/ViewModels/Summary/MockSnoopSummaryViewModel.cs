@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
 using LookupEngine;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
+using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.UI.Playground.Mappers;
 #if NETFRAMEWORK
@@ -23,18 +24,18 @@ public sealed partial class MockSnoopSummaryViewModel : ObservableObject, ISnoop
     [ObservableProperty] private List<ObservableDecomposedMember> _members = [];
     [ObservableProperty] private List<ObservableDecomposedMember> _filteredMembers = [];
 
-    public MockSnoopSummaryViewModel()
+    public MockSnoopSummaryViewModel(ISettingsService settingsService)
     {
         var globalFaker = new Faker();
         var strings = new Faker<string>()
-            .CustomInstantiator(faker => faker.Lorem.Sentence(400))
-            .GenerateBetween(0, 100);
+            .CustomInstantiator(faker => faker.Lorem.Sentence(40))
+            .GenerateBetween(1, 10);
 
-        var integers = Enumerable.Range(0, globalFaker.Random.Int(1, 100))
+        var integers = Enumerable.Range(0, globalFaker.Random.Int(1, 10))
             .Select(_ => globalFaker.Random.Int())
             .ToList();
 
-        var colors = Enumerable.Range(0, globalFaker.Random.Int(1, 100))
+        var colors = Enumerable.Range(0, globalFaker.Random.Int(1, 10))
             .Select(_ => Color.FromRgb(globalFaker.Random.Byte(), globalFaker.Random.Byte(), globalFaker.Random.Byte()))
             .ToList();
 
@@ -43,11 +44,25 @@ public sealed partial class MockSnoopSummaryViewModel : ObservableObject, ISnoop
         objects.AddRange(integers);
         objects.AddRange(colors);
 
-        DecomposedObjects = objects
-            .Cast<object>()
-            .Select(value => LookupComposer.Decompose(value))
-            .Select(DecompositionResultMapper.Convert)
-            .ToList();
+        var options = new DecomposeOptions
+        {
+            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
+            IncludeFields = settingsService.GeneralSettings.IncludeFields,
+            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
+            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
+            IgnorePrivateMembers = !settingsService.GeneralSettings.IncludePrivate,
+            IgnoreStaticMembers = !settingsService.GeneralSettings.IncludeStatic,
+            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions
+        };
+
+        var decomposedObjects = new List<ObservableDecomposedObject>();
+        foreach (var obj in objects)
+        {
+            var decomposedObject = LookupComposer.Decompose(obj, options);
+            decomposedObjects.Add(DecompositionResultMapper.Convert(decomposedObject));
+        }
+
+        DecomposedObjects = decomposedObjects;
     }
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)

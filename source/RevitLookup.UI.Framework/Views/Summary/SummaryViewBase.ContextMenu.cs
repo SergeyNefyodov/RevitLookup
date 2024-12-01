@@ -18,189 +18,199 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Microsoft.Extensions.Logging;
+using RevitLookup.Abstractions.ObservableModels.Decomposition;
+using RevitLookup.UI.Framework.Engine.Configuration;
+using RevitLookup.UI.Framework.Extensions;
+using RevitLookup.UI.Framework.Utils;
+using Wpf.Ui;
+
 namespace RevitLookup.UI.Framework.Views.Summary;
 
 public partial class SummaryViewBase
 {
-    // /// <summary>
-    // ///     Tree view context menu
-    // /// </summary>
-    // private void CreateTreeContextMenu(Descriptor descriptor, FrameworkElement row)
-    // {
-    //     var contextMenu = new ContextMenu
-    //     {
-    //         Resources = Resources,
-    //         PlacementTarget = row,
-    //         DataContext = ViewModel
-    //     };
-    //
-    //     row.ContextMenu = contextMenu;
-    //
-    //     contextMenu.AddMenuItem("CopyMenuItem")
-    //         .SetCommand(descriptor, parameter => Clipboard.SetDataObject(parameter.Name))
-    //         .SetShortcut(ModifierKeys.Control, Key.C);
-    //     contextMenu.AddMenuItem("HelpMenuItem")
-    //         .SetCommand(descriptor, parameter => HelpUtils.ShowHelp(parameter.TypeFullName))
-    //         .SetShortcut(Key.F1);
-    //
-    //     if (descriptor is not IDescriptorConnector connector) return;
-    //
-    //     try
-    //     {
-    //         connector.RegisterMenu(contextMenu);
-    //     }
-    //     catch (Exception exception)
-    //     {
-    //         var logger = ViewModel.ServiceProvider.GetRequiredService<ILogger<SnoopViewBase>>();
-    //         var notificationService = ViewModel.ServiceProvider.GetRequiredService<NotificationService>();
-    //
-    //         logger.LogError(exception, "RegisterMenu error");
-    //         notificationService.ShowError("RegisterMenu error", exception);
-    //     }
-    // }
+    /// <summary>
+    ///     Tree view context menu
+    /// </summary>
+    private void CreateTreeContextMenu(ObservableDecomposedObject decomposedObject, FrameworkElement row)
+    {
+        var contextMenu = new ContextMenu
+        {
+            PlacementTarget = row,
+            Resources = UiApplication.Current.Resources
+        };
 
-    // /// <summary>
-    // ///     Data grid context menu
-    // /// </summary>
-    // private void CreateGridContextMenu(DataGrid dataGrid)
-    // {
-    //     var contextMenu = new ContextMenu
-    //     {
-    //         Resources = Resources,
-    //         PlacementTarget = dataGrid,
-    //         DataContext = ViewModel
-    //     };
-    //
-    //     dataGrid.ContextMenu = contextMenu;
-    //
-    //     contextMenu.AddMenuItem("RefreshMenuItem")
-    //         .SetCommand(ViewModel.RefreshMembersCommand)
-    //         .SetGestureText(Key.F5);
-    //
-    //     contextMenu.AddSeparator();
-    //     contextMenu.AddLabel("Columns");
-    //
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Time")
-    //         .SetChecked(dataGrid.Columns[2].Visibility == Visibility.Visible)
-    //         .SetCommand(dataGrid.Columns[2], parameter =>
-    //         {
-    //             _settings.ShowTimeColumn = parameter.Visibility != Visibility.Visible;
-    //             parameter.Visibility = _settings.ShowTimeColumn ? Visibility.Visible : Visibility.Collapsed;
-    //         });
-    //
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Memory")
-    //         .SetChecked(dataGrid.Columns[3].Visibility == Visibility.Visible)
-    //         .SetCommand(dataGrid.Columns[3], parameter =>
-    //         {
-    //             _settings.ShowMemoryColumn = parameter.Visibility != Visibility.Visible;
-    //             parameter.Visibility = _settings.ShowMemoryColumn ? Visibility.Visible : Visibility.Collapsed;
-    //         });
-    //
-    //     contextMenu.AddSeparator();
-    //     contextMenu.AddLabel("Show");
-    //
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Events")
-    //         .SetChecked(_settings.IncludeEvents)
-    //         .SetCommand(_settings, parameter =>
-    //         {
-    //             parameter.IncludeEvents = !parameter.IncludeEvents;
-    //             return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
-    //         });
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Extensions")
-    //         .SetChecked(_settings.IncludeExtensions)
-    //         .SetCommand(_settings, parameter =>
-    //         {
-    //             parameter.IncludeExtensions = !parameter.IncludeExtensions;
-    //             return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
-    //         });
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Fields")
-    //         .SetChecked(_settings.IncludeFields)
-    //         .SetCommand(_settings, parameter =>
-    //         {
-    //             parameter.IncludeFields = !parameter.IncludeFields;
-    //             return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
-    //         });
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Non-public")
-    //         .SetChecked(_settings.IncludePrivate)
-    //         .SetCommand(_settings, parameter =>
-    //         {
-    //             parameter.IncludePrivate = !parameter.IncludePrivate;
-    //             return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
-    //         });
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Root")
-    //         .SetChecked(_settings.IncludeRootHierarchy)
-    //         .SetCommand(_settings, parameter =>
-    //         {
-    //             parameter.IncludeRootHierarchy = !parameter.IncludeRootHierarchy;
-    //             return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
-    //         });
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Static")
-    //         .SetChecked(_settings.IncludeStatic)
-    //         .SetCommand(_settings, parameter =>
-    //         {
-    //             parameter.IncludeStatic = !parameter.IncludeStatic;
-    //             return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
-    //         });
-    //     contextMenu.AddMenuItem()
-    //         .SetHeader("Unsupported")
-    //         .SetChecked(_settings.IncludeUnsupported)
-    //         .SetCommand(_settings, parameter =>
-    //         {
-    //             parameter.IncludeUnsupported = !parameter.IncludeUnsupported;
-    //             return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
-    //         });
-    // }
+        row.ContextMenu = contextMenu;
 
-    // /// <summary>
-    // ///     Data grid row context menu
-    // /// </summary>
-    // private void CreateGridRowContextMenu(Descriptor descriptor, FrameworkElement row)
-    // {
-    //     var contextMenu = new ContextMenu
-    //     {
-    //         Resources = Resources,
-    //         PlacementTarget = row,
-    //         DataContext = ViewModel
-    //     };
-    //
-    //     row.ContextMenu = contextMenu;
-    //
-    //     contextMenu.AddMenuItem("CopyMenuItem")
-    //         .SetCommand(descriptor, parameter => Clipboard.SetDataObject($"{parameter.Name}: {parameter.Value.Descriptor.Name}"))
-    //         .SetShortcut(ModifierKeys.Control, Key.C)
-    //         .SetAvailability(descriptor.Value.Descriptor.Name is not null);
-    //
-    //     contextMenu.AddMenuItem("CopyMenuItem")
-    //         .SetHeader("Copy value")
-    //         .SetCommand(descriptor, parameter => Clipboard.SetDataObject(parameter.Value.Descriptor.Name))
-    //         .SetShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.C)
-    //         .SetAvailability(descriptor.Value.Descriptor.Name is not null);
-    //
-    //     contextMenu.AddMenuItem("HelpMenuItem")
-    //         .SetCommand(descriptor, parameter => HelpUtils.ShowHelp(parameter.TypeFullName, parameter.Name))
-    //         .SetShortcut(Key.F1);
-    //
-    //     if (descriptor.Value.Descriptor is not IDescriptorConnector connector) return;
-    //
-    //     try
-    //     {
-    //         connector.RegisterMenu(contextMenu);
-    //     }
-    //     catch (Exception exception)
-    //     {
-    //         var logger = ViewModel.ServiceProvider.GetRequiredService<ILogger<SnoopViewBase>>();
-    //         var notificationService = ViewModel.ServiceProvider.GetRequiredService<NotificationService>();
-    //
-    //         logger.LogError(exception, "RegisterMenu error");
-    //         notificationService.ShowError("RegisterMenu error", exception);
-    //     }
-    // }
+        contextMenu.AddMenuItem("CopyMenuItem")
+            .SetCommand(decomposedObject, parameter => Clipboard.SetDataObject(parameter.Name))
+            .SetShortcut(ModifierKeys.Control, Key.C);
+        contextMenu.AddMenuItem("HelpMenuItem")
+            .SetCommand(decomposedObject, parameter => HelpUtils.ShowHelp(parameter.TypeFullName))
+            .SetShortcut(Key.F1);
+
+        if (decomposedObject.Descriptor is not IDescriptorConnector connector) return;
+
+        try
+        {
+            connector.RegisterMenu(contextMenu);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Failed to register the context menu");
+            _notificationService.ShowError("Failed to register the context menu", exception);
+        }
+    }
+
+    /// <summary>
+    ///     Data grid context menu
+    /// </summary>
+    private void CreateGridContextMenu(DataGrid dataGrid)
+    {
+        var contextMenu = new ContextMenu
+        {
+            PlacementTarget = dataGrid,
+            Resources = UiApplication.Current.Resources
+        };
+
+        dataGrid.ContextMenu = contextMenu;
+
+        contextMenu.AddMenuItem("RefreshMenuItem")
+            // .SetCommand(ViewModel.RefreshMembersCommand)
+            .SetGestureText(Key.F5);
+
+        contextMenu.AddSeparator();
+        contextMenu.AddLabel("Columns");
+
+        contextMenu.AddMenuItem()
+            .SetHeader("Time")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(dataGrid.Columns[2].Visibility == Visibility.Visible)
+            .SetCommand(dataGrid.Columns[2], parameter =>
+            {
+                _settingsService.GeneralSettings.ShowTimeColumn = parameter.Visibility != Visibility.Visible;
+                parameter.Visibility = _settingsService.GeneralSettings.ShowTimeColumn ? Visibility.Visible : Visibility.Collapsed;
+            });
+
+        contextMenu.AddMenuItem()
+            .SetHeader("Memory")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(dataGrid.Columns[3].Visibility == Visibility.Visible)
+            .SetCommand(dataGrid.Columns[3], parameter =>
+            {
+                _settingsService.GeneralSettings.ShowMemoryColumn = parameter.Visibility != Visibility.Visible;
+                parameter.Visibility = _settingsService.GeneralSettings.ShowMemoryColumn ? Visibility.Visible : Visibility.Collapsed;
+            });
+
+        contextMenu.AddSeparator();
+        contextMenu.AddLabel("Show");
+
+        contextMenu.AddMenuItem()
+            .SetHeader("Events")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(_settingsService.GeneralSettings.IncludeEvents)
+            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            {
+                parameter.IncludeEvents = !parameter.IncludeEvents;
+                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+            });
+        contextMenu.AddMenuItem()
+            .SetHeader("Extensions")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(_settingsService.GeneralSettings.IncludeExtensions)
+            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            {
+                parameter.IncludeExtensions = !parameter.IncludeExtensions;
+                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+            });
+        contextMenu.AddMenuItem()
+            .SetHeader("Fields")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(_settingsService.GeneralSettings.IncludeFields)
+            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            {
+                parameter.IncludeFields = !parameter.IncludeFields;
+                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+            });
+        contextMenu.AddMenuItem()
+            .SetHeader("Non-public")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(_settingsService.GeneralSettings.IncludePrivate)
+            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            {
+                parameter.IncludePrivate = !parameter.IncludePrivate;
+                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+            });
+        contextMenu.AddMenuItem()
+            .SetHeader("Root")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(_settingsService.GeneralSettings.IncludeRootHierarchy)
+            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            {
+                parameter.IncludeRootHierarchy = !parameter.IncludeRootHierarchy;
+                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+            });
+        contextMenu.AddMenuItem()
+            .SetHeader("Static")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(_settingsService.GeneralSettings.IncludeStatic)
+            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            {
+                parameter.IncludeStatic = !parameter.IncludeStatic;
+                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+            });
+        contextMenu.AddMenuItem()
+            .SetHeader("Unsupported")
+            .SetStaysOpenOnClick(true)
+            .SetChecked(_settingsService.GeneralSettings.IncludeUnsupported)
+            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            {
+                parameter.IncludeUnsupported = !parameter.IncludeUnsupported;
+                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+            });
+    }
+
+    /// <summary>
+    ///     Data grid row context menu
+    /// </summary>
+    private void CreateGridRowContextMenu(ObservableDecomposedMember member, FrameworkElement row)
+    {
+        var contextMenu = new ContextMenu
+        {
+            PlacementTarget = row,
+            Resources = UiApplication.Current.Resources,
+        };
+
+        row.ContextMenu = contextMenu;
+
+        contextMenu.AddMenuItem("CopyMenuItem")
+            .SetCommand(member, parameter => Clipboard.SetDataObject($"{parameter.Name}: {parameter.Value.Name}"))
+            .SetShortcut(ModifierKeys.Control, Key.C)
+            .SetAvailability(member.Value.Name != string.Empty);
+
+        contextMenu.AddMenuItem("CopyMenuItem")
+            .SetHeader("Copy value")
+            .SetCommand(member, parameter => Clipboard.SetDataObject(parameter.Value.Name))
+            .SetShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.C)
+            .SetAvailability(member.Value.Name != string.Empty);
+
+        contextMenu.AddMenuItem("HelpMenuItem")
+            .SetCommand(member, parameter => HelpUtils.ShowHelp(parameter.DeclaringTypeFullName, parameter.Name))
+            .SetShortcut(Key.F1);
+
+        if (member.Value.Descriptor is not IDescriptorConnector connector) return;
+
+        try
+        {
+            connector.RegisterMenu(contextMenu);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Failed to register the context menu");
+            _notificationService.ShowError("Failed to register the context menu", exception);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using JetBrains.Annotations;
+using LookupEngine.Abstractions.ComponentModel;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine.Abstractions;
@@ -13,4 +14,5 @@ public sealed class DecomposedObject
     public required string TypeName { get; set; }
     public required string TypeFullName { get; set; }
     public required List<DecomposedMember> Members { get; init; }
+    public Descriptor? Descriptor { get; init; }
 }

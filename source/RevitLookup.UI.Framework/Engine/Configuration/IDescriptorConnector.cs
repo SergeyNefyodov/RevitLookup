@@ -18,30 +18,14 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using Microsoft.Extensions.Logging;
-using RevitLookup.Abstractions.Services;
-using RevitLookup.Abstractions.ViewModels.Summary;
+using System.Windows.Controls;
 
-namespace RevitLookup.UI.Framework.Views.Summary;
+namespace RevitLookup.UI.Framework.Engine.Configuration;
 
-public sealed partial class SnoopSummaryPage
+/// <summary>
+///     Indicates that additional members can be added to the descriptor
+/// </summary>
+public interface IDescriptorConnector
 {
-    public SnoopSummaryPage(
-        ISnoopSummaryViewModel viewModel,
-        ISettingsService settingsService,
-        IWindowIntercomService intercomService,
-        INotificationService notificationService,
-        ILoggerFactory loggerFactory)
-        : base(settingsService, intercomService, notificationService, loggerFactory)
-
-    {
-        DataContext = this;
-        ViewModel = viewModel;
-        InitializeComponent();
-
-        SearchBoxControl = SummarySearchBox;
-        TreeViewControl = SummaryTreeView;
-        DataGridControl = SummaryDataGrid;
-        InitializeControls();
-    }
+    void RegisterMenu(ContextMenu contextMenu);
 }

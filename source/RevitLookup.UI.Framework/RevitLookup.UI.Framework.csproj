@@ -15,6 +15,7 @@
         <PackageReference Include="JetBrains.Annotations" Version="2024.*"/>
         <PackageReference Include="Microsoft.Extensions.Options" Version="8.*"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.*"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.*"/>
         <PackageReference Include="System.Drawing.Common" Version="8.*" Condition="$(DefineConstants.Contains('NETCOREAPP'))"/>
         <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
     </ItemGroup>

@@ -52,6 +52,7 @@ public sealed partial class LookupComposer
             RawValue = instance,
             TypeName = formatTypeName,
             TypeFullName = ReflexionFormater.FormatTypeFullName(type),
+            Descriptor = descriptor,
             Members = new List<DecomposedMember>(32)
         };
     }
@@ -66,6 +67,7 @@ public sealed partial class LookupComposer
             RawValue = type,
             TypeName = formatTypeName,
             TypeFullName = ReflexionFormater.FormatTypeFullName(type),
+            Descriptor = descriptor,
             Members = new List<DecomposedMember>(32)
         };
     }
@@ -109,7 +111,8 @@ public sealed partial class LookupComposer
             RawValue = value,
             Name = valueDescriptor.Name ?? formatTypeName,
             TypeName = formatTypeName,
-            TypeFullName = ReflexionFormater.FormatTypeFullName(valueType)
+            TypeFullName = ReflexionFormater.FormatTypeFullName(valueType),
+            Descriptor = valueDescriptor
         };
     }
 

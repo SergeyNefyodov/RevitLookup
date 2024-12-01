@@ -18,15 +18,42 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-// using System.Windows.Controls;
-//
-// namespace RevitLookup.Core.Contracts;
-//
-// /// <summary>
-// ///     Indicates that additional members can be added to the descriptor
-// /// </summary>
-// public interface IDescriptorConnector
-// {
-//     void RegisterMenu(ContextMenu contextMenu);
-// }
+using RevitLookup.Common.Tools;
 
+namespace RevitLookup.UI.Framework.Utils;
+
+public static class HelpUtils
+{
+    public static void ShowHelp(string query)
+    {
+        string uri;
+
+        if (query.Contains(' '))
+        {
+            uri = $"https://duckduckgo.com/?q={query}";
+        }
+        else if (query.StartsWith("System"))
+        {
+            query = query.Replace('`', '-');
+            uri = $"https://docs.microsoft.com/en-us/dotnet/api/{query}";
+        }
+        else
+        {
+            uri = $"https://duckduckgo.com/?q={query}";
+        }
+
+        ProcessTasks.StartShell(uri);
+    }
+
+    public static void ShowHelp(string query, string parameter)
+    {
+        if (query.StartsWith("System"))
+        {
+            ShowHelp($"{query}.{parameter}");
+        }
+        else
+        {
+            ShowHelp($"{query} {parameter}");
+        }
+    }
+}

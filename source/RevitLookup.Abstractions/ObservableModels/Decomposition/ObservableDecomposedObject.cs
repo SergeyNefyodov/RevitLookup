@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LookupEngine.Abstractions.ComponentModel;
 
 namespace RevitLookup.Abstractions.ObservableModels.Decomposition;
 
@@ -9,4 +10,5 @@ public sealed class ObservableDecomposedObject : ObservableObject
     public required string TypeName { get; set; }
     public required string TypeFullName { get; set; }
     public required List<ObservableDecomposedMember> Members { get; init; }
+    public Descriptor? Descriptor { get; init; }
 }

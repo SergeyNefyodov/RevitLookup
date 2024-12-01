@@ -19,17 +19,19 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Collections;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.UI.Framework.Utils;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
-using DataGrid = System.Windows.Controls.DataGrid;
+using DataGrid = Wpf.Ui.Controls.DataGrid;
 using TreeView = Wpf.Ui.Controls.TreeView;
 using TreeViewItem = System.Windows.Controls.TreeViewItem;
 using Visibility = System.Windows.Visibility;
@@ -40,11 +42,18 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
 {
     private readonly ISettingsService _settingsService;
     private readonly IWindowIntercomService _intercomService;
+    private readonly INotificationService _notificationService;
+    private readonly ILogger<SummaryViewBase> _logger;
 
-    protected SummaryViewBase(ISettingsService settingsService, IWindowIntercomService intercomService)
+    protected SummaryViewBase(ISettingsService settingsService,
+        IWindowIntercomService intercomService,
+        INotificationService notificationService,
+        ILoggerFactory loggerFactory)
     {
         _settingsService = settingsService;
         _intercomService = intercomService;
+        _notificationService = notificationService;
+        _logger = loggerFactory.CreateLogger<SummaryViewBase>();
 
         AddShortcuts();
     }
@@ -166,11 +175,10 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
         {
             case ObservableDecomposedObjectsGroup decomposedGroup:
                 CreateTreeTooltip(decomposedGroup, element);
-                // CreateTreeContextMenu(context.Descriptor, element);
                 break;
             case ObservableDecomposedObject decomposedObject:
                 CreateTreeTooltip(decomposedObject, element);
-                // CreateTreeContextMenu(context.Descriptor, element);
+                CreateTreeContextMenu(decomposedObject, element);
                 break;
         }
     }
@@ -181,29 +189,36 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     /// <remarks>
     ///     Data grid initialization, validation
     /// </remarks>
-    private void InitializeDataGrid(DataGrid control)
+    private void InitializeDataGrid(DataGrid dataGrid)
     {
-        ApplyGrouping(control);
-        ValidateTimeColumn(control);
-        ValidateAllocatedColumn(control);
-        // CreateGridContextMenu(dataGrid);
-        control.LoadingRow += OnGridRowLoading;
-        control.MouseMove += OnPresenterCursorInteracted;
+        ApplyGrouping(dataGrid);
+        ValidateTimeColumn(dataGrid);
+        ValidateAllocatedColumn(dataGrid);
+        CreateGridContextMenu(dataGrid);
+        dataGrid.LoadingRow += OnGridRowLoading;
+        dataGrid.MouseMove += OnPresenterCursorInteracted;
+        dataGrid.ItemsSourceChanged += ApplySorting;
     }
 
     /// <summary>
     ///     Set DataGrid grouping rules
     /// </summary>
-    /// <param name="dataGrid"></param>
     private void ApplyGrouping(DataGrid dataGrid)
     {
-        // dataGrid.Items.SortDescriptions.Clear();
-        // dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Depth), ListSortDirection.Descending));
-        // dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.MemberAttributes), ListSortDirection.Ascending));
-        // dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Name), ListSortDirection.Ascending));
-
         dataGrid.Items.GroupDescriptions!.Clear();
         dataGrid.Items.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ObservableDecomposedMember.DeclaringTypeName)));
+    }
+
+    /// <summary>
+    ///     Set DataGrid sorting rules
+    /// </summary>
+    private void ApplySorting(object sender, EventArgs eventArgs)
+    {
+        var dataGrid = (DataGrid)sender;
+
+        dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Depth), ListSortDirection.Descending));
+        dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.MemberAttributes), ListSortDirection.Ascending));
+        dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Name), ListSortDirection.Ascending));
     }
 
     // <summary>
@@ -212,7 +227,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     // <remarks>
     //     Select row style
     // </remarks>
-    protected void OnGridRowLoading(object? sender, DataGridRowEventArgs args)
+    private void OnGridRowLoading(object? sender, DataGridRowEventArgs args)
     {
         var row = args.Row;
         row.Loaded += OnGridRowLoaded;
@@ -231,7 +246,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
         var element = (FrameworkElement)sender;
         var member = (ObservableDecomposedMember)element.DataContext;
         CreateGridRowTooltip(member, element);
-        // CreateGridRowContextMenu(member, element);
+        CreateGridRowContextMenu(member, element);
     }
 
     /// <summary>
