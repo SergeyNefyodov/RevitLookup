@@ -8,13 +8,13 @@ public static class ViewsRegistrationExtensions
 {
     public static void RegisterViews(this IServiceCollection services)
     {
-        services.Scan(selector => selector.FromAssemblyOf<UI.Framework.App>()
+        services.Scan(selector => selector.FromAssemblyOf<Framework.App>()
             .AddClasses(filter => filter.AssignableTo<FluentWindow>()).AsSelf().WithScopedLifetime()
-            .AddClasses(filter => filter.AssignableTo<Page>()).AsSelf().WithTransientLifetime()
+            .AddClasses(filter => filter.AssignableTo<Page>()).AsSelf().WithScopedLifetime()
             .AddClasses(filter => filter.AssignableTo<ContentDialog>()).AsSelf().WithTransientLifetime());
 
         services.Scan(selector => selector.FromCallingAssembly()
             .AddClasses(filter => filter.AssignableTo<FluentWindow>()).AsSelf().WithScopedLifetime()
-            .AddClasses(filter => filter.AssignableTo<Page>()).AsSelf().WithTransientLifetime());
+            .AddClasses(filter => filter.AssignableTo<Page>()).AsSelf().WithScopedLifetime());
     }
 }
