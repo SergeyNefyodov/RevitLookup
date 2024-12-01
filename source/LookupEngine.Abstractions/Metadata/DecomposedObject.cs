@@ -14,5 +14,6 @@ public sealed class DecomposedObject
     public required string TypeName { get; set; }
     public required string TypeFullName { get; set; }
     public required List<DecomposedMember> Members { get; init; }
+    public string? Description { get; set; }
     public Descriptor? Descriptor { get; init; }
 }

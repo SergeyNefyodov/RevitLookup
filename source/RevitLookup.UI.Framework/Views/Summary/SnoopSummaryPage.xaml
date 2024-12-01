@@ -74,11 +74,12 @@
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto"
                 ItemsSource="{Binding ViewModel.FilteredMembers}"
+                RowStyle="{x:Null}"
+                RowStyleSelector="{StaticResource DataGridRowStyleSelector}"
                 ScrollViewer.CanContentScroll="True"
                 VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                 VirtualizingPanel.VirtualizationMode="Recycling">
                 <DataGrid.GroupStyle>
-                    <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
                     <StaticResource
                         ResourceKey="DefaultSummaryGridGroupStyle" />
                 </DataGrid.GroupStyle>
@@ -110,23 +111,15 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn
-                        Width="2*">
+                        Width="2*"
+                        CellTemplateSelector="{StaticResource DataGridCellTemplateSelector}">
                         <DataGridTemplateColumn.Header>
                             <rl:TextBlock
                                 FontTypography="Caption"
                                 Text="Value"
                                 FontWeight="Bold" />
                         </DataGridTemplateColumn.Header>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <rl:TextBlock
-                                    VerticalAlignment="Center"
-                                    FontTypography="Caption"
-                                    Text="{Binding Value.Name, Mode=OneTime}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <!-- CellTemplateSelector="{StaticResource DataGridCellStyleSelector}" /> -->
                     <DataGridTemplateColumn
                         Width="61"
                         MinWidth="0"

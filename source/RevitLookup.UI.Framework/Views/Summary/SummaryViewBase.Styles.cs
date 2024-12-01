@@ -20,46 +20,32 @@
 
 namespace RevitLookup.UI.Framework.Views.Summary;
 
-//     /// <summary>
-//     ///     Data grid row style selector
-//     /// </summary>
-//     private void SelectDataGridRowStyle(DataGridRow row)
-//     {
-//         var rowDescriptor = (Descriptor) row.DataContext;
-//         var styleName = rowDescriptor.Value.Descriptor switch
-//         {
-//             ExceptionDescriptor => "ExceptionDataGridRowStyle",
-//             IDescriptorEnumerator {IsEmpty: false} => "HandleDataGridRowStyle",
-//             IDescriptorEnumerator => "DefaultLookupDataGridRowStyle",
-//             IDescriptorCollector => "HandleDataGridRowStyle",
-//             _ => "DefaultLookupDataGridRowStyle"
-//         };
-//
-//         row.Style = (Style) FindResource(styleName);
-//     }
-// }
-
-// public sealed class DataGridCellStyleSelector : DataTemplateSelector
-// {
-//     /// <summary>
-//     ///     Data grid cell style selector
-//     /// </summary>
-//     public override DataTemplate SelectTemplate(object item, DependencyObject container)
-//     {
-//         if (item is null) return null;
-//
-//         var descriptor = (Descriptor) item;
-//         var presenter = (FrameworkElement) container;
-//         var templateName = descriptor.Value.Descriptor switch
-//         {
-//             ColorDescriptor => "DataGridColorCellTemplate",
-//             ColorMediaDescriptor => "DataGridColorCellTemplate",
-//             _ => "DefaultLookupDataGridCellTemplate"
-//         };
-//
-//         return (DataTemplate) presenter.FindResource(templateName);
-//     }
-// }
+public partial class SummaryViewBase
+{
+    // /// <summary>
+    // ///     Data grid row style selector
+    // /// </summary>
+    // private void SelectDataGridRowStyle(DataGridRow row)
+    // {
+    //     var member = (ObservableDecomposedMember)row.DataContext;
+    //
+    //     var styleName = member.Value.RawValue switch
+    //                     {
+    //                         Exception => "ExceptionDataGridRowStyle",
+    //                         ICollection { Count: > 0 } => "EnumerableDataGridRowStyle",
+    //                         _ => null
+    //                     }
+    //                     ??
+    //                     member.Value.Descriptor switch
+    //                     {
+    //                         IDescriptorEnumerator { IsEmpty: false } => "HandleDataGridRowStyle",
+    //                         IDescriptorCollector => "HandleDataGridRowStyle",
+    //                         _ => "DefaultLookupDataGridRowStyle"
+    //                     };
+    //
+    //     row.Style = (Style)FindResource(styleName);
+    // }
+}
 
 // public sealed class TreeViewItemTemplateSelector : DataTemplateSelector
 // {

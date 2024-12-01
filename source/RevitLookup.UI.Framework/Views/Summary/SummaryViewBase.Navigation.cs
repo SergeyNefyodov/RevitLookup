@@ -96,7 +96,7 @@ public partial class SummaryViewBase
     /// <summary>
     ///     Handle cursor interaction
     /// </summary>
-    protected void OnPresenterCursorInteracted(object sender, MouseEventArgs args)
+    private void OnPresenterCursorInteracted(object sender, MouseEventArgs args)
     {
         var presenter = (FrameworkElement)sender;
         if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)

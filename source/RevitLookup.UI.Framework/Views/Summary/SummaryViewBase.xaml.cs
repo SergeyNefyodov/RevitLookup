@@ -232,7 +232,6 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
         var row = args.Row;
         row.MouseEnter += OnGridRowCaptured;
         // row.PreviewMouseLeftButtonUp += OnGridRowClicked;
-        // SelectDataGridRowStyle(row);
     }
 
     /// <summary>

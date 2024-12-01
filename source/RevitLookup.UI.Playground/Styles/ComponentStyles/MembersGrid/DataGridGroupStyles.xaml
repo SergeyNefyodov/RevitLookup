@@ -4,10 +4,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:rl="http://revitlookup.com/xaml"
+    xmlns:membersGrid="clr-namespace:RevitLookup.UI.Playground.Styles.ComponentStyles.MembersGrid"
     mc:Ignorable="d">
 
+    <membersGrid:DataGridRowStyleSelector
+        x:Key="DataGridRowStyleSelector" />
+
     <GroupStyle
-        x:Key="DefaultSummaryGridGroupStyle">
+        x:Key="DefaultSummaryGridGroupStyle"
+        ContainerStyleSelector="{StaticResource DataGridRowStyleSelector}">
 
         <GroupStyle.ContainerStyle>
             <Style
