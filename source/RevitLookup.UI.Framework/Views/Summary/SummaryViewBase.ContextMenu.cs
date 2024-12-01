@@ -178,6 +178,8 @@ public partial class SummaryViewBase
     /// </summary>
     private void CreateGridRowContextMenu(ObservableDecomposedMember member, FrameworkElement row)
     {
+        if (row.ContextMenu is not null) return;
+
         var contextMenu = new ContextMenu
         {
             PlacementTarget = row,

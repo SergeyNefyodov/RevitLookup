@@ -150,10 +150,10 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
                 var treeItem = (ItemsControl)generator.ContainerFromItem(item);
                 if (treeItem is null) continue;
 
-                treeItem.Loaded -= OnTreeItemLoaded;
+                treeItem.MouseEnter -= OnTreeItemCaptured;
                 // treeItem.PreviewMouseLeftButtonUp -= OnTreeItemClicked;
 
-                treeItem.Loaded += OnTreeItemLoaded;
+                treeItem.MouseEnter += OnTreeItemCaptured;
                 // treeItem.PreviewMouseLeftButtonUp += OnTreeItemClicked;
 
                 if (treeItem.Items.Count > 0)
@@ -168,7 +168,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     /// <summary>
     ///     Create tree view tooltips, menus
     /// </summary>
-    private void OnTreeItemLoaded(object? sender, RoutedEventArgs args)
+    private void OnTreeItemCaptured(object? sender, RoutedEventArgs args)
     {
         var element = (FrameworkElement)sender!;
         switch (element.DataContext)
@@ -212,9 +212,9 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     /// <summary>
     ///     Set DataGrid sorting rules
     /// </summary>
-    private void ApplySorting(object sender, EventArgs eventArgs)
+    private void ApplySorting(object? sender, EventArgs eventArgs)
     {
-        var dataGrid = (DataGrid)sender;
+        var dataGrid = (DataGrid)sender!;
 
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Depth), ListSortDirection.Descending));
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.MemberAttributes), ListSortDirection.Ascending));
@@ -230,7 +230,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     private void OnGridRowLoading(object? sender, DataGridRowEventArgs args)
     {
         var row = args.Row;
-        row.Loaded += OnGridRowLoaded;
+        row.MouseEnter += OnGridRowCaptured;
         // row.PreviewMouseLeftButtonUp += OnGridRowClicked;
         // SelectDataGridRowStyle(row);
     }
@@ -241,7 +241,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     /// <remarks>
     ///     Create tooltips, context menu
     /// </remarks>
-    protected void OnGridRowLoaded(object sender, RoutedEventArgs args)
+    private void OnGridRowCaptured(object sender, RoutedEventArgs args)
     {
         var element = (FrameworkElement)sender;
         var member = (ObservableDecomposedMember)element.DataContext;

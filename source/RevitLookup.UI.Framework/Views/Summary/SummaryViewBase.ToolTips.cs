@@ -32,6 +32,8 @@ public partial class SummaryViewBase
     /// </summary>
     private void CreateTreeTooltip(ObservableDecomposedObject decomposedObject, FrameworkElement row)
     {
+        if (row.ToolTip is not null) return;
+
         row.ToolTip = new StringBuilder()
             .Append("Name: ")
             .AppendLine(decomposedObject.Name)
@@ -49,6 +51,8 @@ public partial class SummaryViewBase
     /// </summary>
     private void CreateTreeTooltip(ObservableDecomposedObjectsGroup decomposedGroup, FrameworkElement row)
     {
+        if (row.ToolTip is not null) return;
+
         row.ToolTip = new StringBuilder()
             .Append("Type: ")
             .AppendLine(decomposedGroup.GroupName)
@@ -62,6 +66,8 @@ public partial class SummaryViewBase
     /// </summary>
     private void CreateGridRowTooltip(ObservableDecomposedMember member, FrameworkElement row)
     {
+        if (row.ToolTip is not null) return;
+
         var builder = new StringBuilder();
 
         if ((member.MemberAttributes & MemberAttributes.Private) != 0) builder.Append("Private ");
