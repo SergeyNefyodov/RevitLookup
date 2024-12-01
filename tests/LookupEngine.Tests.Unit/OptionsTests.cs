@@ -1,4 +1,4 @@
-﻿namespace LookupEngine.Tests;
+﻿namespace LookupEngine.Tests.Unit;
 
 public sealed class LookupEngineTests
 {
@@ -35,10 +35,7 @@ public sealed class LookupEngineTests
         //Arrange
         var options = new DecomposeOptions
         {
-            RedirectMap =
-            [
-                new Redirect<int, string>(i => "d")
-            ]
+            IncludeFields = true
         };
 
         //Act

@@ -1,4 +1,4 @@
 ﻿using BenchmarkDotNet.Running;
-using LookupEngine.Benchmarks;
+using LookupEngine.Tests.Performance;
 
 BenchmarkRunner.Run<ClosureBenchmark>();

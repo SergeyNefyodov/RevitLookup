@@ -20,7 +20,7 @@
 
 using BenchmarkDotNet.Attributes;
 
-namespace LookupEngine.Benchmarks;
+namespace LookupEngine.Tests.Performance;
 
 [ShortRunJob]
 [MemoryDiagnoser]

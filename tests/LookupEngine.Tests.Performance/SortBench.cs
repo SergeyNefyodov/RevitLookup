@@ -21,7 +21,7 @@
 using System.Reflection;
 using BenchmarkDotNet.Attributes;
 
-namespace LookupEngine.Benchmarks;
+namespace LookupEngine.Tests.Performance;
 
 [MediumRunJob]
 [MemoryDiagnoser(false)]
