@@ -100,9 +100,9 @@ public sealed partial class LookupComposer
     {
         if (value is null) return CreateNullableValue();
 
+        var valueDescriptor = RedirectValue(targetMember, ref value);
         var valueType = value.GetType();
         var formatTypeName = ReflexionFormater.FormatTypeName(valueType);
-        var valueDescriptor = RedirectValue(targetMember, ref value);
 
         return new DecomposedValue
         {
