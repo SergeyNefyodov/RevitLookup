@@ -9,10 +9,19 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Light" />
+                <ui:ThemesDictionary
+                    Theme="Light" />
                 <ui:ControlsDictionary />
                 <menu:MenusDictionary />
-                <ResourceDictionary Source="pack://application:,,,/RevitLookup.UI.Playground;component/Client/Controls/ControlExample.xaml" />
+
+                <ResourceDictionary
+                    Source="pack://application:,,,/RevitLookup.UI.Framework;component/Controls/ContentPlaceholder/ContentPlaceholder.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/RevitLookup.UI.Playground;component/Client/Controls/ControlExample.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/RevitLookup.UI.Playground;component/Styles/ComponentStyles/Summary/ObjectsTree/SummaryTreeGroupTemplates.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/RevitLookup.UI.Playground;component/Styles/ComponentStyles/Summary/MembersGrid/SummaryGridGroupStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

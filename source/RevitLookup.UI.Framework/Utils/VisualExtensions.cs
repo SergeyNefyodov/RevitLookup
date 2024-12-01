@@ -1,11 +1,12 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace RevitLookup.UI.Framework.Utils;
 
 public static class VisualExtensions
 {
-    public static T? FindVisualParent<T>(this FrameworkElement element) where T : FrameworkElement
+    public static T? FindVisualParent<T>(this DependencyObject element) where T : FrameworkElement
     {
         var parentElement = (FrameworkElement?)VisualTreeHelper.GetParent(element);
         while (parentElement != null)
@@ -19,7 +20,7 @@ public static class VisualExtensions
         return null;
     }
 
-    public static T? FindVisualParent<T>(this FrameworkElement element, string name) where T : FrameworkElement
+    public static T? FindVisualParent<T>(this DependencyObject element, string name) where T : FrameworkElement
     {
         var parentElement = (FrameworkElement?)VisualTreeHelper.GetParent(element);
         while (parentElement != null)
@@ -34,7 +35,7 @@ public static class VisualExtensions
         return null;
     }
 
-    public static T? FindVisualChild<T>(this FrameworkElement element) where T : Visual
+    public static T? FindVisualChild<T>(this DependencyObject element) where T : Visual
     {
         for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
         {
@@ -51,7 +52,7 @@ public static class VisualExtensions
         return null;
     }
 
-    public static T? FindVisualChild<T>(this FrameworkElement element, string name) where T : Visual
+    public static T? FindVisualChild<T>(this DependencyObject element, string name) where T : Visual
     {
         for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
         {
@@ -69,7 +70,7 @@ public static class VisualExtensions
         return null;
     }
 
-    public static T? FindLogicalChild<T>(this Visual visual) where T : Visual
+    public static T? FindLogicalChild<T>(this DependencyObject visual) where T : Visual
     {
         foreach (Visual child in LogicalTreeHelper.GetChildren(visual))
         {
@@ -92,5 +93,35 @@ public static class VisualExtensions
         }
 
         return null;
+    }
+
+    public static DependencyObject? GetItemAtIndex(this ItemsControl container, int index)
+    {
+        if (container.Items.Count == 0) return null;
+
+        if (container is TreeViewItem { IsExpanded: false } viewItem)
+            viewItem.SetCurrentValue(TreeViewItem.IsExpandedProperty, true);
+
+        container.ApplyTemplate();
+        var itemsPresenter = (ItemsPresenter)container.Template.FindName("ItemsHost", container);
+        if (itemsPresenter != null)
+        {
+            itemsPresenter.ApplyTemplate();
+        }
+        else
+        {
+            itemsPresenter = FindVisualChild<ItemsPresenter>(container);
+            if (itemsPresenter == null)
+            {
+                container.UpdateLayout();
+                itemsPresenter = FindVisualChild<ItemsPresenter>(container);
+            }
+        }
+
+        if (itemsPresenter is null) return null;
+
+        var itemsHostPanel = (VirtualizingPanel)VisualTreeHelper.GetChild(itemsPresenter, 0);
+        itemsHostPanel.BringIndexIntoViewPublic(index);
+        return container.ItemContainerGenerator.ContainerFromIndex(index);
     }
 }

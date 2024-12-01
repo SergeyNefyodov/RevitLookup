@@ -19,7 +19,9 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Windows;
+using System.Windows.Automation.Peers;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.UI.Framework.Controls.Automation;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 
@@ -96,5 +98,10 @@ public sealed partial class RevitLookupView
         var self = (RevitLookupView)sender;
         self._settingsService.GeneralSettings.WindowWidth = args.NewSize.Width;
         self._settingsService.GeneralSettings.WindowHeight = args.NewSize.Height;
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer()
+    {
+        return new NoAutomationWindowPeer(this);
     }
 }

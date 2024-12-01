@@ -12,6 +12,9 @@
                     Theme="Light" />
                 <ui:ControlsDictionary />
                 <menu:MenusDictionary />
+
+                <ResourceDictionary
+                    Source="pack://application:,,,/RevitLookup.UI.Framework;component/Controls/ContentPlaceholder/ContentPlaceholder.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -18,17 +18,35 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace LookupEngine.Abstractions.Enums;
+using System.Globalization;
+using System.Windows.Data;
+using System.Windows.Markup;
 
-[Flags]
-public enum MemberAttributes
+namespace RevitLookup.UI.Framework.Converters.ValueConverters;
+
+public sealed class TimeToStringConverter : MarkupExtension, IValueConverter
 {
-    Private = 0b1,
-    Static = 0b10,
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        var milliseconds = (double)value!;
+        return milliseconds switch
+        {
+            0 => string.Empty,
+            < 1e-3 => "0.001 ms",
+            < 10 => $"{milliseconds:F3} ms",
+            < 100 => $"{milliseconds:F2} ms",
+            < 1000 => $"{milliseconds:F1} ms",
+            _ => $"{milliseconds:0} ms"
+        };
+    }
 
-    Field = 0b100,
-    Property = 0b1000,
-    Method = 0b10000,
-    Extension = 0b100000,
-    Event = 0b1000000
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+        return this;
+    }
 }

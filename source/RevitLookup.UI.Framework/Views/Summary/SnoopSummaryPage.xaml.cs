@@ -18,17 +18,26 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace LookupEngine.Abstractions.Enums;
+using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.ViewModels.Summary;
 
-[Flags]
-public enum MemberAttributes
+namespace RevitLookup.UI.Framework.Views.Summary;
+
+public sealed partial class SnoopSummaryPage
 {
-    Private = 0b1,
-    Static = 0b10,
+    public SnoopSummaryPage(
+        ISnoopSummaryViewModel viewModel,
+        ISettingsService settingsService,
+        IWindowIntercomService intercomService)
+        : base(settingsService, intercomService)
+    {
+        DataContext = this;
+        ViewModel = viewModel;
+        InitializeComponent();
 
-    Field = 0b100,
-    Property = 0b1000,
-    Method = 0b10000,
-    Extension = 0b100000,
-    Event = 0b1000000
+        SearchBoxControl = SummarySearchBox;
+        TreeViewControl = SummaryTreeView;
+        DataGridControl = SummaryDataGrid;
+        InitializeControls();
+    }
 }

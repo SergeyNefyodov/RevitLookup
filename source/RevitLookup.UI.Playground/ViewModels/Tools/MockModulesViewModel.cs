@@ -19,18 +19,23 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 
-using System.Runtime.Loader;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RevitLookup.Abstractions.Models.Tools;
 using RevitLookup.Abstractions.ViewModels.Tools;
+#if NETCOREAPP
+using System.Runtime.Loader;
+#endif
+#if NETFRAMEWORK
+using RevitLookup.UI.Framework.Extensions;
+#endif
 
 namespace RevitLookup.UI.Playground.ViewModels.Tools;
 
 public sealed partial class MockModulesViewModel : ObservableObject, IModulesViewModel
 {
     [ObservableProperty] private string _searchText = string.Empty;
+    [ObservableProperty] private List<ModuleInfo> _modules = [];
     [ObservableProperty] private List<ModuleInfo> _filteredModules = [];
-    [ObservableProperty] private List<ModuleInfo> _modules;
 
     public MockModulesViewModel()
     {
@@ -68,14 +73,14 @@ public sealed partial class MockModulesViewModel : ObservableObject, IModulesVie
 
         FilteredModules = await Task.Run(() =>
         {
-            var formattedText = value.ToLower().Trim();
+            var formattedText = value.Trim();
             var searchResults = new List<ModuleInfo>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var module in Modules)
             {
-                if (module.Name.ToLower().Contains(formattedText) ||
-                    module.Path.ToLower().Contains(formattedText) ||
-                    module.Version.ToLower().Contains(formattedText))
+                if (module.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
+                    module.Path.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
+                    module.Version.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
                 {
                     searchResults.Add(module);
                 }

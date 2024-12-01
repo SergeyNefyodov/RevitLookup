@@ -128,12 +128,14 @@ public sealed class ControlExample : Control
 
                     Clipboard.SetText(controlExample.XamlCode);
                     var peer = UIElementAutomationPeer.CreatePeerForElement((Button)e.OriginalSource);
+#if NETCOREAPP
                     peer.RaiseNotificationEvent(
                         AutomationNotificationKind.Other,
                         AutomationNotificationProcessing.ImportantMostRecent,
                         "Source Code Copied",
                         "ButtonClickedActivity"
                     );
+#endif
 
                     break;
                 case "Copy_CsharpCode":

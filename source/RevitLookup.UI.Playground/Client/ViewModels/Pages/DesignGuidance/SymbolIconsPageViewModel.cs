@@ -2,13 +2,16 @@
 using JetBrains.Annotations;
 using RevitLookup.UI.Playground.Client.Models;
 using Wpf.Ui.Controls;
+#if NETFRAMEWORK
+using RevitLookup.UI.Framework.Extensions;
+#endif
 
 namespace RevitLookup.UI.Playground.Client.ViewModels.Pages.DesignGuidance;
 
 [UsedImplicitly]
 public partial class SymbolIconsPageViewModel : ObservableObject
 {
-    [ObservableProperty] private List<SymbolIconData> _icons;
+    [ObservableProperty] private List<SymbolIconData> _icons = [];
     [ObservableProperty] private List<SymbolIconData> _filteredIcons = [];
     [ObservableProperty] private SymbolIconData? _selectedIcon;
     [ObservableProperty] private string _searchText = string.Empty;

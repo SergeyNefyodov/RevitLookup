@@ -1,5 +1,7 @@
 using System.Windows;
+using System.Windows.Automation.Peers;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.UI.Framework.Controls.Automation;
 using RevitLookup.UI.Playground.Client.ViewModels;
 using RevitLookup.UI.Playground.Client.Views.Pages;
 using Wpf.Ui;
@@ -11,7 +13,8 @@ public sealed partial class PlaygroundView
 {
     private readonly INavigationService _navigationService;
 
-    public PlaygroundView(PlaygroundViewModel viewModel,
+    public PlaygroundView(
+        PlaygroundViewModel viewModel,
         INavigationService navigationService,
         IContentDialogService dialogService,
         ISnackbarService snackbarService,
@@ -41,5 +44,10 @@ public sealed partial class PlaygroundView
         var showHeader = onControlsPage ? Visibility.Visible : Visibility.Collapsed;
 
         NavigationView.SetCurrentValue(NavigationView.HeaderVisibilityProperty, showHeader);
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer()
+    {
+        return new NoAutomationWindowPeer(this);
     }
 }

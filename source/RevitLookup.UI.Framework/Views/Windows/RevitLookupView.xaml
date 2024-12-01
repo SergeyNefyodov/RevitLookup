@@ -8,6 +8,7 @@
     xmlns:settings="clr-namespace:RevitLookup.UI.Framework.Views.Settings"
     xmlns:aboutProgram="clr-namespace:RevitLookup.UI.Framework.Views.AboutProgram"
     xmlns:dashboard="clr-namespace:RevitLookup.UI.Framework.Views.Dashboard"
+    xmlns:pages="clr-namespace:RevitLookup.UI.Framework.Views.Summary"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="200"
@@ -36,10 +37,10 @@
                     Content="Dashboard"
                     TargetPageType="{x:Type dashboard:DashboardPage}"
                     Icon="{rl:SymbolIcon AppGeneric24}" />
-                <!-- <rl:NavigationViewItem -->
-                <!--     Content="Snoop summary" -->
-                <!--     TargetPageType="{x:Type pages:SnoopPage}" -->
-                <!--     Icon="{rl:SymbolIcon SlideSearch24}" /> -->
+                <rl:NavigationViewItem
+                    Content="Snoop summary"
+                    TargetPageType="{x:Type pages:SnoopSummaryPage}"
+                    Icon="{rl:SymbolIcon SlideSearch24}" />
                 <!-- <rl:NavigationViewItem -->
                 <!--     Content="Event monitor" -->
                 <!--     TargetPageType="{x:Type pages:EventsPage}" -->
@@ -69,7 +70,16 @@
             <rl:NavigationView.Header>
                 <rl:BreadcrumbBar
                     x:Name="BreadcrumbBar"
-                    Margin="12 12 0 0" />
+                    Margin="12 12 0 0">
+                    <rl:BreadcrumbBar.ItemTemplate>
+                        <DataTemplate
+                            DataType="{x:Type rl:NavigationViewBreadcrumbItem}">
+                            <rl:TextBlock
+                                FontTypography="Subtitle"
+                                Text="{Binding Content}" />
+                        </DataTemplate>
+                    </rl:BreadcrumbBar.ItemTemplate>
+                </rl:BreadcrumbBar>
             </rl:NavigationView.Header>
             <rl:NavigationView.ContentOverlay>
                 <rl:SnackbarPresenter

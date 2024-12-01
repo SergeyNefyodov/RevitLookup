@@ -23,6 +23,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
 using RevitLookup.Abstractions.Models.Tools;
 using RevitLookup.Abstractions.ViewModels.Tools;
+#if NETFRAMEWORK
+using RevitLookup.UI.Framework.Extensions;
+#endif
 
 namespace RevitLookup.UI.Playground.ViewModels.Tools;
 
@@ -71,11 +74,11 @@ public sealed partial class MockUnitsViewModel : ObservableObject, IUnitsViewMod
 
         FilteredUnits = await Task.Run(() =>
         {
-            var formattedText = value.ToLower().Trim();
+            var formattedText = value.Trim();
             var searchResults = new List<UnitInfo>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var family in Units)
-                if (family.Label.ToLower().Contains(formattedText) || family.Unit.ToLower().Contains(formattedText))
+                if (family.Label.Contains(formattedText, StringComparison.OrdinalIgnoreCase) || family.Unit.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
                     searchResults.Add(family);
 
             return searchResults;

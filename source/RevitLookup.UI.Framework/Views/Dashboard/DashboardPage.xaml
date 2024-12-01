@@ -9,379 +9,67 @@
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
     xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance dashboard:DashboardPage}">
+    d:DataContext="{d:DesignInstance dashboard:DashboardPage}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
-    <rl:DynamicScrollViewer
-        x:Name="RootScrollViewer">
-        <ItemsControl
-            Margin="12 0 12 12"
-            ItemsSource="{Binding ViewModel.NavigationGroups}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <rl:TextBlock
-                            Margin="0,12,0,0"
-                            FontTypography="BodyStrong"
-                            Text="{Binding GroupName}" />
-                        <ItemsControl
-                            Margin="-2 0"
-                            ItemsSource="{Binding  Items}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <UniformGrid
-                                        Columns="{Binding ActualWidth, 
-                                            ElementName=RootScrollViewer,
+    <ItemsControl
+        x:Name="RootItemsControl"
+        Margin="12 0 12 12"
+        ItemsSource="{Binding ViewModel.NavigationGroups}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                    <rl:TextBlock
+                        Margin="0,12,0,0"
+                        FontTypography="BodyStrong"
+                        Text="{Binding GroupName}" />
+                    <ItemsControl
+                        Margin="-2 0"
+                        ItemsSource="{Binding  Items}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid
+                                    Columns="{Binding ActualWidth, 
+                                            ElementName=RootItemsControl,
                                             Converter={valueConverters:WidthToUniformColumnsConverter}}" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemContainerStyle>
-                                <Style
-                                    TargetType="ContentPresenter">
-                                    <Setter
-                                        Property="Margin"
-                                        Value="2,4,2,0" />
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <rl:CardAction
-                                        Command="{Binding Command}"
-                                        CommandParameter="{Binding CommandParameter}">
-                                        <rl:CardAction.Icon>
-                                            <rl:SymbolIcon
-                                                Symbol="{Binding Icon}" />
-                                        </rl:CardAction.Icon>
-                                        <rl:CardAction.Content>
-                                            <StackPanel>
-                                                <rl:TextBlock
-                                                    Text="{Binding Title}" />
-                                                <rl:TextBlock
-                                                    Appearance="Secondary"
-                                                    FontTypography="Caption"
-                                                    TextTrimming="CharacterEllipsis"
-                                                    Text="{Binding Description}"
-                                                    Visibility="{Binding Description, Converter={converters:StringVisibilityConverter}}" />
-                                            </StackPanel>
-                                        </rl:CardAction.Content>
-                                    </rl:CardAction>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <!-- <VirtualizingStackPanel -->
-        <!--     Margin="12" -->
-        <!--     IsVirtualizing="True" -->
-        <!--     VirtualizationMode="Recycling" -->
-        <!--     TextBlock.FontWeight="Medium"> -->
-        <!--     <TextBlock -->
-        <!--         FontSize="16" -->
-        <!--         Text="Workspace" /> -->
-        <!--     <ItemsControl> -->
-        <!--         <ItemsControl.ItemsPanel> -->
-        <!--             <ItemsPanelTemplate> -->
-        <!--                 <rl:VirtualizingWrapPanel -->
-        <!--                     Orientation="Vertical" -->
-        <!--                     StretchItems="True"/> -->
-        <!--             </ItemsPanelTemplate> -->
-        <!--         </ItemsControl.ItemsPanel> -->
-        <!--         <rl:CardAction -->
-        <!--             Icon="{rl:SymbolIcon Image24}" -->
-        <!--             CommandParameter="view" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Active view" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Icon="{rl:SymbolIcon Document24}" -->
-        <!--             CommandParameter="document" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Active document" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Icon="{rl:SymbolIcon Apps24}" -->
-        <!--             CommandParameter="application" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Application" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Icon="{rl:SymbolIcon WindowApps24}" -->
-        <!--             CommandParameter="uiApplication" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="UI Application" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Icon="{rl:SymbolIcon Database24}" -->
-        <!--             CommandParameter="database" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Database" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Icon="{rl:SymbolIcon DataLine24}" -->
-        <!--             CommandParameter="dependents" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Dependent elements" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--     </ItemsControl> -->
-        <!-- -->
-        <!--     <TextBlock -->
-        <!--         Margin="0,17,0,0" -->
-        <!--         FontSize="16" -->
-        <!--         Text="Interaction" /> -->
-        <!--     <StackPanel> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="0,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon SquareHint24}" -->
-        <!--             CommandParameter="selection" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Selection" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon LinkSquare24}" -->
-        <!--             CommandParameter="linked" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Linked element" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon LayerDiagonal20}" -->
-        <!--             CommandParameter="face" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Face" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,0,0" -->
-        <!--             Icon="{rl:SymbolIcon Line24}" -->
-        <!--             CommandParameter="edge" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Edge" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="0,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon Location24}" -->
-        <!--             CommandParameter="point" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Point" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon Subtitles24}" -->
-        <!--             CommandParameter="subElement" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Sub-element" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--     </StackPanel> -->
-        <!-- -->
-        <!--     <TextBlock -->
-        <!--         Margin="0,17,0,0" -->
-        <!--         FontSize="16" -->
-        <!--         Text="Maintenance" /> -->
-        <!--     <StackPanel> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="0,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon SlideTextMultiple32}" -->
-        <!--             CommandParameter="components" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Component manager" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon HeartPulse24}" -->
-        <!--             CommandParameter="performance" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Performance adviser" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--     </StackPanel> -->
-        <!-- -->
-        <!--     <TextBlock -->
-        <!--         Margin="0,17,0,0" -->
-        <!--         FontSize="16" -->
-        <!--         Text="Registry" /> -->
-        <!--     <StackPanel> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="0,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon Whiteboard24}" -->
-        <!--             CommandParameter="updaters" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Updaters" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon Box24}" -->
-        <!--             CommandParameter="schemas" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Schemas" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon WeatherCloudy24}" -->
-        <!--             CommandParameter="services" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Services" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--     </StackPanel> -->
-        <!-- -->
-        <!--     <TextBlock -->
-        <!--         Margin="0,17,0,0" -->
-        <!--         FontSize="16" -->
-        <!--         Text="Units" /> -->
-        <!--     <StackPanel> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="0,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon LeafOne24}" -->
-        <!--             CommandParameter="parameters" -->
-        <!--             Command="{Binding ViewModel.OpenDialogCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="BuiltIn Parameters" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon LeafTwo24}" -->
-        <!--             CommandParameter="categories" -->
-        <!--             Command="{Binding ViewModel.OpenDialogCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="BuiltIn Categories" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon LeafThree24}" -->
-        <!--             CommandParameter="forge" -->
-        <!--             Command="{Binding ViewModel.OpenDialogCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Forge Schema" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--     </StackPanel> -->
-        <!-- -->
-        <!--     <TextBlock -->
-        <!--         Margin="0,17,0,0" -->
-        <!--         FontSize="16" -->
-        <!--         Text="Tools" /> -->
-        <!--     <StackPanel> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="0,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon SlideSearch24}" -->
-        <!--             CommandParameter="search" -->
-        <!--             Command="{Binding ViewModel.OpenDialogCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Search elements" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon DesktopPulse24}" -->
-        <!--             CommandParameter="events" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Event monitor" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon LauncherSettings24}" -->
-        <!--             CommandParameter="revitSettings" -->
-        <!--             Command="{Binding  ViewModel.NavigateSnoopPageCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Revit settings" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--         <rl:CardAction -->
-        <!--             Margin="4,8,4,0" -->
-        <!--             Icon="{rl:SymbolIcon BroadActivityFeed24}" -->
-        <!--             CommandParameter="modules" -->
-        <!--             Command="{Binding  ViewModel.OpenDialogCommand}"> -->
-        <!--             <StackPanel> -->
-        <!--                 <TextBlock -->
-        <!--                     FontWeight="Medium" -->
-        <!--                     Text="Modules" /> -->
-        <!--             </StackPanel> -->
-        <!--         </rl:CardAction> -->
-        <!--     </StackPanel> -->
-        <!-- </VirtualizingStackPanel> -->
-    </rl:DynamicScrollViewer>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style
+                                TargetType="ContentPresenter">
+                                <Setter
+                                    Property="Margin"
+                                    Value="2,4,2,0" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <rl:CardAction
+                                    Command="{Binding Command}"
+                                    CommandParameter="{Binding CommandParameter}">
+                                    <rl:CardAction.Icon>
+                                        <rl:SymbolIcon
+                                            Symbol="{Binding Icon}" />
+                                    </rl:CardAction.Icon>
+                                    <rl:CardAction.Content>
+                                        <StackPanel>
+                                            <rl:TextBlock
+                                                Text="{Binding Title}" />
+                                            <rl:TextBlock
+                                                Appearance="Secondary"
+                                                FontTypography="Caption"
+                                                TextTrimming="CharacterEllipsis"
+                                                Text="{Binding Description}"
+                                                Visibility="{Binding Description, Converter={converters:StringVisibilityConverter}}" />
+                                        </StackPanel>
+                                    </rl:CardAction.Content>
+                                </rl:CardAction>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 
 </Page>

@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 
 namespace RevitLookup.UI.Framework.Converters;
 
-public class EnumBoolConverter<TEnum> : MarkupExtension, IValueConverter where TEnum : Enum
+public class EnumBooleanConverter<TEnum> : MarkupExtension, IValueConverter where TEnum : Enum
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

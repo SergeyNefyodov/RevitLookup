@@ -4,13 +4,16 @@ using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
 using RevitLookup.UI.Playground.Client.Models;
+#if NETFRAMEWORK
+using RevitLookup.UI.Framework.Extensions;
+#endif
 
 namespace RevitLookup.UI.Playground.Client.ViewModels.Pages.DesignGuidance;
 
 [UsedImplicitly]
 public partial class FontIconsPageViewModel : ObservableObject
 {
-    [ObservableProperty] private List<FontIconData> _icons;
+    [ObservableProperty] private List<FontIconData> _icons = [];
     [ObservableProperty] private List<FontIconData> _filteredIcons = [];
     [ObservableProperty] private FontIconData? _selectedIcon;
     [ObservableProperty] private string _searchText = string.Empty;

@@ -18,17 +18,33 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace LookupEngine.Abstractions.Enums;
+using System.Globalization;
+using System.Windows.Data;
+using System.Windows.Markup;
 
-[Flags]
-public enum MemberAttributes
+namespace RevitLookup.UI.Framework.Converters.ValueConverters;
+
+public sealed class BytesToStringConverter : MarkupExtension, IValueConverter
 {
-    Private = 0b1,
-    Static = 0b10,
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        var bytes = (long)value!;
+        return bytes switch
+        {
+            0 => string.Empty,
+            < 1_000 => $"{value} B",
+            < 1_000_000 => $"{(bytes / 1000d):F3} KB",
+            _ => $"{(bytes / 1_000_000d):F3} MB"
+        };
+    }
 
-    Field = 0b100,
-    Property = 0b1000,
-    Method = 0b10000,
-    Extension = 0b100000,
-    Event = 0b1000000
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+        return this;
+    }
 }

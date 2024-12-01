@@ -2,4 +2,4 @@
 
 namespace RevitLookup.UI.Framework.Converters.ValueConverters;
 
-public sealed class SoftwareUpdateStateBooleanConverter : EnumBoolConverter<SoftwareUpdateState>;
+public sealed class SoftwareUpdateStateBooleanConverter : EnumBooleanConverter<SoftwareUpdateState>;

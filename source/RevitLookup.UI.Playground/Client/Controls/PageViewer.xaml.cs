@@ -1,7 +1,9 @@
 ﻿using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.UI.Framework.Controls.Automation;
 using Wpf.Ui;
 
 namespace RevitLookup.UI.Playground.Client.Controls;
@@ -50,5 +52,10 @@ public sealed partial class PageViewer
         {
             Top -= (ActualHeight - MinHeight) / 2;
         }
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer()
+    {
+        return new NoAutomationWindowPeer(this);
     }
 }
