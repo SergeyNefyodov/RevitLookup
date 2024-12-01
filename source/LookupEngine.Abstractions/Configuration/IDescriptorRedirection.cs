@@ -25,5 +25,5 @@ namespace LookupEngine.Abstractions.Configuration;
 /// </summary>
 public interface IDescriptorRedirection
 {
-    bool TryRedirect(string target, out object output);
+    bool TryRedirect(string targetMember, out object result);
 }

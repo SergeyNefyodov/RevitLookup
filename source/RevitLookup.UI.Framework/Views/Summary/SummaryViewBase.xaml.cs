@@ -203,7 +203,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
         // dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Name), ListSortDirection.Ascending));
 
         dataGrid.Items.GroupDescriptions!.Clear();
-        dataGrid.Items.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ObservableDecomposedMember.Type)));
+        dataGrid.Items.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ObservableDecomposedMember.DeclaringTypeName)));
     }
 
     // <summary>

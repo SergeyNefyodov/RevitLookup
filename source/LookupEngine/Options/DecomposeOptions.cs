@@ -15,8 +15,6 @@ public sealed class DecomposeOptions
         set => _typeResolver = value;
     }
 
-    public IRedirect[]? RedirectMap { get; set; }
-
     public bool IncludeRoot { get; set; }
     public bool IncludeFields { get; set; }
     public bool IncludeEvents { get; set; }

@@ -36,7 +36,7 @@ public partial class SummaryViewBase
             .Append("Name: ")
             .AppendLine(decomposedObject.Name)
             .Append("Type: ")
-            .AppendLine(decomposedObject.Type)
+            .AppendLine(decomposedObject.TypeName)
             .Append("Full type: ")
             .AppendLine(decomposedObject.TypeFullName)
             .Append("Members: ")
@@ -74,11 +74,11 @@ public partial class SummaryViewBase
 
         builder.AppendLine(member.Name)
             .Append("Type: ")
-            .AppendLine(member.Type)
+            .AppendLine(member.Value.TypeName)
             .Append("Full type: ")
-            .AppendLine(member.TypeFullName)
+            .AppendLine(member.Value.TypeFullName)
             .Append("Value: ")
-            .Append(member.Value);
+            .Append(member.Value.Name);
 
         if (member.Description is not null)
         {

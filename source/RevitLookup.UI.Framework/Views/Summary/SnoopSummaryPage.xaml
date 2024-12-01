@@ -122,7 +122,7 @@
                                 <rl:TextBlock
                                     VerticalAlignment="Center"
                                     FontTypography="Caption"
-                                    Text="{Binding Value, Mode=OneTime}" />
+                                    Text="{Binding Value.Name, Mode=OneTime}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

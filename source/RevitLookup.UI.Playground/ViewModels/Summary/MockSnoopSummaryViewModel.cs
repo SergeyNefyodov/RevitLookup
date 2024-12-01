@@ -106,9 +106,9 @@ public sealed partial class MockSnoopSummaryViewModel : ObservableObject, ISnoop
     private List<ObservableDecomposedObjectsGroup> ApplyGrouping(List<ObservableDecomposedObject> objects)
     {
         return objects
-            .OrderBy(data => data.Type)
+            .OrderBy(data => data.TypeName)
             .ThenBy(data => data.Name)
-            .GroupBy(data => data.Type)
+            .GroupBy(data => data.TypeName)
             .Select(group => new ObservableDecomposedObjectsGroup
             {
                 GroupName = group.Key,

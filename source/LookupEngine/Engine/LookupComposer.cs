@@ -32,8 +32,8 @@ public sealed partial class LookupComposer
     private readonly DecomposeOptions _options;
 
     private int _depth;
-    private Type? _subtype;
-    private Descriptor? _subtypeDescriptor;
+    private Type? _declaringType;
+    private Descriptor? _declaringDescriptor;
     private DecomposedObject? _decomposedObject;
 
     private LookupComposer(DecomposeOptions options)
@@ -55,32 +55,32 @@ public sealed partial class LookupComposer
         set => _decomposedObject = value;
     }
 
-    internal Type Subtype
+    internal Type DeclaringType
     {
         get
         {
-            if (_subtype is null)
+            if (_declaringType is null)
             {
-                EngineException.ThrowIfEngineNotInitialized(nameof(Subtype));
+                EngineException.ThrowIfEngineNotInitialized(nameof(DeclaringType));
             }
 
-            return _subtype;
+            return _declaringType;
         }
-        set => _subtype = value;
+        set => _declaringType = value;
     }
 
-    internal Descriptor SubtypeDescriptor
+    internal Descriptor DeclaringDescriptor
     {
         get
         {
-            if (_subtypeDescriptor is null)
+            if (_declaringDescriptor is null)
             {
-                EngineException.ThrowIfEngineNotInitialized(nameof(SubtypeDescriptor));
+                EngineException.ThrowIfEngineNotInitialized(nameof(DeclaringDescriptor));
             }
 
-            return _subtypeDescriptor;
+            return _declaringDescriptor;
         }
-        set => _subtypeDescriptor = value;
+        set => _declaringDescriptor = value;
     }
 
     [Pure]

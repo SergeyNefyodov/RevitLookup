@@ -5,13 +5,13 @@ namespace RevitLookup.Abstractions.ObservableModels.Decomposition;
 
 public sealed class ObservableDecomposedMember : ObservableObject
 {
-    public required int Depth { get; init; }
-    public required object? Value { get; init; }
-    public required string Name { get; init; }
-    public required string Type { get; init; }
-    public required string TypeFullName { get; init; }
-    public required string? Description { get; init; }
-    public required double ComputationTime { get; init; }
-    public required long AllocatedBytes { get; init; }
-    public required MemberAttributes MemberAttributes { get; init; }
+    public required ObservableDecomposedValue Value { get; set; }
+    public required int Depth { get; set; }
+    public required string Name { get; set; }
+    public required string DeclaringTypeName { get; set; }
+    public required string DeclaringTypeFullName { get; set; }
+    public string? Description { get; set; }
+    public double ComputationTime { get; set; }
+    public long AllocatedBytes { get; set; }
+    public MemberAttributes MemberAttributes { get; set; }
 }

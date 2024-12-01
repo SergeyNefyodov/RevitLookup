@@ -29,7 +29,7 @@ public sealed partial class LookupComposer
     {
         if (!_options.IncludeFields) return;
 
-        var members = Subtype.GetFields(bindingFlags);
+        var members = DeclaringType.GetFields(bindingFlags);
         foreach (var member in members)
         {
             if (member.IsSpecialName) continue;

@@ -35,8 +35,8 @@ public sealed partial class LookupComposer
 
         for (var i = objectTypeHierarchy.Count - 1; i >= 0; i--)
         {
-            Subtype = objectTypeHierarchy[i];
-            SubtypeDescriptor = _options.TypeResolver.Invoke(instance, Subtype);
+            DeclaringType = objectTypeHierarchy[i];
+            DeclaringDescriptor = _options.TypeResolver.Invoke(instance, DeclaringType);
 
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
             if (!_options.IgnoreStaticMembers) flags |= BindingFlags.Static;
@@ -51,7 +51,7 @@ public sealed partial class LookupComposer
             _depth--;
         }
 
-        Subtype = objectType;
+        DeclaringType = objectType;
         AddEnumerableItems();
 
         return _decomposedObject;
@@ -65,8 +65,8 @@ public sealed partial class LookupComposer
         var staticDescriptor = _options.TypeResolver.Invoke(null, objectType);
         _decomposedObject = CreateStaticDecomposition(objectType, staticDescriptor);
 
-        Subtype = objectType;
-        SubtypeDescriptor = staticDescriptor;
+        DeclaringType = objectType;
+        DeclaringDescriptor = staticDescriptor;
 
         DecomposeFields(flags);
         DecomposeProperties(flags);

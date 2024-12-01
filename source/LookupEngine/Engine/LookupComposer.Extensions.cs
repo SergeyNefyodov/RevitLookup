@@ -29,7 +29,7 @@ public sealed partial class LookupComposer : IExtensionManager
     private void ExecuteExtensions()
     {
         if (!_options.EnableExtensions) return;
-        if (SubtypeDescriptor is not IDescriptorExtension extension) return;
+        if (DeclaringDescriptor is not IDescriptorExtension extension) return;
 
         extension.RegisterExtensions(this);
     }
