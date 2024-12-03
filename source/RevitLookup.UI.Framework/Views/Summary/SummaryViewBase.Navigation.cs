@@ -34,7 +34,7 @@ public partial class SummaryViewBase
     /// <remarks>
     ///     Collect data for selected item
     /// </remarks>
-    protected void OnTreeItemSelected(object sender, RoutedPropertyChangedEventArgs<object> args)
+    private void OnTreeItemSelected(object sender, RoutedPropertyChangedEventArgs<object> args)
     {
         switch (args.NewValue)
         {
@@ -96,7 +96,7 @@ public partial class SummaryViewBase
     /// <summary>
     ///     Handle cursor interaction
     /// </summary>
-    private void OnPresenterCursorInteracted(object sender, MouseEventArgs args)
+    private static void OnPresenterCursorInteracted(object sender, MouseEventArgs args)
     {
         var presenter = (FrameworkElement)sender;
         if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)
@@ -122,7 +122,7 @@ public partial class SummaryViewBase
         presenter.PreviewKeyUp += OnPresenterCursorRestored;
     }
 
-    private void OnPresenterCursorRestored(object sender, KeyEventArgs e)
+    private static void OnPresenterCursorRestored(object sender, KeyEventArgs e)
     {
         var presenter = (FrameworkElement)sender;
         presenter.PreviewKeyUp -= OnPresenterCursorRestored;

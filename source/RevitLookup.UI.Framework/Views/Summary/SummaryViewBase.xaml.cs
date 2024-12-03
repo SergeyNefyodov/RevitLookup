@@ -85,31 +85,32 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     /// <summary>
     ///     Tree view source changed handled. Setup action after the setting source
     /// </summary>
-    private void OnTreeSourceChanged(object? sender, IEnumerable enumerable)
+    private static void OnTreeSourceChanged(object? sender, IEnumerable enumerable)
     {
-        var self = (FrameworkElement)sender!;
+        var treeView = (TreeView)sender!;
 
-        if (self.IsLoaded)
+        if (treeView.IsLoaded)
         {
-            ExpandFirstTreeGroup();
+            ExpandFirstTreeGroup(treeView);
             return;
         }
 
-        self.Loaded += OnLoaded;
+        treeView.Loaded += OnLoaded;
         return;
 
         void OnLoaded(object nestedSender, RoutedEventArgs args)
         {
-            var nestedSelf = (FrameworkElement)nestedSender;
-            nestedSelf.Loaded -= OnLoaded;
-            ExpandFirstTreeGroup();
+            var self = (TreeView)nestedSender;
+            self.Loaded -= OnLoaded;
+            ExpandFirstTreeGroup(treeView);
         }
     }
 
     /// <summary>
     ///     Expand the first tree view group after setting source
     /// </summary>
-    private async void ExpandFirstTreeGroup()
+    /// <param name="treeView"></param>
+    private static async void ExpandFirstTreeGroup(TreeView treeView)
     {
         try
         {
@@ -118,9 +119,9 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
             await Task.Delay(transitionDuration);
 
             //3 is optimal groups count for expanding
-            if (TreeViewControl.Items.Count > 3) return;
+            if (treeView.Items.Count > 3) return;
 
-            var rootItem = (TreeViewItem?)TreeViewControl.GetItemAtIndex(0);
+            var rootItem = (TreeViewItem?)treeView.GetItemAtIndex(0);
             if (rootItem is null) return;
 
             var nestedItem = (TreeViewItem?)rootItem.GetItemAtIndex(0);
@@ -198,6 +199,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
         dataGrid.LoadingRow += OnGridRowLoading;
         dataGrid.MouseMove += OnPresenterCursorInteracted;
         dataGrid.ItemsSourceChanged += ApplySorting;
+        dataGrid.Loaded += FixInitialGridColumnSize;
     }
 
     /// <summary>
@@ -212,7 +214,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     /// <summary>
     ///     Set DataGrid sorting rules
     /// </summary>
-    private void ApplySorting(object? sender, EventArgs eventArgs)
+    private static void ApplySorting(object? sender, EventArgs eventArgs)
     {
         var dataGrid = (DataGrid)sender!;
 

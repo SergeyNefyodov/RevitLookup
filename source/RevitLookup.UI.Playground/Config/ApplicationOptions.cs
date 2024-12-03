@@ -18,7 +18,7 @@ public static class ApplicationOptions
 
     public static void AddFolderOptions(this IServiceCollection services)
     {
-        var rootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+        var rootPath = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory!.FullName;
         services.Configure<FoldersOptions>(options =>
         {
             options.RootFolder = rootPath;

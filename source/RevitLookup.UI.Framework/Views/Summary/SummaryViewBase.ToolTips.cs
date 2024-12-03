@@ -30,7 +30,7 @@ public partial class SummaryViewBase
     /// <summary>
     ///     Create tree view tooltips
     /// </summary>
-    private void CreateTreeTooltip(ObservableDecomposedObject decomposedObject, FrameworkElement row)
+    private static void CreateTreeTooltip(ObservableDecomposedObject decomposedObject, FrameworkElement row)
     {
         if (row.ToolTip is not null) return;
 
@@ -49,7 +49,7 @@ public partial class SummaryViewBase
     /// <summary>
     ///     Create tree view tooltips
     /// </summary>
-    private void CreateTreeTooltip(ObservableDecomposedObjectsGroup decomposedGroup, FrameworkElement row)
+    private static void CreateTreeTooltip(ObservableDecomposedObjectsGroup decomposedGroup, FrameworkElement row)
     {
         if (row.ToolTip is not null) return;
 
@@ -64,7 +64,7 @@ public partial class SummaryViewBase
     /// <summary>
     ///     Create data grid tooltips
     /// </summary>
-    private void CreateGridRowTooltip(ObservableDecomposedMember member, FrameworkElement row)
+    private static void CreateGridRowTooltip(ObservableDecomposedMember member, FrameworkElement row)
     {
         if (row.ToolTip is not null) return;
 

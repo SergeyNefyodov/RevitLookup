@@ -72,7 +72,7 @@
                 CanUserReorderColumns="False"
                 AutoGenerateColumns="False"
                 HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Visible"
                 ItemsSource="{Binding ViewModel.FilteredMembers}"
                 RowStyle="{x:Null}"
                 RowStyleSelector="{StaticResource DataGridRowStyleSelector}"
@@ -122,7 +122,7 @@
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn
                         Width="61"
-                        MinWidth="0"
+                        MinWidth="61"
                         CanUserResize="False">
                         <DataGridTemplateColumn.Header>
                             <rl:TextBlock
@@ -143,7 +143,7 @@
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn
                         Width="73"
-                        MinWidth="0"
+                        MinWidth="73"
                         CanUserResize="False">
                         <DataGridTemplateColumn.Header>
                             <rl:TextBlock
