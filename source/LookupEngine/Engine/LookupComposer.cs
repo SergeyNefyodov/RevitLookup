@@ -29,30 +29,33 @@ namespace LookupEngine;
 [PublicAPI]
 public sealed partial class LookupComposer
 {
+    private readonly object? _input;
     private readonly DecomposeOptions _options;
 
     private int _depth;
     private Type? _declaringType;
     private Descriptor? _declaringDescriptor;
     private DecomposedObject? _decomposedObject;
+    private List<DecomposedMember>? _decomposedMembers;
 
-    private LookupComposer(DecomposeOptions options)
+    private LookupComposer(object value, DecomposeOptions options)
     {
+        _input = value;
         _options = options;
     }
 
-    internal DecomposedObject DecomposedObject
+    internal List<DecomposedMember> DecomposedMembers
     {
         get
         {
-            if (_decomposedObject is null)
+            if (_decomposedMembers is null)
             {
-                EngineException.ThrowIfEngineNotInitialized(nameof(DecomposedObject));
+                EngineException.ThrowIfEngineNotInitialized(nameof(DecomposedMembers));
             }
 
-            return _decomposedObject;
+            return _decomposedMembers;
         }
-        set => _decomposedObject = value;
+        set => _decomposedMembers = value;
     }
 
     internal Type DeclaringType
@@ -89,12 +92,43 @@ public sealed partial class LookupComposer
         if (value is null) return CreateNullableDecomposition();
 
         options ??= DecomposeOptions.Default;
-        var composer = new LookupComposer(options);
+        var composer = new LookupComposer(value, options);
 
         return value switch
         {
-            Type staticObjectType => composer.DecomposeStaticObject(staticObjectType),
-            _ => composer.DecomposeInstanceObject(value)
+            Type type => composer.DecomposeType(type, true),
+            _ => composer.DecomposeInstance(value, true)
+        };
+    }
+
+
+    [Pure]
+    public static DecomposedObject DecomposeObject(object? value, DecomposeOptions? options = null)
+    {
+        if (value is null) return CreateNullableDecomposition();
+
+        options ??= DecomposeOptions.Default;
+        var composer = new LookupComposer(value, options);
+
+        return value switch
+        {
+            Type type => composer.DecomposeType(type, false),
+            _ => composer.DecomposeInstance(value, false)
+        };
+    }
+
+    [Pure]
+    public static List<DecomposedMember> DecomposeMembers(object? value, DecomposeOptions? options = null)
+    {
+        if (value is null) return [];
+
+        options ??= DecomposeOptions.Default;
+        var composer = new LookupComposer(value, options);
+
+        return value switch
+        {
+            Type type => composer.DecomposeTypeMembers(type),
+            _ => composer.DecomposeInstanceMembers(value, value.GetType())
         };
     }
 }

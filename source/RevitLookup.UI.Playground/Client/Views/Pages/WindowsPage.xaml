@@ -22,6 +22,21 @@
             Icon="{ui:SymbolIcon AirplaneTakeOff24}"
             Content="RevitLookup window"
             Command="{Binding ViewModel.ShowRevitLookupWindowCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Color24}"
+            Content="Decompose colors"
+            Command="{Binding ViewModel.DecomposeColorsCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Textbox24}"
+            Content="Decompose text"
+            Command="{Binding ViewModel.DecomposeTextCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon BuildingTownhouse24}"
+            Content="Decompose assembly"
+            Command="{Binding ViewModel.DecomposeAssemblyCommand}" />
     </StackPanel>
 
 </Page>

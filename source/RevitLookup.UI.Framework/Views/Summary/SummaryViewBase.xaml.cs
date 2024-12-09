@@ -152,10 +152,10 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
                 if (treeItem is null) continue;
 
                 treeItem.MouseEnter -= OnTreeItemCaptured;
-                // treeItem.PreviewMouseLeftButtonUp -= OnTreeItemClicked;
+                treeItem.PreviewMouseLeftButtonUp -= OnTreeItemClicked;
 
                 treeItem.MouseEnter += OnTreeItemCaptured;
-                // treeItem.PreviewMouseLeftButtonUp += OnTreeItemClicked;
+                treeItem.PreviewMouseLeftButtonUp += OnTreeItemClicked;
 
                 if (treeItem.Items.Count > 0)
                 {
@@ -233,7 +233,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     {
         var row = args.Row;
         row.MouseEnter += OnGridRowCaptured;
-        // row.PreviewMouseLeftButtonUp += OnGridRowClicked;
+        row.PreviewMouseLeftButtonUp += OnGridRowClicked;
     }
 
     /// <summary>

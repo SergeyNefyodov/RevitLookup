@@ -35,6 +35,12 @@ public sealed partial class PageViewer
         return ShowDialog();
     }
 
+    public void RunService<T>(Action<T> handler) where T : class
+    {
+        var service = _serviceProvider.GetRequiredService<T>();
+        handler.Invoke(service);
+    }
+
     private void OnViewerFrameResized(object sender, SizeChangedEventArgs args)
     {
         if (args.PreviousSize.Height == 0 || args.PreviousSize.Width == 0) return;

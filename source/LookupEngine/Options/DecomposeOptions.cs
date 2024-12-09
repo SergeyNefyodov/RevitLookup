@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections;
+using JetBrains.Annotations;
 using LookupEngine.Abstractions.ComponentModel;
 
 // ReSharper disable once CheckNamespace
@@ -19,8 +20,8 @@ public sealed class DecomposeOptions
     public bool IncludeFields { get; set; }
     public bool IncludeEvents { get; set; }
     public bool IncludeUnsupported { get; set; }
-    public bool IgnorePrivateMembers { get; set; } = true;
-    public bool IgnoreStaticMembers { get; set; } = true;
+    public bool IncludePrivateMembers { get; set; }
+    public bool IncludeStaticMembers { get; set; }
     public bool EnableExtensions { get; set; }
 
     public static DecomposeOptions Default => new();
@@ -30,6 +31,8 @@ public sealed class DecomposeOptions
         return obj switch
         {
             bool value when type is null || type == typeof(bool) => new BooleanDescriptor(value),
+            string value when type is null || type == typeof(string) => new StringDescriptor(value),
+            IEnumerable value => new EnumerableDescriptor(value),
             Exception value when type is null || type == typeof(Exception) => new ExceptionDescriptor(value),
             _ => new ObjectDescriptor(obj)
         };

@@ -36,7 +36,6 @@ public sealed partial class LookupComposer
         {
             Name = $"{nameof(System)}.{nameof(Object)}",
             RawValue = null,
-            Members = [],
             TypeName = nameof(Object),
             TypeFullName = $"{nameof(System)}.{nameof(Object)}"
         };
@@ -48,12 +47,11 @@ public sealed partial class LookupComposer
 
         return new DecomposedObject
         {
-            Name = descriptor.Name ?? formatTypeName,
+            Name = string.IsNullOrEmpty(descriptor.Name) ? formatTypeName : descriptor.Name!,
             RawValue = instance,
             TypeName = formatTypeName,
-            TypeFullName = ReflexionFormater.FormatTypeFullName(type),
-            Descriptor = descriptor,
-            Members = new List<DecomposedMember>(32)
+            TypeFullName = $"{type.Namespace}.{formatTypeName}",
+            Descriptor = descriptor
         };
     }
 
@@ -63,12 +61,11 @@ public sealed partial class LookupComposer
 
         return new DecomposedObject
         {
-            Name = descriptor.Name ?? formatTypeName,
+            Name = string.IsNullOrEmpty(descriptor.Name) ? formatTypeName : descriptor.Name!,
             RawValue = type,
             TypeName = formatTypeName,
-            TypeFullName = ReflexionFormater.FormatTypeFullName(type),
-            Descriptor = descriptor,
-            Members = new List<DecomposedMember>(32)
+            TypeFullName = $"{type.Namespace}.{formatTypeName}",
+            Descriptor = descriptor
         };
     }
 
@@ -78,13 +75,13 @@ public sealed partial class LookupComposer
         {
             Depth = _depth,
             Value = CreateValue(nameof(IEnumerable), value),
-            Name = $"{DeclaringType.Name}[{index}]",
+            Name = $"{DeclaringType.Name.Replace("[]", string.Empty)}[{index}]",
             MemberAttributes = MemberAttributes.Property,
             DeclaringTypeName = nameof(IEnumerable),
             DeclaringTypeFullName = $"{nameof(System)}.{nameof(System.Collections)}.{nameof(IEnumerable)}",
         };
 
-        DecomposedObject.Members.Add(member);
+        DecomposedMembers.Add(member);
     }
 
     private DecomposedValue CreateNullableValue()
@@ -109,44 +106,48 @@ public sealed partial class LookupComposer
         return new DecomposedValue
         {
             RawValue = value,
-            Name = valueDescriptor.Name ?? formatTypeName,
+            Name = string.IsNullOrEmpty(valueDescriptor.Name) ? formatTypeName : valueDescriptor.Name!,
             TypeName = formatTypeName,
-            TypeFullName = ReflexionFormater.FormatTypeFullName(valueType),
+            TypeFullName = $"{valueType.Namespace}.{formatTypeName}",
             Descriptor = valueDescriptor
         };
     }
 
     private void WriteExtensionMember(object? value, string name)
     {
+        var formatTypeName = ReflexionFormater.FormatTypeName(DeclaringType);
+
         var member = new DecomposedMember
         {
             Depth = _depth,
             Name = name,
             Value = CreateValue(name, value),
-            DeclaringTypeName = ReflexionFormater.FormatTypeName(DeclaringType),
-            DeclaringTypeFullName = ReflexionFormater.FormatTypeFullName(DeclaringType),
+            DeclaringTypeName = formatTypeName,
+            DeclaringTypeFullName = $"{DeclaringType.Namespace}.{formatTypeName}",
             MemberAttributes = MemberAttributes.Extension,
             ComputationTime = _timeDiagnoser.GetElapsed().TotalMilliseconds,
             AllocatedBytes = _memoryDiagnoser.GetAllocatedBytes()
         };
 
-        DecomposedObject.Members.Add(member);
+        DecomposedMembers.Add(member);
     }
 
     private void WriteDecompositionMember(object? value, MemberInfo memberInfo, ParameterInfo[]? parameters = null)
     {
+        var formatTypeName = ReflexionFormater.FormatTypeName(DeclaringType);
+
         var member = new DecomposedMember
         {
             Depth = _depth,
             Value = CreateValue(memberInfo.Name, value),
             Name = ReflexionFormater.FormatMemberName(memberInfo, parameters),
-            DeclaringTypeName = ReflexionFormater.FormatTypeName(DeclaringType),
-            DeclaringTypeFullName = ReflexionFormater.FormatTypeFullName(DeclaringType),
+            DeclaringTypeName = formatTypeName,
+            DeclaringTypeFullName = $"{DeclaringType.Namespace}.{formatTypeName}",
             MemberAttributes = ModifiersFormater.FormatAttributes(memberInfo),
             ComputationTime = _timeDiagnoser.GetElapsed().TotalMilliseconds,
             AllocatedBytes = _memoryDiagnoser.GetAllocatedBytes()
         };
 
-        DecomposedObject.Members.Add(member);
+        DecomposedMembers.Add(member);
     }
 }

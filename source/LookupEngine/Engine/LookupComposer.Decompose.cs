@@ -18,6 +18,7 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using System.Diagnostics.Contracts;
 using System.Reflection;
 using LookupEngine.Abstractions;
 
@@ -26,21 +27,51 @@ namespace LookupEngine;
 
 public sealed partial class LookupComposer
 {
-    private DecomposedObject DecomposeInstanceObject(object instance)
+    [Pure]
+    private DecomposedObject DecomposeInstance(object instance, bool decomposeMembers)
     {
         var objectType = instance.GetType();
-        var objectTypeHierarchy = GetTypeHierarchy(objectType);
         var instanceDescriptor = _options.TypeResolver.Invoke(instance, null);
         _decomposedObject = CreateInstanceDecomposition(instance, objectType, instanceDescriptor);
 
+        if (decomposeMembers)
+        {
+            var members = DecomposeInstanceMembers(instance, objectType);
+            _decomposedObject.Members.AddRange(members);
+        }
+
+        return _decomposedObject;
+    }
+
+    [Pure]
+    private DecomposedObject DecomposeType(Type type, bool decomposeMembers)
+    {
+        var staticDescriptor = _options.TypeResolver.Invoke(null, type);
+        _decomposedObject = CreateStaticDecomposition(type, staticDescriptor);
+
+        if (decomposeMembers)
+        {
+            var members = DecomposeTypeMembers(type);
+            _decomposedObject.Members.AddRange(members);
+        }
+
+        return _decomposedObject;
+    }
+
+    [Pure]
+    private List<DecomposedMember> DecomposeInstanceMembers(object instance, Type objectType)
+    {
+        _decomposedMembers = new List<DecomposedMember>(32);
+
+        var objectTypeHierarchy = GetTypeHierarchy(objectType);
         for (var i = objectTypeHierarchy.Count - 1; i >= 0; i--)
         {
             DeclaringType = objectTypeHierarchy[i];
             DeclaringDescriptor = _options.TypeResolver.Invoke(instance, DeclaringType);
 
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            if (!_options.IgnoreStaticMembers) flags |= BindingFlags.Static;
-            if (!_options.IgnorePrivateMembers) flags |= BindingFlags.NonPublic;
+            if (_options.IncludeStaticMembers) flags |= BindingFlags.Static;
+            if (_options.IncludePrivateMembers) flags |= BindingFlags.NonPublic;
 
             DecomposeFields(flags);
             DecomposeProperties(flags);
@@ -54,27 +85,34 @@ public sealed partial class LookupComposer
         DeclaringType = objectType;
         AddEnumerableItems();
 
-        return _decomposedObject;
+        return _decomposedMembers;
     }
 
-    private DecomposedObject DecomposeStaticObject(Type objectType)
+    [Pure]
+    private List<DecomposedMember> DecomposeTypeMembers(Type type)
     {
+        _decomposedMembers = new List<DecomposedMember>(32);
+
         var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly;
-        if (!_options.IgnorePrivateMembers) flags |= BindingFlags.NonPublic;
+        if (_options.IncludePrivateMembers) flags |= BindingFlags.NonPublic;
 
-        var staticDescriptor = _options.TypeResolver.Invoke(null, objectType);
-        _decomposedObject = CreateStaticDecomposition(objectType, staticDescriptor);
+        var objectTypeHierarchy = GetTypeHierarchy(type);
+        for (var i = objectTypeHierarchy.Count - 1; i >= 0; i--)
+        {
+            DeclaringType = objectTypeHierarchy[i];
+            DeclaringDescriptor = _options.TypeResolver.Invoke(null, DeclaringType);
 
-        DeclaringType = objectType;
-        DeclaringDescriptor = staticDescriptor;
+            DecomposeFields(flags);
+            DecomposeProperties(flags);
+            DecomposeMethods(flags);
 
-        DecomposeFields(flags);
-        DecomposeProperties(flags);
-        DecomposeMethods(flags);
+            _depth--;
+        }
 
-        return _decomposedObject;
+        return _decomposedMembers;
     }
 
+    [Pure]
     private List<Type> GetTypeHierarchy(Type inputType)
     {
         var types = new List<Type>();

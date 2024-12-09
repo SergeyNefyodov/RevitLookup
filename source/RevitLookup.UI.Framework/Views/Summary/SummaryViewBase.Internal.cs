@@ -29,16 +29,20 @@ namespace RevitLookup.UI.Framework.Views.Summary;
 public partial class SummaryViewBase
 {
     private static readonly FieldInfo InternalGridScrollHostField =
-        typeof(System.Windows.Controls.DataGrid).GetField("_internalScrollHost", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)!;
+        typeof(System.Windows.Controls.DataGrid).GetField("_internalScrollHost",
+            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)!;
 
     private static readonly PropertyInfo InternalGridColumnsProperty =
-        typeof(System.Windows.Controls.DataGrid).GetProperty("InternalColumns", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)!;
+        typeof(System.Windows.Controls.DataGrid).GetProperty("InternalColumns",
+            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)!;
 
     private static readonly MethodInfo InternalGridInvalidateColumnWidthsComputationMethod =
-        InternalGridColumnsProperty.PropertyType.GetMethod("InvalidateColumnWidthsComputation", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
+        InternalGridColumnsProperty.PropertyType.GetMethod("InvalidateColumnWidthsComputation",
+            BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
 
     private static readonly MethodInfo InternalGridOnViewportSizeChangedMethod =
-        typeof(System.Windows.Controls.DataGrid).GetMethod("OnViewportSizeChanged", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
+        typeof(System.Windows.Controls.DataGrid).GetMethod("OnViewportSizeChanged",
+            BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
 
     /// <summary>
     ///      By default, WPF calculates the column width after adding items to the ItemSource. This fix calculates it on loading
@@ -49,7 +53,13 @@ public partial class SummaryViewBase
     private static void FixInitialGridColumnSize(object sender, RoutedEventArgs args)
     {
         var dataGrid = (DataGrid)sender;
-        var passiveScrollViewer = dataGrid.FindVisualChild<PassiveScrollViewer>()!;
+        var passiveScrollViewer = dataGrid.FindVisualChild<PassiveScrollViewer>();
+        if (passiveScrollViewer is null)
+        {
+            dataGrid.ApplyTemplate();
+            passiveScrollViewer = dataGrid.FindVisualChild<PassiveScrollViewer>()!;
+        }
+
         var gridColumns = InternalGridColumnsProperty.GetValue(dataGrid);
         InternalGridScrollHostField.SetValue(dataGrid, passiveScrollViewer);
         InternalGridInvalidateColumnWidthsComputationMethod.Invoke(gridColumns, null);

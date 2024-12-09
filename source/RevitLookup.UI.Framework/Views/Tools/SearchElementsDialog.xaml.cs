@@ -19,6 +19,7 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using RevitLookup.Abstractions.ViewModels.Tools;
+using RevitLookup.UI.Framework.Views.Summary;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -27,13 +28,16 @@ namespace RevitLookup.UI.Framework.Views.Tools;
 public sealed partial class SearchElementsDialog
 {
     private readonly ISearchElementsViewModel _viewModel;
+    private readonly INavigationService _navigationService;
 
     public SearchElementsDialog(
         IContentDialogService dialogService,
-        ISearchElementsViewModel viewModel)
+        ISearchElementsViewModel viewModel,
+        INavigationService navigationService)
         : base(dialogService.GetDialogHost())
     {
         _viewModel = viewModel;
+        _navigationService = navigationService;
 
         DataContext = viewModel;
         InitializeComponent();
@@ -48,25 +52,10 @@ public sealed partial class SearchElementsDialog
             {
                 return;
             }
+
+            _navigationService.Navigate(typeof(SnoopSummaryPage));
         }
 
         base.OnButtonClick(button);
     }
-
-    // public async Task ShowDialogAsync()
-    // {
-    //     var result = await ShowAsync();
-    //     if (result != ContentDialogResult.Primary) return;
-    //
-    //     var elements = _viewModel.SearchElements();
-    //     if (elements.Count == 0)
-    //     {
-    //         var notificationService = _serviceProvider.GetRequiredService<INotificationService>();
-    //         notificationService.ShowWarning("Search elements", "There are no elements found for your request");
-    //         return;
-    //     }
-    //
-    //     _serviceProvider.GetRequiredService<ISnoopVisualService>().Snoop(new SnoopableObject(elements));
-    //     _serviceProvider.GetRequiredService<INavigationService>().Navigate(typeof(SnoopPage));
-    // }
 }

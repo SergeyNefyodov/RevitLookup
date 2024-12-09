@@ -79,7 +79,7 @@ public partial class SummaryViewBase
         dataGrid.ContextMenu = contextMenu;
 
         contextMenu.AddMenuItem("RefreshMenuItem")
-            // .SetCommand(ViewModel.RefreshMembersCommand)
+            .SetCommand(ViewModel.RefreshMembersCommand)
             .SetGestureText(Key.F5);
 
         contextMenu.AddSeparator();
@@ -112,64 +112,64 @@ public partial class SummaryViewBase
             .SetHeader("Events")
             .SetStaysOpenOnClick(true)
             .SetChecked(_settingsService.GeneralSettings.IncludeEvents)
-            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeEvents = !parameter.IncludeEvents;
-                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
             });
         contextMenu.AddMenuItem()
             .SetHeader("Extensions")
             .SetStaysOpenOnClick(true)
             .SetChecked(_settingsService.GeneralSettings.IncludeExtensions)
-            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeExtensions = !parameter.IncludeExtensions;
-                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
             });
         contextMenu.AddMenuItem()
             .SetHeader("Fields")
             .SetStaysOpenOnClick(true)
             .SetChecked(_settingsService.GeneralSettings.IncludeFields)
-            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeFields = !parameter.IncludeFields;
-                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
             });
         contextMenu.AddMenuItem()
             .SetHeader("Non-public")
             .SetStaysOpenOnClick(true)
             .SetChecked(_settingsService.GeneralSettings.IncludePrivate)
-            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludePrivate = !parameter.IncludePrivate;
-                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
             });
         contextMenu.AddMenuItem()
             .SetHeader("Root")
             .SetStaysOpenOnClick(true)
             .SetChecked(_settingsService.GeneralSettings.IncludeRootHierarchy)
-            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeRootHierarchy = !parameter.IncludeRootHierarchy;
-                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
             });
         contextMenu.AddMenuItem()
             .SetHeader("Static")
             .SetStaysOpenOnClick(true)
             .SetChecked(_settingsService.GeneralSettings.IncludeStatic)
-            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeStatic = !parameter.IncludeStatic;
-                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
             });
         contextMenu.AddMenuItem()
             .SetHeader("Unsupported")
             .SetStaysOpenOnClick(true)
             .SetChecked(_settingsService.GeneralSettings.IncludeUnsupported)
-            .SetCommand(_settingsService.GeneralSettings, parameter =>
+            .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeUnsupported = !parameter.IncludeUnsupported;
-                // return ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
             });
     }
 

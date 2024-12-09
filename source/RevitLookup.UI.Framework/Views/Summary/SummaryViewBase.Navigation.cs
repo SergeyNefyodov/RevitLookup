@@ -21,6 +21,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using LookupEngine.Abstractions.Configuration;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.UI.Framework.Utils;
 
@@ -47,51 +48,50 @@ public partial class SummaryViewBase
             default:
                 return;
         }
-
-        // ViewModel.FetchMembersCommand.Execute(null);
     }
 
-    // /// <summary>
-    // ///     Handle tree view click event
-    // /// </summary>
-    // /// <remarks>
-    // ///     Open new window for navigation on Ctrl pressed
-    // /// </remarks>
-    // private void OnTreeItemClicked(object sender, RoutedEventArgs args)
-    // {
-    //     if ((Keyboard.Modifiers & ModifierKeys.Control) == 0) return;
-    //     args.Handled = true;
-    //
-    //     var element = (FrameworkElement) args.OriginalSource;
-    //     switch (element.DataContext)
-    //     {
-    //         case SnoopableObject item:
-    //             ViewModel.Navigate(item);
-    //             break;
-    //         case CollectionViewGroup group:
-    //             ViewModel.Navigate(group.Items.Cast<SnoopableObject>().ToArray());
-    //             break;
-    //     }
-    // }
+    /// <summary>
+    ///     Handle tree view click event
+    /// </summary>
+    /// <remarks>
+    ///     Navigate on Ctrl pressed
+    /// </remarks>
+    private void OnTreeItemClicked(object sender, RoutedEventArgs args)
+    {
+        if ((Keyboard.Modifiers & ModifierKeys.Control) == 0) return;
+        args.Handled = true;
 
-    // /// <summary>
-    // ///     Handle data grid click event
-    // /// </summary>
-    // /// <remarks>
-    // ///     Open new window for navigation
-    // /// </remarks>
-    // private void OnGridRowClicked(object sender, RoutedEventArgs args)
-    // {
-    //     var row = (DataGridRow) sender;
-    //     var context = (Descriptor) row.DataContext;
-    //     if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)
-    //     {
-    //         if (context.Value.Descriptor is not IDescriptorCollector) return;
-    //         if (context.Value.Descriptor is IDescriptorEnumerator {IsEmpty: true}) return;
-    //     }
-    //
-    //     ViewModel.Navigate(context.Value);
-    // }
+        var element = (FrameworkElement)args.OriginalSource;
+        switch (element.DataContext)
+        {
+            case ObservableDecomposedObject item:
+                ViewModel.Navigate(item);
+                break;
+            case ObservableDecomposedObjectsGroup group:
+                ViewModel.Navigate(group.GroupItems);
+                break;
+        }
+    }
+
+    /// <summary>
+    ///     Handle data grid click event
+    /// </summary>
+    /// <remarks>
+    ///     Navigate on row clicked
+    /// </remarks>
+    private void OnGridRowClicked(object sender, RoutedEventArgs args)
+    {
+        var row = (DataGridRow)sender;
+        if (row.DataContext is not ObservableDecomposedMember context) return;
+
+        if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)
+        {
+            if (context.Value.Descriptor is not IDescriptorCollector) return;
+            if (context.Value.Descriptor is IDescriptorEnumerator { IsEmpty: true }) return;
+        }
+
+        ViewModel.Navigate(context.Value.RawValue);
+    }
 
     /// <summary>
     ///     Handle cursor interaction
@@ -122,6 +122,9 @@ public partial class SummaryViewBase
         presenter.PreviewKeyUp += OnPresenterCursorRestored;
     }
 
+    /// <summary>
+    ///     Restore cursor
+    /// </summary>
     private static void OnPresenterCursorRestored(object sender, KeyEventArgs e)
     {
         var presenter = (FrameworkElement)sender;

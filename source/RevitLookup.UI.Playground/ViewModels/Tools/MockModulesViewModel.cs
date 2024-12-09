@@ -25,6 +25,7 @@ using RevitLookup.Abstractions.ViewModels.Tools;
 #if NETCOREAPP
 using System.Runtime.Loader;
 #endif
+
 #if NETFRAMEWORK
 using RevitLookup.UI.Framework.Extensions;
 #endif
@@ -65,29 +66,36 @@ public sealed partial class MockModulesViewModel : ObservableObject, IModulesVie
 
     async partial void OnSearchTextChanged(string value)
     {
-        if (string.IsNullOrEmpty(SearchText))
+        try
         {
-            FilteredModules = Modules;
-            return;
-        }
-
-        FilteredModules = await Task.Run(() =>
-        {
-            var formattedText = value.Trim();
-            var searchResults = new List<ModuleInfo>();
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var module in Modules)
+            if (string.IsNullOrEmpty(SearchText))
             {
-                if (module.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
-                    module.Path.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
-                    module.Version.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
-                {
-                    searchResults.Add(module);
-                }
+                FilteredModules = Modules;
+                return;
             }
 
-            return searchResults;
-        });
+            FilteredModules = await Task.Run(() =>
+            {
+                var formattedText = value.Trim();
+                var searchResults = new List<ModuleInfo>();
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                foreach (var module in Modules)
+                {
+                    if (module.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
+                        module.Path.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
+                        module.Version.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
+                    {
+                        searchResults.Add(module);
+                    }
+                }
+
+                return searchResults;
+            });
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     partial void OnModulesChanged(List<ModuleInfo> value)

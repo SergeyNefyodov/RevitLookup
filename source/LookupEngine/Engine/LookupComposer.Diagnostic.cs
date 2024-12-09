@@ -35,7 +35,7 @@ public sealed partial class LookupComposer
         _timeDiagnoser.StartMonitoring();
         _memoryDiagnoser.StartMonitoring();
 
-        var value = member.GetValue(DecomposedObject.RawValue);
+        var value = member.GetValue(_input);
 
         _memoryDiagnoser.StopMonitoring();
         _timeDiagnoser.StopMonitoring();
@@ -50,7 +50,7 @@ public sealed partial class LookupComposer
             _timeDiagnoser.StartMonitoring();
             _memoryDiagnoser.StartMonitoring();
 
-            return member.GetValue(DecomposedObject.RawValue);
+            return member.GetValue(_input);
         }
         finally
         {
@@ -66,7 +66,7 @@ public sealed partial class LookupComposer
             _timeDiagnoser.StartMonitoring();
             _memoryDiagnoser.StartMonitoring();
 
-            return member.Invoke(DecomposedObject.RawValue, null);
+            return member.Invoke(_input, null);
         }
         finally
         {

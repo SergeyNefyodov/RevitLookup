@@ -23,14 +23,6 @@ public static class ReflexionFormater
         return typeName;
     }
 
-    public static string FormatTypeFullName(Type type)
-    {
-        var fullName = type.FullName;
-        if (fullName is null) return string.Empty;
-
-        return type.IsGenericType ? fullName[..fullName.IndexOf('[')] : fullName;
-    }
-
     public static string FormatMemberName(MemberInfo member, ParameterInfo[]? parameters)
     {
         if (parameters is null) return member.Name;

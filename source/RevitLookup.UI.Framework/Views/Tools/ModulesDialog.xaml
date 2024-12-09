@@ -43,6 +43,7 @@
             CanUserResizeColumns="True"
             CanUserSortColumns="True"
             MinColumnWidth="100"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
             ItemsSource="{Binding FilteredModules}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn

@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Windows.Media;
-using Bogus;
+﻿using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using LookupEngine;
+using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Summary;
+using RevitLookup.UI.Framework.Views.Summary;
 using RevitLookup.UI.Playground.Mappers;
 #if NETFRAMEWORK
 using RevitLookup.UI.Framework.Extensions;
@@ -15,75 +16,64 @@ using RevitLookup.UI.Framework.Extensions;
 namespace RevitLookup.UI.Playground.ViewModels.Summary;
 
 [UsedImplicitly]
-public sealed partial class MockSnoopSummaryViewModel : ObservableObject, ISnoopSummaryViewModel
+public sealed partial class MockSnoopSummaryViewModel(
+    ISettingsService settingsService,
+    IWindowIntercomService intercomService,
+    INotificationService notificationService,
+    ILogger<MockSnoopSummaryViewModel> logger)
+    : ObservableObject, ISnoopSummaryViewModel
 {
     [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private ObservableDecomposedObject? _selectedDecomposedObject;
     [ObservableProperty] private List<ObservableDecomposedObject> _decomposedObjects = [];
     [ObservableProperty] private List<ObservableDecomposedObjectsGroup> _filteredDecomposedObjects = [];
-    [ObservableProperty] private List<ObservableDecomposedMember> _members = [];
-    [ObservableProperty] private List<ObservableDecomposedMember> _filteredMembers = [];
 
-    public MockSnoopSummaryViewModel(ISettingsService settingsService)
+    [RelayCommand]
+    private async Task RefreshMembersAsync()
     {
-        var globalFaker = new Faker();
-        var strings = new Faker<string>()
-            .CustomInstantiator(faker => faker.Lorem.Sentence(40))
-            .GenerateBetween(1, 10);
-
-        var integers = Enumerable.Range(0, globalFaker.Random.Int(1, 10))
-            .Select(_ => globalFaker.Random.Int())
-            .ToList();
-
-        var colors = Enumerable.Range(0, globalFaker.Random.Int(1, 10))
-            .Select(_ => Color.FromRgb(globalFaker.Random.Byte(), globalFaker.Random.Byte(), globalFaker.Random.Byte()))
-            .ToList();
-
-        var objects = new ArrayList();
-        objects.AddRange(strings);
-        objects.AddRange(integers);
-        objects.AddRange(colors);
-
-        var options = new DecomposeOptions
+        foreach (var decomposedObject in DecomposedObjects)
         {
-            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
-            IncludeFields = settingsService.GeneralSettings.IncludeFields,
-            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
-            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
-            IgnorePrivateMembers = !settingsService.GeneralSettings.IncludePrivate,
-            IgnoreStaticMembers = !settingsService.GeneralSettings.IncludeStatic,
-            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions
-        };
-
-        var decomposedObjects = new List<ObservableDecomposedObject>();
-        foreach (var obj in objects)
-        {
-            var decomposedObject = LookupComposer.Decompose(obj, options);
-            decomposedObjects.Add(DecompositionResultMapper.Convert(decomposedObject));
+            decomposedObject.Members.Clear();
         }
 
-        DecomposedObjects = decomposedObjects;
+        try
+        {
+            await FetchMembersAsync(SelectedDecomposedObject);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Members decomposing failed");
+            notificationService.ShowError("Lookup engine error", exception);
+        }
+    }
+
+    public void Navigate(object? value)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(value)
+            .DependsOn(intercomService.GetHost())
+            .Show<SnoopSummaryPage>();
+    }
+
+    public void Navigate(ObservableDecomposedObject value)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(value)
+            .DependsOn(intercomService.GetHost())
+            .Show<SnoopSummaryPage>();
+    }
+
+    public void Navigate(List<ObservableDecomposedObject> values)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(values)
+            .DependsOn(intercomService.GetHost())
+            .Show<SnoopSummaryPage>();
     }
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)
     {
         OnSearchTextChanged(SearchText);
-    }
-
-    partial void OnSelectedDecomposedObjectChanged(ObservableDecomposedObject? value)
-    {
-        if (value is null)
-        {
-            Members = [];
-            return;
-        }
-
-        Members = value.Members;
-    }
-
-    partial void OnMembersChanged(List<ObservableDecomposedMember> value)
-    {
-        FilteredMembers = value;
     }
 
     async partial void OnSearchTextChanged(string value)
@@ -111,11 +101,65 @@ public sealed partial class MockSnoopSummaryViewModel : ObservableObject, ISnoop
 
                 return ApplyGrouping(searchResults);
             });
+
+            if (FilteredDecomposedObjects.Count == 0)
+            {
+                SelectedDecomposedObject = null;
+            }
         }
         catch
         {
             // ignored
         }
+    }
+
+    async partial void OnSelectedDecomposedObjectChanged(ObservableDecomposedObject? value)
+    {
+        try
+        {
+            await FetchMembersAsync(value);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Members decomposing failed");
+            notificationService.ShowError("Lookup engine error", exception);
+        }
+    }
+
+    private async Task FetchMembersAsync(ObservableDecomposedObject? value)
+    {
+        if (value is null) return;
+        if (value.Members.Count > 0) return;
+
+        value.Members = await DecomposeMembersAsync(value);
+    }
+
+    [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
+    private async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
+    {
+        var options = new DecomposeOptions
+        {
+            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
+            IncludeFields = settingsService.GeneralSettings.IncludeFields,
+            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
+            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
+            IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
+            IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
+            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions
+        };
+
+        return await Task.Run(() =>
+        {
+            var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
+            var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
+
+            foreach (var decomposedMember in decomposedMembers)
+            {
+                members.Add(DecompositionResultMapper.Convert(decomposedMember));
+            }
+
+            return members;
+        });
     }
 
     private List<ObservableDecomposedObjectsGroup> ApplyGrouping(List<ObservableDecomposedObject> objects)

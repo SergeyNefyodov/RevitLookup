@@ -40,9 +40,7 @@ public partial class SummaryViewBase
             .Append("Type: ")
             .AppendLine(decomposedObject.TypeName)
             .Append("Full type: ")
-            .AppendLine(decomposedObject.TypeFullName)
-            .Append("Members: ")
-            .Append(decomposedObject.Members.Count)
+            .Append(decomposedObject.TypeFullName)
             .ToString();
     }
 

@@ -1,7 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
+using RevitLookup.Abstractions.Models.Summary;
 using RevitLookup.Abstractions.Models.UserInterface;
+using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Dashboard;
+using RevitLookup.UI.Framework.Views.Summary;
+using RevitLookup.UI.Framework.Views.Tools;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
 
 namespace RevitLookup.UI.Playground.ViewModels.Dashboard;
@@ -9,8 +15,22 @@ namespace RevitLookup.UI.Playground.ViewModels.Dashboard;
 [UsedImplicitly]
 public sealed partial class MockDashboardViewModel : IDashboardViewModel
 {
-    public MockDashboardViewModel()
+    private readonly IServiceProvider _serviceProvider;
+    private readonly INavigationService _navigationService;
+    private readonly INotificationService _notificationService;
+    private readonly IVisualDecompositionService _visualDecompositionService;
+
+    public MockDashboardViewModel(
+        IServiceProvider serviceProvider,
+        INavigationService navigationService,
+        INotificationService notificationService,
+        IVisualDecompositionService visualDecompositionService)
     {
+        _serviceProvider = serviceProvider;
+        _navigationService = navigationService;
+        _notificationService = notificationService;
+        _visualDecompositionService = visualDecompositionService;
+
         NavigationGroups =
         [
             new NavigationCardGroup
@@ -255,12 +275,119 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
     [RelayCommand]
     private async Task NavigatePage(string? parameter)
     {
-        await Task.CompletedTask;
+        switch (parameter)
+        {
+            case "view":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.View);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "document":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Document);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "application":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Application);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "uiApplication":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.UiApplication);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "database":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Database);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "dependents":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.DependentElements);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "selection":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Selection);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "linked":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.LinkedElement);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "face":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Face);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "edge":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Edge);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "point":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Point);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "subElement":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.SubElement);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "components":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.ComponentManager);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "performance":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.PerformanceAdviser);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "updaters":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.UpdaterRegistry);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "services":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Services);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "schemas":
+                await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Schemas);
+                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                break;
+            case "events":
+                // _navigationService.Navigate(typeof(EventsPage));
+                break;
+            case "revitSettings":
+                // _navigationService.NavigateWithHierarchy(typeof(RevitSettingsPage));
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(parameter), parameter);
+        }
     }
 
     [RelayCommand]
     private async Task OpenDialog(string parameter)
     {
-        await Task.CompletedTask;
+        try
+        {
+            switch (parameter)
+            {
+                case "parameters":
+                    var unitsDialog = _serviceProvider.GetRequiredService<UnitsDialog>();
+                    await unitsDialog.ShowParametersDialogAsync();
+                    return;
+                case "categories":
+                    unitsDialog = _serviceProvider.GetRequiredService<UnitsDialog>();
+                    await unitsDialog.ShowCategoriesDialogAsync();
+                    return;
+                case "forge":
+                    unitsDialog = _serviceProvider.GetRequiredService<UnitsDialog>();
+                    await unitsDialog.ShowForgeSchemaDialogAsync();
+                    return;
+                case "search":
+                    var searchDialog = _serviceProvider.GetRequiredService<SearchElementsDialog>();
+                    await searchDialog.ShowAsync();
+                    return;
+                case "modules":
+                    var modulesDialog = _serviceProvider.GetRequiredService<ModulesDialog>();
+                    await modulesDialog.ShowAsync();
+                    return;
+            }
+        }
+        catch (Exception exception)
+        {
+            _notificationService.ShowError("Failed to open dialog", exception);
+        }
     }
 }

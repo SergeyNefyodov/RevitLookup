@@ -27,7 +27,7 @@ public sealed partial class LookupComposer
 {
     private void AddEnumerableItems()
     {
-        if (DecomposedObject.RawValue is not IEnumerable enumerable) return;
+        if (_input is not IEnumerable enumerable) return;
 
         var enumerator = enumerable.GetEnumerator();
 

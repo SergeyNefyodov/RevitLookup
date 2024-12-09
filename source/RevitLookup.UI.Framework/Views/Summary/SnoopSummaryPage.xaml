@@ -53,8 +53,7 @@
                     Margin="0 8 0 0"
                     ItemTemplate="{StaticResource DefaultSummaryTreeGroupTemplate}"
                     ItemsSource="{Binding ViewModel.FilteredDecomposedObjects}"
-                    VirtualizingPanel.IsVirtualizing="True"
-                    VirtualizingPanel.VirtualizationMode="Recycling">
+                    VirtualizingPanel.IsVirtualizing="True">
                 </rl:TreeView>
             </DockPanel>
             <rl:DataGrid
@@ -73,7 +72,7 @@
                 AutoGenerateColumns="False"
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Visible"
-                ItemsSource="{Binding ViewModel.FilteredMembers}"
+                ItemsSource="{Binding ViewModel.SelectedDecomposedObject.FilteredMembers, FallbackValue={x:Null}}"
                 RowStyle="{x:Null}"
                 RowStyleSelector="{StaticResource DataGridRowStyleSelector}"
                 ScrollViewer.CanContentScroll="True"

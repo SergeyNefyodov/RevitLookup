@@ -43,6 +43,8 @@ public static class Host
         //Services
         services.AddSingleton<ISoftwareUpdateService, MockSoftwareUpdateService>();
         services.AddSingleton<ISettingsService, MockSettingsService>();
+        services.AddScoped<IVisualDecompositionService, MockVisualDecompositionService>();
+        services.AddTransient<IRevitLookupUiService, MockRevitLookupUiService>();
 
         return services.BuildServiceProvider();
     }

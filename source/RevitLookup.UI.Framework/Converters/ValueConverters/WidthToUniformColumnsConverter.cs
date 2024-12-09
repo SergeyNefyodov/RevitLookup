@@ -9,7 +9,7 @@ public sealed class WidthToUniformColumnsConverter : MarkupExtension, IValueConv
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var width = (double)value!;
-        var columns = (int)Math.Floor(width / 600d);
+        var columns = (int)Math.Floor(width / 470d);
         return columns > 0 ? columns : 1;
     }
 

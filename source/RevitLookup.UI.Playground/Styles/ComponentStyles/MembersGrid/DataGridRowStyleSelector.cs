@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using LookupEngine.Abstractions.ComponentModel;
 using LookupEngine.Abstractions.Configuration;
@@ -28,7 +27,6 @@ public sealed class DataGridRowStyleSelector : StyleSelector
         return value switch
         {
             Exception => "ExceptionDataGridRowStyle",
-            ICollection { Count: > 0 } => "HandledDataGridRowStyle",
             _ => null
         };
     }
@@ -37,7 +35,8 @@ public sealed class DataGridRowStyleSelector : StyleSelector
     {
         return descriptor switch
         {
-            IDescriptorEnumerator { IsEmpty: false } => "HandleDataGridRowStyle",
+            IDescriptorEnumerator { IsEmpty: false } => "HandledDataGridRowStyle",
+            IDescriptorEnumerator => "DefaultLookupDataGridRowStyle",
             IDescriptorCollector => "HandledDataGridRowStyle",
             _ => "DefaultLookupDataGridRowStyle"
         };

@@ -1,7 +1,9 @@
 ﻿using System.Windows;
+using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
+using RevitLookup.Abstractions.Services;
 using RevitLookup.UI.Framework.Views.AboutProgram;
 using RevitLookup.UI.Framework.Views.Dashboard;
 using RevitLookup.UI.Framework.Views.Settings;
@@ -29,6 +31,19 @@ public sealed partial class PagesViewModel : ObservableObject
         viewer.SizeToContent = SizeToContent.Manual;
         viewer.Height = 500;
         viewer.Width = 900;
+        viewer.RunService<IVisualDecompositionService>(service =>
+        {
+            var faker = new Faker();
+
+            var strings = new List<string>();
+            for (var i = 0; i < 1000; i++)
+            {
+                strings.Add(faker.Lorem.Sentence(300));
+            }
+
+            service.VisualizeDecompositionAsync(strings);
+        });
+
         viewer.ShowPage<SnoopSummaryPage>();
     }
 

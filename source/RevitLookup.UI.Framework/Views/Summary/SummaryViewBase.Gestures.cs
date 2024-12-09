@@ -19,6 +19,7 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using RevitLookup.UI.Framework.Views.Windows;
 using Wpf.Ui.Abstractions.Controls;
 
@@ -26,6 +27,9 @@ namespace RevitLookup.UI.Framework.Views.Summary;
 
 public partial class SummaryViewBase : INavigationAware
 {
+    /// <summary>
+    ///     Callback when navigating to the current page
+    /// </summary>
     public Task OnNavigatedToAsync()
     {
         var host = _intercomService.GetHost();
@@ -33,6 +37,9 @@ public partial class SummaryViewBase : INavigationAware
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    ///     Callback when navigating from this page
+    /// </summary>
     public Task OnNavigatedFromAsync()
     {
         var host = _intercomService.GetHost();
@@ -45,8 +52,8 @@ public partial class SummaryViewBase : INavigationAware
     /// </summary>
     private void AddShortcuts()
     {
-        // var command = new AsyncRelayCommand(() => ViewModel.RefreshMembersCommand.ExecuteAsync(null));
-        // InputBindings.Add(new KeyBinding(command, new KeyGesture(Key.F5)));
+        var command = new AsyncRelayCommand(() => ViewModel.RefreshMembersCommand.ExecuteAsync(null));
+        InputBindings.Add(new KeyBinding(command, new KeyGesture(Key.F5)));
     }
 
     /// <summary>

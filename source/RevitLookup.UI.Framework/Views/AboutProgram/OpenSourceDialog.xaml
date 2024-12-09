@@ -35,6 +35,7 @@
         CanUserResizeColumns="False"
         CanUserSortColumns="False"
         VerticalScrollBarVisibility="Visible"
+        ScrollViewer.VerticalScrollBarVisibility="Visible"
         ItemsSource="{Binding Software}">
         <DataGrid.Columns>
             <DataGridHyperlinkColumn

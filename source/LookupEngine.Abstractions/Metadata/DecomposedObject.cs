@@ -13,7 +13,7 @@ public sealed class DecomposedObject
     public required string Name { get; init; }
     public required string TypeName { get; set; }
     public required string TypeFullName { get; set; }
-    public required List<DecomposedMember> Members { get; init; }
+    public List<DecomposedMember> Members { get; } = [];
     public string? Description { get; set; }
     public Descriptor? Descriptor { get; init; }
 }
