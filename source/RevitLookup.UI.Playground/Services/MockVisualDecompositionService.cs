@@ -13,7 +13,7 @@ namespace RevitLookup.UI.Playground.Services;
 public sealed class MockVisualDecompositionService(
     IWindowIntercomService intercomService,
     INotificationService notificationService,
-    ISnoopSummaryViewModel summaryViewModel)
+    IDecompositionSummaryViewModel summaryViewModel)
     : IVisualDecompositionService
 {
     public async Task VisualizeDecompositionAsync(KnownDecompositionObject decompositionObject)

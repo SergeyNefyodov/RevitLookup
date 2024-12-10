@@ -21,7 +21,14 @@ public sealed partial class WindowsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void DecomposeColors()
+    private void ShowEventsWindow()
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Show<EventsSummaryPage>();
+    }
+
+    [RelayCommand]
+    private void ShowDecomposeColorsWindow()
     {
         var faker = new Faker();
 
@@ -38,11 +45,11 @@ public sealed partial class WindowsViewModel : ObservableObject
 
         Host.GetService<IRevitLookupUiService>()
             .Decompose(colors)
-            .Show<SnoopSummaryPage>();
+            .Show<DecompositionSummaryPage>();
     }
 
     [RelayCommand]
-    private void DecomposeText()
+    private void ShowDecomposeTextWindow()
     {
         var faker = new Faker();
 
@@ -54,15 +61,15 @@ public sealed partial class WindowsViewModel : ObservableObject
 
         Host.GetService<IRevitLookupUiService>()
             .Decompose(strings)
-            .Show<SnoopSummaryPage>();
+            .Show<DecompositionSummaryPage>();
     }
 
     [RelayCommand]
-    private void DecomposeAssembly()
+    private void ShowDecomposeAssemblyWindow()
     {
         var assembly = Assembly.GetExecutingAssembly();
         Host.GetService<IRevitLookupUiService>()
             .Decompose(assembly.GetTypes())
-            .Show<SnoopSummaryPage>();
+            .Show<DecompositionSummaryPage>();
     }
 }
