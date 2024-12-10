@@ -279,77 +279,77 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
         {
             case "view":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.View);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "document":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Document);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "application":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Application);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "uiApplication":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.UiApplication);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "database":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Database);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "dependents":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.DependentElements);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "selection":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Selection);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "linked":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.LinkedElement);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "face":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Face);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "edge":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Edge);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "point":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Point);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "subElement":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.SubElement);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "components":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.ComponentManager);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "performance":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.PerformanceAdviser);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "updaters":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.UpdaterRegistry);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "services":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Services);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "schemas":
                 await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.Schemas);
-                _navigationService.Navigate(typeof(SnoopSummaryPage));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
                 break;
             case "events":
-                // _navigationService.Navigate(typeof(EventsPage));
+                _navigationService.Navigate(typeof(EventsSummaryPage));
                 break;
             case "revitSettings":
-                // _navigationService.NavigateWithHierarchy(typeof(RevitSettingsPage));
+                _navigationService.NavigateWithHierarchy(typeof(RevitSettingsPage));
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(parameter), parameter);
