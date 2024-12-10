@@ -26,13 +26,12 @@ using RevitLookup.Abstractions.ObservableModels.Entries;
 using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using Wpf.Ui;
-using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
 
 namespace RevitLookup.UI.Framework.Views.Tools;
 
-public sealed partial class RevitSettingsPage : INavigableView<IRevitSettingsViewModel>
+public sealed partial class RevitSettingsPage
 {
     private readonly INotificationService _notificationService;
 

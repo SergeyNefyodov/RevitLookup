@@ -87,7 +87,7 @@ public sealed partial class PagesViewModel : ObservableObject
         var viewer = Host.CreateScope<PageViewer>();
         viewer.SizeToContent = SizeToContent.Manual;
         viewer.Height = 850;
-        viewer.Width = 500;
+        viewer.Width = 550;
         viewer.ShowPage<RevitSettingsPage>();
     }
 }

@@ -170,6 +170,7 @@
                     ScrollViewer.CanContentScroll="True"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.ItemContainerStyle>
+                        <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
                         <Style
                             BasedOn="{StaticResource ListViewItemStyle}"
                             TargetType="{x:Type rl:ListViewItem}">
@@ -259,7 +260,7 @@
                                 Path="ViewModel.Entries.Count" />
                             <Binding
                                 Path="ViewModel.InitializationTask.IsCompleted"
-                                FallbackValue="Visible" />
+                                FallbackValue="False" />
                         </MultiBinding>
                     </contentPlaceholder:ContentPlaceholder.Visibility>
                 </contentPlaceholder:ContentPlaceholder>
@@ -296,7 +297,7 @@
                     HorizontalAlignment="Center"
                     Visibility="{Binding ViewModel.InitializationTask.IsCompleted, 
                         Converter={converters:InverseBooleanCollapsedVisibilityConverter},
-                        FallbackValue=Visible}">
+                        FallbackValue=Hidden}">
                     <TextBlock
                         FontSize="24"
                         FontWeight="Medium"
