@@ -24,16 +24,15 @@ using RevitLookup.Abstractions.ViewModels.Summary;
 
 namespace RevitLookup.UI.Framework.Views.Summary;
 
-public sealed partial class SnoopSummaryPage
+public sealed partial class DecompositionSummaryPage
 {
-    public SnoopSummaryPage(
-        ISnoopSummaryViewModel viewModel,
+    public DecompositionSummaryPage(
+        IDecompositionSummaryViewModel viewModel,
         ISettingsService settingsService,
         IWindowIntercomService intercomService,
         INotificationService notificationService,
         ILoggerFactory loggerFactory)
         : base(settingsService, intercomService, notificationService, loggerFactory)
-
     {
         DataContext = this;
         ViewModel = viewModel;

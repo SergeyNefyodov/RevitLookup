@@ -1,5 +1,5 @@
 <summary:SummaryViewBase
-    x:Class="RevitLookup.UI.Framework.Views.Summary.SnoopSummaryPage"
+    x:Class="RevitLookup.UI.Framework.Views.Summary.EventsSummaryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,26 +9,45 @@
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
     xmlns:contentPlaceholder="clr-namespace:RevitLookup.UI.Framework.Controls.ContentPlaceholder"
     xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
+    xmlns:viewModelsSummary="clr-namespace:RevitLookup.Abstractions.ViewModels.Summary;assembly=RevitLookup.Abstractions"
     mc:Ignorable="d"
     d:DesignHeight="500"
     d:DesignWidth="700"
-    d:DataContext="{d:DesignInstance summary:SnoopSummaryPage}"
+    d:DataContext="{d:DesignInstance summary:EventsSummaryPage}"
     ScrollViewer.CanContentScroll="False">
 
     <Grid
         Margin="12">
+
         <contentPlaceholder:ContentPlaceholder
-            MaxHeight="300"
-            Visibility="{Binding ViewModel.DecomposedObjects, Converter={converters:EmptyCollectionVisibilityConverter}}">
+            MaxHeight="300">
+            <contentPlaceholder:ContentPlaceholder.Visibility>
+                <MultiBinding
+                    Converter="{converters:EmptyCollectionsVisibilityConverter}">
+                    <Binding
+                        Path="ViewModel.DecomposedObjects" />
+                    <Binding
+                        Path="ViewModel.(viewModelsSummary:IEventsSummaryViewModel.FilteredDecomposedObjects).Count" />
+                </MultiBinding>
+            </contentPlaceholder:ContentPlaceholder.Visibility>
             <contentPlaceholder:ContentPlaceholder.Content>
                 <rl:TextBlock
                     FontTypography="Subtitle"
                     Text="Nothing to show" />
             </contentPlaceholder:ContentPlaceholder.Content>
         </contentPlaceholder:ContentPlaceholder>
+
         <Grid
-            Margin="0"
-            Visibility="{Binding ViewModel.DecomposedObjects, Converter={converters:InverseEmptyCollectionVisibilityConverter}}">
+            Margin="0">
+            <Grid.Visibility>
+                <MultiBinding
+                    Converter="{converters:InverseEmptyCollectionsVisibilityConverter}">
+                    <Binding
+                        Path="ViewModel.DecomposedObjects" />
+                    <Binding
+                        Path="ViewModel.(viewModelsSummary:IEventsSummaryViewModel.FilteredDecomposedObjects).Count" />
+                </MultiBinding>
+            </Grid.Visibility>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     Width="250" />
@@ -51,8 +70,8 @@
                 <rl:TreeView
                     x:Name="SummaryTreeView"
                     Margin="0 8 0 0"
-                    ItemTemplate="{StaticResource DefaultSummaryTreeGroupTemplate}"
-                    ItemsSource="{Binding ViewModel.FilteredDecomposedObjects}"
+                    ItemsSource="{Binding Path=ViewModel.(viewModelsSummary:IEventsSummaryViewModel.FilteredDecomposedObjects)}"
+                    ItemTemplateSelector="{StaticResource TreeViewItemTemplateSelector}"
                     VirtualizingPanel.IsVirtualizing="True">
                 </rl:TreeView>
             </DockPanel>
@@ -76,12 +95,17 @@
                 RowStyle="{x:Null}"
                 RowStyleSelector="{StaticResource DataGridRowStyleSelector}"
                 ScrollViewer.CanContentScroll="True"
-                VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                VirtualizingPanel.VirtualizationMode="Recycling">
+                VirtualizingPanel.IsVirtualizingWhenGrouping="True">
                 <DataGrid.GroupStyle>
                     <StaticResource
                         ResourceKey="DefaultSummaryGridGroupStyle" />
                 </DataGrid.GroupStyle>
+                <DataGrid.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DataGridRowsPresenter
+                            VirtualizationMode="Recycling" />
+                    </ItemsPanelTemplate>
+                </DataGrid.ItemsPanel>
                 <DataGrid.Columns>
                     <DataGridTemplateColumn
                         Width="*">

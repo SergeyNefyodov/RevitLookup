@@ -1,0 +1,177 @@
+<summary:SummaryViewBase
+    x:Class="RevitLookup.UI.Framework.Views.Summary.DecompositionSummaryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:rl="http://revitlookup.com/xaml"
+    xmlns:summary="clr-namespace:RevitLookup.UI.Framework.Views.Summary"
+    xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
+    xmlns:contentPlaceholder="clr-namespace:RevitLookup.UI.Framework.Controls.ContentPlaceholder"
+    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
+    xmlns:viewModels="clr-namespace:RevitLookup.Abstractions.ViewModels.Summary;assembly=RevitLookup.Abstractions"
+    mc:Ignorable="d"
+    d:DesignHeight="500"
+    d:DesignWidth="700"
+    d:DataContext="{d:DesignInstance summary:DecompositionSummaryPage}"
+    ScrollViewer.CanContentScroll="False">
+
+    <Grid
+        Margin="12">
+
+        <contentPlaceholder:ContentPlaceholder
+            MaxHeight="300"
+            Visibility="{Binding ViewModel.DecomposedObjects, Converter={converters:EmptyCollectionVisibilityConverter}}">
+            <contentPlaceholder:ContentPlaceholder.Content>
+                <rl:TextBlock
+                    FontTypography="Subtitle"
+                    Text="Nothing to show" />
+            </contentPlaceholder:ContentPlaceholder.Content>
+        </contentPlaceholder:ContentPlaceholder>
+
+        <Grid
+            Margin="0"
+            Visibility="{Binding ViewModel.DecomposedObjects, Converter={converters:InverseEmptyCollectionVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="250" />
+                <ColumnDefinition
+                    Width="9" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <DockPanel
+                Grid.Column="0">
+                <rl:TextBox
+                    x:Name="SummarySearchBox"
+                    DockPanel.Dock="Top"
+                    PlaceholderText="Search..."
+                    Icon="{rl:SymbolIcon Search24}"
+                    IconPlacement="Right"
+                    Text="{Binding ViewModel.SearchText,
+                        Mode=TwoWay,
+                        UpdateSourceTrigger=PropertyChanged}" />
+                <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+                <rl:TreeView
+                    x:Name="SummaryTreeView"
+                    Margin="0 8 0 0"
+                    ItemTemplate="{StaticResource DefaultSummaryTreeGroupTemplate}"
+                    ItemsSource="{Binding Path=ViewModel.(viewModels:IDecompositionSummaryViewModel.FilteredDecomposedObjects)}"
+                    VirtualizingPanel.IsVirtualizing="True">
+                </rl:TreeView>
+            </DockPanel>
+            <rl:DataGrid
+                x:Name="SummaryDataGrid"
+                Grid.Column="2"
+                ColumnHeaderHeight="30"
+                MinColumnWidth="100"
+                HeadersVisibility="Column"
+                SelectionMode="Single"
+                IsReadOnly="True"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserResizeRows="False"
+                CanUserSortColumns="False"
+                CanUserReorderColumns="False"
+                AutoGenerateColumns="False"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Visible"
+                ItemsSource="{Binding ViewModel.SelectedDecomposedObject.FilteredMembers, FallbackValue={x:Null}}"
+                RowStyle="{x:Null}"
+                RowStyleSelector="{StaticResource DataGridRowStyleSelector}"
+                ScrollViewer.CanContentScroll="True"
+                VirtualizingPanel.IsVirtualizingWhenGrouping="True">
+                <DataGrid.GroupStyle>
+                    <StaticResource
+                        ResourceKey="DefaultSummaryGridGroupStyle" />
+                </DataGrid.GroupStyle>
+                <DataGrid.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DataGridRowsPresenter
+                            VirtualizationMode="Recycling" />
+                    </ItemsPanelTemplate>
+                </DataGrid.ItemsPanel>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn
+                        Width="*">
+                        <DataGridTemplateColumn.Header>
+                            <rl:TextBlock
+                                FontTypography="Caption"
+                                Text="Member"
+                                FontWeight="Bold" />
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel
+                                    Orientation="Horizontal">
+                                    <rl:SymbolIcon
+                                        FontSize="16"
+                                        Symbol="{Binding MemberAttributes,
+                                        Converter={valueConverters:MemberAttributeIconConverter},
+                                        Mode=OneTime}" />
+                                    <rl:TextBlock
+                                        Margin="4 0 0 0"
+                                        VerticalAlignment="Center"
+                                        FontTypography="Caption"
+                                        Text="{Binding Name, Mode=OneTime}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        Width="2*"
+                        CellTemplateSelector="{StaticResource DataGridCellTemplateSelector}">
+                        <DataGridTemplateColumn.Header>
+                            <rl:TextBlock
+                                FontTypography="Caption"
+                                Text="Value"
+                                FontWeight="Bold" />
+                        </DataGridTemplateColumn.Header>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        Width="61"
+                        MinWidth="61"
+                        CanUserResize="False">
+                        <DataGridTemplateColumn.Header>
+                            <rl:TextBlock
+                                FontTypography="Caption"
+                                Text="Time"
+                                FontWeight="Bold" />
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <rl:TextBlock
+                                    VerticalAlignment="Center"
+                                    FontTypography="Caption"
+                                    Text="{Binding ComputationTime,
+                                        Converter={valueConverters:TimeToStringConverter},
+                                        Mode=OneTime}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        Width="73"
+                        MinWidth="73"
+                        CanUserResize="False">
+                        <DataGridTemplateColumn.Header>
+                            <rl:TextBlock
+                                FontTypography="Caption"
+                                Text="Memory"
+                                FontWeight="Bold" />
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <rl:TextBlock
+                                    VerticalAlignment="Center"
+                                    FontTypography="Caption"
+                                    Text="{Binding AllocatedBytes,
+                                        Converter={valueConverters:BytesToStringConverter},
+                                        Mode=OneTime}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </rl:DataGrid>
+        </Grid>
+    </Grid>
+
+</summary:SummaryViewBase>

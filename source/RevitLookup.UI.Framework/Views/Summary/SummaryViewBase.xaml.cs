@@ -38,7 +38,7 @@ using Visibility = System.Windows.Visibility;
 
 namespace RevitLookup.UI.Framework.Views.Summary;
 
-public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewModel>
+public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
 {
     private readonly ISettingsService _settingsService;
     private readonly IWindowIntercomService _intercomService;
@@ -61,7 +61,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISnoopSummaryViewMod
     public required UIElement SearchBoxControl { get; init; }
     public required TreeView TreeViewControl { get; init; }
     public required DataGrid DataGridControl { get; init; }
-    public required ISnoopSummaryViewModel ViewModel { get; init; }
+    public required ISummaryViewModel ViewModel { get; init; }
 
     protected void InitializeControls()
     {

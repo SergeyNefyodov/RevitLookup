@@ -38,13 +38,13 @@
                     TargetPageType="{x:Type dashboard:DashboardPage}"
                     Icon="{rl:SymbolIcon AppGeneric24}" />
                 <rl:NavigationViewItem
-                    Content="Snoop summary"
-                    TargetPageType="{x:Type pages:SnoopSummaryPage}"
+                    Content="Decomposition summary"
+                    TargetPageType="{x:Type pages:DecompositionSummaryPage}"
                     Icon="{rl:SymbolIcon SlideSearch24}" />
-                <!-- <rl:NavigationViewItem -->
-                <!--     Content="Event monitor" -->
-                <!--     TargetPageType="{x:Type pages:EventsPage}" -->
-                <!--     Icon="{rl:SymbolIcon DesktopPulse24}" /> -->
+                <rl:NavigationViewItem
+                    Content="Event monitor"
+                    TargetPageType="{x:Type pages:EventsSummaryPage}"
+                    Icon="{rl:SymbolIcon DesktopPulse24}" />
             </rl:NavigationView.MenuItems>
             <rl:NavigationView.FooterMenuItems>
                 <rl:NavigationViewItem
