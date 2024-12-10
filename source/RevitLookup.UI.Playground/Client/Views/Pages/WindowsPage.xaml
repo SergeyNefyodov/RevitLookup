@@ -24,19 +24,24 @@
             Command="{Binding ViewModel.ShowRevitLookupWindowCommand}" />
         <ui:CardAction
             Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon DesktopPulse24}"
+            Content="Events monitor summary window"
+            Command="{Binding ViewModel.ShowEventsWindowCommand}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon Color24}"
-            Content="Decompose colors"
-            Command="{Binding ViewModel.DecomposeColorsCommand}" />
+            Content="Decompose colors summary window"
+            Command="{Binding ViewModel.ShowDecomposeColorsWindowCommand}" />
         <ui:CardAction
             Margin="0 8 0 0"
             Icon="{ui:SymbolIcon Textbox24}"
-            Content="Decompose text"
-            Command="{Binding ViewModel.DecomposeTextCommand}" />
+            Content="Decompose text summary window"
+            Command="{Binding ViewModel.ShowDecomposeTextWindowCommand}" />
         <ui:CardAction
             Margin="0 8 0 0"
             Icon="{ui:SymbolIcon BuildingTownhouse24}"
-            Content="Decompose assembly"
-            Command="{Binding ViewModel.DecomposeAssemblyCommand}" />
+            Content="Decompose assembly summary window"
+            Command="{Binding ViewModel.ShowDecomposeAssemblyWindowCommand}" />
     </StackPanel>
 
 </Page>

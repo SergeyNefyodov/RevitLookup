@@ -25,8 +25,13 @@
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon SlideSearch24}"
-            Content="Snoop summary page"
-            Command="{Binding ViewModel.ShowSnoopSummaryPageCommand}" />
+            Content="Decomposition summary page"
+            Command="{Binding ViewModel.ShowDecompositionSummaryPageCommand}" />
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon DesktopPulse24}"
+            Content="Events summary page"
+            Command="{Binding ViewModel.ShowEventsSummaryPageCommand}" />
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Settings24}"
@@ -37,6 +42,17 @@
             Icon="{ui:SymbolIcon Info24}"
             Content="About page"
             Command="{Binding ViewModel.ShowAboutPageCommand}" />
+
+        <ui:TextBlock
+            Text="Tools"
+            FontTypography="BodyStrong"
+            Margin="0 12 0 0" />
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon LauncherSettings24}"
+            Content="Revit settings page"
+            Command="{Binding ViewModel.ShowRevitSettingsPageCommand}" />
+
     </StackPanel>
 
 </Page>

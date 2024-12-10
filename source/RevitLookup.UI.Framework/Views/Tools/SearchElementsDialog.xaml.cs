@@ -53,7 +53,7 @@ public sealed partial class SearchElementsDialog
                 return;
             }
 
-            _navigationService.Navigate(typeof(SnoopSummaryPage));
+            _navigationService.Navigate(typeof(DecompositionSummaryPage));
         }
 
         base.OnButtonClick(button);

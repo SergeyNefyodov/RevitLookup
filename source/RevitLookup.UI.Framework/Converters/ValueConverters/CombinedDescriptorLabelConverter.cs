@@ -20,7 +20,7 @@ public sealed class SingleDescriptorLabelConverter : DescriptorLabelConverter
 
     private static string CreateSingleName(string name, string? description)
     {
-        return string.IsNullOrEmpty(description) ? name : description;
+        return string.IsNullOrEmpty(description) ? name : description!;
     }
 }
 
@@ -40,7 +40,7 @@ public sealed class CombinedDescriptorLabelConverter : DescriptorLabelConverter
     private static string CreateCombinedName(string name, string? description)
     {
         if (string.IsNullOrEmpty(description)) return name;
-        if (description.EndsWith(name, StringComparison.OrdinalIgnoreCase)) return description;
+        if (description!.EndsWith(name, StringComparison.OrdinalIgnoreCase)) return description;
 
         return $"{description}: {name}";
     }

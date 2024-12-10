@@ -33,8 +33,8 @@ public sealed class BytesToStringConverter : MarkupExtension, IValueConverter
         {
             0 => string.Empty,
             < 1_000 => $"{value} B",
-            < 1_000_000 => $"{(bytes / 1000d):F3} KB",
-            _ => $"{(bytes / 1_000_000d):F3} MB"
+            < 1_000_000 => $"{bytes / 1000d:F3} KB",
+            _ => $"{bytes / 1_000_000d:F3} MB"
         };
     }
 

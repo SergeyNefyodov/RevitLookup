@@ -4,10 +4,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.UI.Framework.Views.AboutProgram;
 using RevitLookup.UI.Framework.Views.Dashboard;
 using RevitLookup.UI.Framework.Views.Settings;
 using RevitLookup.UI.Framework.Views.Summary;
+using RevitLookup.UI.Framework.Views.Tools;
 using RevitLookup.UI.Playground.Client.Controls;
 
 namespace RevitLookup.UI.Playground.Client.ViewModels.Pages;
@@ -25,7 +27,7 @@ public sealed partial class PagesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ShowSnoopSummaryPage()
+    private void ShowDecompositionSummaryPage()
     {
         var viewer = Host.CreateScope<PageViewer>();
         viewer.SizeToContent = SizeToContent.Manual;
@@ -44,7 +46,25 @@ public sealed partial class PagesViewModel : ObservableObject
             service.VisualizeDecompositionAsync(strings);
         });
 
-        viewer.ShowPage<SnoopSummaryPage>();
+        viewer.ShowPage<DecompositionSummaryPage>();
+    }
+
+    [RelayCommand]
+    private void ShowEventsSummaryPage()
+    {
+        var viewer = Host.CreateScope<PageViewer>();
+        viewer.SizeToContent = SizeToContent.Manual;
+        viewer.Height = 500;
+        viewer.Width = 900;
+        viewer.RunService<IEventsSummaryViewModel>(service => { service.OnNavigatedToAsync(); });
+
+        viewer.Closing += (sender, _) =>
+        {
+            var self = (PageViewer)sender!;
+            self.RunService<IEventsSummaryViewModel>(service => { service.OnNavigatedFromAsync(); });
+        };
+
+        viewer.ShowPage<EventsSummaryPage>();
     }
 
     [RelayCommand]
@@ -59,5 +79,15 @@ public sealed partial class PagesViewModel : ObservableObject
     {
         var viewer = Host.CreateScope<PageViewer>();
         viewer.ShowPage<AboutPage>();
+    }
+
+    [RelayCommand]
+    private void ShowRevitSettingsPage()
+    {
+        var viewer = Host.CreateScope<PageViewer>();
+        viewer.SizeToContent = SizeToContent.Manual;
+        viewer.Height = 850;
+        viewer.Width = 500;
+        viewer.ShowPage<RevitSettingsPage>();
     }
 }

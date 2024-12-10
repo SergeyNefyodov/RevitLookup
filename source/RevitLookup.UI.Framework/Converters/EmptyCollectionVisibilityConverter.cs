@@ -16,7 +16,7 @@ public sealed class EmptyCollectionVisibilityConverter : MarkupExtension, IValue
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return (Visibility)value! == Visibility.Visible;
+        throw new NotSupportedException();
     }
 
     public override object ProvideValue(IServiceProvider serviceProvider)

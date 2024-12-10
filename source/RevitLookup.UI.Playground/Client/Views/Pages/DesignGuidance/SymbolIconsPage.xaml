@@ -232,11 +232,10 @@
                     </ItemsPanelTemplate>
                 </ui:ListView.ItemsPanel>
                 <ui:ListView.ItemContainerStyle>
-                    <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
+                    <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
                     <Style
                         TargetType="{x:Type ui:ListViewItem}"
                         BasedOn="{StaticResource ListViewItemStyle}">
-                        <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
                         <Setter
                             Property="AutomationProperties.Name"
                             Value="{Binding Name, Mode=OneWay}" />
