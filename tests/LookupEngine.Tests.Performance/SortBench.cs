@@ -27,7 +27,7 @@ namespace LookupEngine.Tests.Performance;
 [MemoryDiagnoser(false)]
 public sealed class SortBench
 {
-    private MethodInfo[] _methodInfos;
+    private MethodInfo[] _methodInfos = null!;
 
     [GlobalSetup]
     public void Setup()
@@ -42,7 +42,7 @@ public sealed class SortBench
         var enumerable = _methodInfos.OrderBy(info => info.Name);
         foreach (var methodInfo in enumerable)
         {
-            var parameterInfos = methodInfo.GetParameters();
+            _ = methodInfo.GetParameters();
         }
     }
 
@@ -52,7 +52,7 @@ public sealed class SortBench
         Array.Sort(_methodInfos, new MethodInfoComparer());
         foreach (var methodInfo in _methodInfos)
         {
-            var parameterInfos = methodInfo.GetParameters();
+            _ = methodInfo.GetParameters();
         }
     }
 
@@ -62,7 +62,7 @@ public sealed class SortBench
         Array.Sort(_methodInfos, Comparison);
         foreach (var methodInfo in _methodInfos)
         {
-            var parameterInfos = methodInfo.GetParameters();
+            _ = methodInfo.GetParameters();
         }
     }
 
@@ -74,8 +74,11 @@ public sealed class SortBench
 
 public sealed class MethodInfoComparer : IComparer<MethodInfo>
 {
-    public int Compare(MethodInfo x, MethodInfo y)
+    public int Compare(MethodInfo? x, MethodInfo? y)
     {
-        return x.Name == y.Name ? 0 : string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
+        if (ReferenceEquals(x, y)) return 0;
+        if (y is null) return 1;
+        if (x is null) return -1;
+        return string.Compare(x.Name, y.Name, StringComparison.Ordinal);
     }
 }

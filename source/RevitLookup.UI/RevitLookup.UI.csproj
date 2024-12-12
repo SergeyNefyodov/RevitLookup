@@ -4,16 +4,13 @@
         <UseWPF>true</UseWPF>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
+        <NoWarn>CS0108;CS8601;CS4014;CS8602</NoWarn>
         <RootNamespace>Wpf.Ui</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
         <Resource Include="Resources\Fonts\FluentSystemIcons-Filled.ttf"/>
         <Resource Include="Resources\Fonts\FluentSystemIcons-Regular.ttf"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -4,14 +4,14 @@
         <OutputType>Exe</OutputType>
         <Nullable>disable</Nullable>
         <NoWarn>CS0649;CS0169</NoWarn>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <NukeRootDirectory>..</NukeRootDirectory>
         <NukeScriptDirectory>..</NukeScriptDirectory>
         <NukeTelemetryVersion>1</NukeTelemetryVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Nuke.Common" Version="9.0.1"/>
+        <PackageReference Include="Nuke.Common"/>
     </ItemGroup>
 
     <ItemGroup>

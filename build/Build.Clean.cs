@@ -8,7 +8,7 @@ sealed partial class Build
         .Executes(() =>
         {
             CleanDirectory(ArtifactsDirectory);
-            foreach (var project in Solution.AllProjects.Where(project => project != Solution.Build.Build))
+            foreach (var project in Solution.AllProjects.Where(project => project != Solution.Automation.Build))
             {
                 CleanDirectory(project.Directory / "bin");
                 CleanDirectory(project.Directory / "obj");

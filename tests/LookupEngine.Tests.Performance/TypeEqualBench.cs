@@ -26,30 +26,30 @@ namespace LookupEngine.Tests.Performance;
 [MemoryDiagnoser]
 public sealed class TypeEqualBench
 {
-    public object Object { get; set; } = new RoundButton();
+    private object Object { get; set; } = new RoundButton();
 
     [Params(null, typeof(ButtonBase))]
-    public Type Type { get; set; }
+    public Type? Type { get; set; }
 
     [Benchmark]
-    public string FindValue1()
+    public string? FindValue1()
     {
-        return FindValue1(Object, Type);
+        return FindValue1(Object);
     }
 
     [Benchmark]
-    public string FindValue2()
+    public string? FindValue2()
     {
         return FindValue2(Object, Type);
     }
 
     [Benchmark]
-    public string FindValue3()
+    public string? FindValue3()
     {
         return FindValue3(Object, Type);
     }
 
-    public string FindValue1(object obj, Type type)
+    private string? FindValue1(object? obj)
     {
         return obj switch
         {
@@ -60,7 +60,7 @@ public sealed class TypeEqualBench
         };
     }
 
-    public string FindValue2(object obj, Type type)
+    private string? FindValue2(object? obj, Type? type)
     {
         return obj switch
         {
@@ -71,7 +71,7 @@ public sealed class TypeEqualBench
         };
     }
 
-    public string FindValue3(object obj, Type type)
+    private string? FindValue3(object? obj, Type? type)
     {
         return obj switch
         {

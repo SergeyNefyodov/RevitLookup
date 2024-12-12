@@ -6,8 +6,4 @@
         <RootNamespace>Wpf.Ui.Abstractions</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
-    </ItemGroup>
-
 </Project>

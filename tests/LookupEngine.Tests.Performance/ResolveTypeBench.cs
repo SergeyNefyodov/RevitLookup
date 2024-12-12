@@ -26,12 +26,7 @@ namespace LookupEngine.Tests.Performance;
 [MemoryDiagnoser]
 public sealed class ResolveTypeBench
 {
-    public object Obj { get; set; }
-
-    public ResolveTypeBench()
-    {
-        Obj = "Text";
-    }
+    private static object Obj => "Text";
 
     [Benchmark]
     public bool TypeIsEquals()
@@ -54,6 +49,6 @@ public sealed class ResolveTypeBench
     [Benchmark]
     public bool AssemblyStartsWith()
     {
-        return Obj.GetType().Assembly.FullName.StartsWith("Revit");
+        return Obj.GetType().Assembly.FullName!.StartsWith("Revit");
     }
 }

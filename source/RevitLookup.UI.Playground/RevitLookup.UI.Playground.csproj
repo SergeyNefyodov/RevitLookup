@@ -13,19 +13,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="35.*"/>
-        <PackageReference Include="Riok.Mapperly" Version="4.*"/>
-        <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+        <PackageReference Include="Bogus"/>
+        <PackageReference Include="Riok.Mapperly"/>
 
         <!--IOC-->
-        <PackageReference Include="Scrutor" Version="5.*"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*"/>
+        <PackageReference Include="Scrutor"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
 
         <!--Logging-->
-        <PackageReference Include="Serilog.Sinks.Debug" Version="3.*"/>
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.*"/>
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.*"/>
-
+        <PackageReference Include="Serilog.Sinks.Debug"/>
+        <PackageReference Include="Serilog.Sinks.Console"/>
+        <PackageReference Include="Serilog.Extensions.Hosting"/>
     </ItemGroup>
 
     <ItemGroup>

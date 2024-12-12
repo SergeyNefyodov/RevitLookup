@@ -43,33 +43,33 @@
         <Reference Include="System.Net.Http"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <!--Revit references-->
-        <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*"/>
-        <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPIMacros" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*"/>
+    <!--    <ItemGroup>-->
+    <!--        &lt;!&ndash;Revit references&ndash;&gt;-->
+    <!--        <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*"/>-->
+    <!--        <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*"/>-->
+    <!--        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*"/>-->
+    <!--        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*"/>-->
+    <!--        <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*"/>-->
+    <!--        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*"/>-->
+    <!--        <PackageReference Include="Nice3point.Revit.Api.RevitAPIMacros" Version="$(RevitVersion).*"/>-->
+    <!--        <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*"/>-->
+    <!--        <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*"/>-->
 
-        <!--MVVM-->
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>
+    <!--        &lt;!&ndash;MVVM&ndash;&gt;-->
+    <!--        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>-->
 
-        <!--IOC-->
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*"/>
+    <!--        &lt;!&ndash;IOC&ndash;&gt;-->
+    <!--        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*"/>-->
 
-        <!--Logging-->
-        <PackageReference Include="Serilog.Sinks.Debug" Version="3.*"/>
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.*"/>
-        <PackageReference Include="Serilog.Sinks.Autodesk.Revit" Version="2.0.1"/>
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.*"/>
+    <!--        &lt;!&ndash;Logging&ndash;&gt;-->
+    <!--        <PackageReference Include="Serilog.Sinks.Debug" Version="3.*"/>-->
+    <!--        <PackageReference Include="Serilog.Sinks.Console" Version="6.*"/>-->
+    <!--        <PackageReference Include="Serilog.Sinks.Autodesk.Revit" Version="2.0.1"/>-->
+    <!--        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.*"/>-->
 
-        <!--Compability-->
-        <PackageReference Include="PolySharp" Version="*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
-    </ItemGroup>
+    <!--        &lt;!&ndash;Compability&ndash;&gt;-->
+    <!--        <PackageReference Include="PolySharp" Version="*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>-->
+    <!--    </ItemGroup>-->
 
     <ItemGroup>
         <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
