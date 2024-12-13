@@ -8,7 +8,7 @@ public sealed partial class LookupComposer
 {
     private void DecomposeEvents(BindingFlags bindingFlags)
     {
-        if (_options.IncludeEvents) return;
+        if (!_options.IncludeEvents) return;
 
         var members = DeclaringType.GetEvents(bindingFlags);
         foreach (var member in members)
