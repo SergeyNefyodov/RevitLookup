@@ -44,7 +44,7 @@
         <PackageVersion Include="WixSharp.wix.bin" Version="3.14.1"/>
 
         <!-- Testing -->
-        <PackageVersion Include="BenchmarkDotNet" Version="0.13.12"/>
+        <PackageVersion Include="BenchmarkDotNet" Version="0.14.0"/>
         <PackageVersion Include="TUnit" Version="0.4.105"/>
 
         <!-- Compability -->
@@ -55,6 +55,17 @@
         <PackageVersion Include="System.Text.Json" Version="9.0.0"/>
     </ItemGroup>
 
+    <!-- Revit 2025 fixed references -->
+    <ItemGroup Condition="$(DefineConstants.Contains('NET8_0'))">
+        <PackageVersion Update="Microsoft.Extensions.Hosting" Version="8.0.1"/>
+        <PackageVersion Update="Microsoft.Extensions.Options" Version="8.0.2"/>
+        <PackageVersion Update="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2"/>
+        <PackageVersion Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2"/>
+
+        <PackageVersion Update="Serilog.Extensions.Hosting" Version="8.0.0"/>
+    </ItemGroup>
+
+    <!-- Development References -->
     <ItemGroup>
         <GlobalPackageReference Include="PolySharp" Version="1.15.0"/>
     </ItemGroup>
