@@ -1,49 +1,158 @@
-﻿namespace LookupEngine.Tests.Unit;
+﻿using Bogus;
+using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Tests.Unit.Data;
+
+namespace LookupEngine.Tests.Unit;
 
 public sealed class LookupEngineTests
 {
     [Test]
-    public async Task Decompose_DefaultOptions()
+    public async Task Decompose_NonZeroMembers()
     {
+        //Arrange
+        var data = new Faker().Random.String();
+
         //Act
-        var descriptors = LookupComposer.Decompose("Hello World");
+        var defaultResult = LookupComposer.Decompose(data);
 
         //Assert
-        await Assert.That(descriptors.Members).IsNotEmpty();
+        await Assert.That(defaultResult.Members).IsNotEmpty();
     }
 
     [Test]
-    public async Task Decompose_Include_Fields()
+    public async Task Decompose_IncludingFields_NonZeroFields()
     {
         //Arrange
+        var data = new PublicFieldsObject();
         var options = new DecomposeOptions
         {
-            IncludeFields = true
+            IncludeFields = true,
         };
 
         //Act
-        var defaultDescriptors = LookupComposer.Decompose("Hello World");
-        var optionalDescriptors = LookupComposer.Decompose("Hello World", options);
+        var defaultResult = LookupComposer.Decompose(data);
+        var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(() => optionalDescriptors.Members.Count > defaultDescriptors.Members.Count).ThrowsNothing();
+        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
     }
 
     [Test]
-    public async Task Decompose_With_Redirection()
+    public async Task Decompose_IncludingPrivate_NonZeroPrivateMembers()
     {
         //Arrange
+        var data = new Faker().Random.String();
         var options = new DecomposeOptions
         {
-            IncludeFields = true
+            IncludePrivateMembers = true,
         };
 
         //Act
-        var defaultDescriptors = LookupComposer.Decompose(69);
-        var optionalDescriptors = LookupComposer.Decompose(69, options);
+        var defaultResult = LookupComposer.Decompose(data);
+        var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(optionalDescriptors.Members.Count(data => data.Value is string))
-            .IsGreaterThan(defaultDescriptors.Members.Count(data => data.Value is string));
+        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+    }
+
+    [Test]
+    public async Task Decompose_IncludingUnsupported_NonZeroUnsupported()
+    {
+        //Arrange
+        var data = new Faker().Random.String();
+        var options = new DecomposeOptions
+        {
+            IncludeUnsupported = true
+        };
+
+        //Act
+        var defaultResult = LookupComposer.Decompose(data);
+        var comparableResult = LookupComposer.Decompose(data, options);
+
+        //Assert
+        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+    }
+
+    [Test]
+    public async Task Decompose_IncludingRoot_NonZeroRootMembers()
+    {
+        //Arrange
+        var data = new Faker().Random.String();
+        var options = new DecomposeOptions
+        {
+            IncludeRoot = true
+        };
+
+        //Act
+        var defaultResult = LookupComposer.Decompose(data);
+        var comparableResult = LookupComposer.Decompose(data, options);
+
+        //Assert
+        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+    }
+
+    [Test]
+    public async Task Decompose_IncludingStatic_NonZeroStaticMembers()
+    {
+        //Arrange
+        var data = new Faker().Date.Future();
+        var options = new DecomposeOptions
+        {
+            IncludeStaticMembers = true
+        };
+
+        //Act
+        var defaultResult = LookupComposer.Decompose(data);
+        var comparableResult = LookupComposer.Decompose(data, options);
+
+        //Assert
+        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+    }
+
+    [Test]
+    public async Task Decompose_IncludingEvents_NonZeroEvents()
+    {
+        //Arrange
+        var data = AppDomain.CurrentDomain;
+        var options = new DecomposeOptions
+        {
+            IncludeEvents = true
+        };
+
+        //Act
+        var defaultResult = LookupComposer.Decompose(data);
+        var comparableResult = LookupComposer.Decompose(data, options);
+
+        //Assert
+        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+    }
+
+    [Test]
+    public async Task Decompose_IncludingRedirection_RedirectedToAnotherValue()
+    {
+        //Arrange
+        var data = new RedirectionObject
+        {
+            Property = new RedirectionObject()
+        };
+
+        var options = new DecomposeOptions
+        {
+            TypeResolver = (obj, _) =>
+            {
+                return obj switch
+                {
+                    RedirectionObject => new RedirectionDescriptor(),
+                    _ => new ObjectDescriptor(obj)
+                };
+            }
+        };
+
+        //Act
+        var defaultResult = LookupComposer.Decompose(data);
+        var comparableResult = LookupComposer.Decompose(data, options);
+
+        //Assert
+        await Assert.That(() => defaultResult.Members[0].Value.TypeName != comparableResult.Members[0].Value.TypeName).IsTrue();
     }
 }
