@@ -5,7 +5,7 @@
 
 using Wpf.Ui.Abstractions;
 
-namespace RevitLookup.UI.Playground.Client.Services;
+namespace RevitLookup.UI.Framework.Services;
 
 /// <summary>
 /// Service that provides pages for navigation.

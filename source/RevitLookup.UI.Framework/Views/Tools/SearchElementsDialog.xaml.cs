@@ -18,6 +18,8 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using Microsoft.Extensions.Logging;
+using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.UI.Framework.Views.Summary;
 using Wpf.Ui;
@@ -29,33 +31,47 @@ public sealed partial class SearchElementsDialog
 {
     private readonly ISearchElementsViewModel _viewModel;
     private readonly INavigationService _navigationService;
+    private readonly INotificationService _notificationService;
+    private readonly ILogger<SearchElementsDialog> _logger;
 
     public SearchElementsDialog(
         IContentDialogService dialogService,
         ISearchElementsViewModel viewModel,
-        INavigationService navigationService)
+        INavigationService navigationService,
+        INotificationService notificationService,
+        ILogger<SearchElementsDialog> logger)
         : base(dialogService.GetDialogHost())
     {
         _viewModel = viewModel;
         _navigationService = navigationService;
+        _notificationService = notificationService;
+        _logger = logger;
 
         DataContext = viewModel;
         InitializeComponent();
     }
 
-    protected override void OnButtonClick(ContentDialogButton button)
+    protected override async void OnButtonClick(ContentDialogButton button)
     {
-        if (button == ContentDialogButton.Primary)
+        try
         {
-            var success = _viewModel.SearchElements();
-            if (!success)
+            if (button == ContentDialogButton.Primary)
             {
-                return;
+                var success = await _viewModel.SearchElementsAsync();
+                if (!success)
+                {
+                    return;
+                }
+
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
             }
 
-            _navigationService.Navigate(typeof(DecompositionSummaryPage));
+            base.OnButtonClick(button);
         }
-
-        base.OnButtonClick(button);
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while searching elements");
+            _notificationService.ShowError("Search error", exception.Message);
+        }
     }
 }

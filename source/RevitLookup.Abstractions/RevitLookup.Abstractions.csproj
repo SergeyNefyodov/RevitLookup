@@ -20,4 +20,8 @@
         <Reference Include="WindowsBase" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="ObservableModels\RevitSettings\"/>
+    </ItemGroup>
+
 </Project>

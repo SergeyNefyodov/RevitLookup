@@ -43,6 +43,7 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
     private readonly INotificationService _notificationService;
     private readonly ISettingsService _settingsService;
     private readonly IWindowIntercomService _intercomService;
+    private readonly bool _initialized;
 
     [ObservableProperty] private ApplicationTheme _theme;
     [ObservableProperty] private WindowBackdropType _background;
@@ -66,6 +67,7 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
         _intercomService = intercomService;
 
         ApplySettings();
+        _initialized = true;
     }
 
     public List<ApplicationTheme> Themes { get; } =
@@ -105,21 +107,27 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
 
     partial void OnThemeChanged(ApplicationTheme value)
     {
+        if (!_initialized) return;
+
         _settingsService.GeneralSettings.Theme = value;
         ApplicationThemeManager.Apply(value, Background);
     }
 
     partial void OnBackgroundChanged(WindowBackdropType value)
     {
+        if (!_initialized) return;
+
         _settingsService.GeneralSettings.Background = value;
         ApplicationThemeManager.Apply(Theme, value);
     }
 
     partial void OnUseTransitionChanged(bool value)
     {
+        if (!_initialized) return;
+
         var navigationControl = _navigationService.GetNavigationControl();
         var transition = _settingsService.GeneralSettings.Transition = value
-            ? (Transition)NavigationView.TransitionProperty.DefaultMetadata.DefaultValue
+            ? (Transition) NavigationView.TransitionProperty.DefaultMetadata.DefaultValue
             : Transition.None;
 
         _settingsService.GeneralSettings.Transition = transition;
@@ -128,14 +136,17 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
 
     partial void OnUseHardwareRenderingChanged(bool value)
     {
+        if (!_initialized) return;
+
         _settingsService.GeneralSettings.UseHardwareRendering = value;
         RenderOptions.ProcessRenderMode = value ? RenderMode.Default : RenderMode.SoftwareOnly;
     }
 
     partial void OnUseSizeRestoringChanged(bool value)
     {
-        _settingsService.GeneralSettings.UseSizeRestoring = value;
+        if (!_initialized) return;
 
+        _settingsService.GeneralSettings.UseSizeRestoring = value;
         if (_intercomService.GetHost() is not RevitLookupView lookupView) return;
 
         if (value)
@@ -150,12 +161,13 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
 
     partial void OnUseModifyTabChanged(bool value)
     {
+        if (!_initialized) return;
+
         _settingsService.GeneralSettings.UseModifyTab = value;
     }
 
     private void ApplySettings()
     {
-        //TODO disable for initialization
         Theme = _settingsService.GeneralSettings.Theme;
         Background = _settingsService.GeneralSettings.Background;
         UseTransition = _settingsService.GeneralSettings.Transition != Transition.None;

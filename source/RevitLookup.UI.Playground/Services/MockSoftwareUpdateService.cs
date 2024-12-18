@@ -8,12 +8,12 @@ public sealed class MockSoftwareUpdateService : ISoftwareUpdateService
     public string? NewVersion { get; private set; }
     public string? ReleaseNotesUrl { get; private set; }
     public string? LocalFilePath { get; private set; }
-    public string? LatestCheckDate { get; private set; }
+    public DateTime? LatestCheckDate { get; private set; }
 
     public async Task<bool> CheckUpdatesAsync()
     {
         await Task.Delay(1000);
-        LatestCheckDate = DateTime.Now.ToString("yyyy.MM.dd HH:mm:ss");
+        LatestCheckDate = DateTime.Now;
 
         var faker = new Faker();
         var factor = faker.Random.Int(0, 100);

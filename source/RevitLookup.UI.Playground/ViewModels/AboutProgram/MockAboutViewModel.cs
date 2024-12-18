@@ -40,7 +40,7 @@ public sealed partial class MockAboutViewModel : ObservableObject, IAboutViewMod
     private readonly IServiceProvider _serviceProvider;
     private readonly ISoftwareUpdateService _updateService;
 
-    [ObservableProperty] private SoftwareUpdateState _state = (SoftwareUpdateState)(-1);
+    [ObservableProperty] private SoftwareUpdateState _state = (SoftwareUpdateState) (-1);
     [ObservableProperty] private Version _currentVersion;
     [ObservableProperty] private string? _newVersion;
     [ObservableProperty] private string? _releaseNotesUrl;
@@ -63,7 +63,7 @@ public sealed partial class MockAboutViewModel : ObservableObject, IAboutViewMod
             .Append(" GC)")
             .ToString();
 
-        LatestCheckDate = _updateService.LatestCheckDate;
+        LatestCheckDate = _updateService.LatestCheckDate?.ToString("yyyy.MM.dd HH:mm:ss");
         UpdateSoftwareState();
     }
 
@@ -89,7 +89,7 @@ public sealed partial class MockAboutViewModel : ObservableObject, IAboutViewMod
         }
         finally
         {
-            LatestCheckDate = _updateService.LatestCheckDate;
+            LatestCheckDate = _updateService.LatestCheckDate?.ToString("yyyy.MM.dd HH:mm:ss");
         }
     }
 

@@ -22,6 +22,7 @@ using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
 using RevitLookup.Abstractions.Models.Tools;
+using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.ViewModels.Tools;
 #if NETFRAMEWORK
 using RevitLookup.UI.Framework.Extensions;
@@ -30,7 +31,7 @@ using RevitLookup.UI.Framework.Extensions;
 namespace RevitLookup.UI.Playground.ViewModels.Tools;
 
 [UsedImplicitly]
-public sealed partial class MockUnitsViewModel : ObservableObject, IUnitsViewModel
+public sealed partial class MockUnitsViewModel(IVisualDecompositionService decompositionService) : ObservableObject, IUnitsViewModel
 {
     [ObservableProperty] private List<UnitInfo> _units = [];
     [ObservableProperty] private List<UnitInfo> _filteredUnits = [];
@@ -64,25 +65,41 @@ public sealed partial class MockUnitsViewModel : ObservableObject, IUnitsViewMod
             .Generate(200);
     }
 
+    public async Task DecomposeAsync(UnitInfo unitInfo)
+    {
+        await decompositionService.VisualizeDecompositionAsync(unitInfo.Value);
+    }
+
     async partial void OnSearchTextChanged(string value)
     {
-        if (string.IsNullOrEmpty(SearchText))
+        try
         {
-            FilteredUnits = Units;
-            return;
+            if (string.IsNullOrEmpty(SearchText))
+            {
+                FilteredUnits = Units;
+                return;
+            }
+
+            FilteredUnits = await Task.Run(() =>
+            {
+                var formattedText = value.Trim();
+                var searchResults = new List<UnitInfo>();
+                foreach (var family in Units)
+                {
+                    if (family.Label.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
+                        family.Unit.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
+                    {
+                        searchResults.Add(family);
+                    }
+                }
+
+                return searchResults;
+            });
         }
-
-        FilteredUnits = await Task.Run(() =>
+        catch
         {
-            var formattedText = value.Trim();
-            var searchResults = new List<UnitInfo>();
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var family in Units)
-                if (family.Label.Contains(formattedText, StringComparison.OrdinalIgnoreCase) || family.Unit.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
-                    searchResults.Add(family);
-
-            return searchResults;
-        });
+            // ignored
+        }
     }
 
     partial void OnUnitsChanged(List<UnitInfo> value)

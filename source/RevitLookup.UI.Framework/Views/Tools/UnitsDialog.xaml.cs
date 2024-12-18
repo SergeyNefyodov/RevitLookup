@@ -24,6 +24,7 @@ using System.Windows.Input;
 using RevitLookup.Abstractions.Models.Tools;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.UI.Framework.Extensions;
+using RevitLookup.UI.Framework.Views.Summary;
 using Wpf.Ui;
 using Visibility = System.Windows.Visibility;
 
@@ -32,10 +33,16 @@ namespace RevitLookup.UI.Framework.Views.Tools;
 public sealed partial class UnitsDialog
 {
     private readonly IUnitsViewModel _viewModel;
+    private readonly INavigationService _navigationService;
 
-    public UnitsDialog(IContentDialogService dialogService, IUnitsViewModel viewModel) : base(dialogService.GetDialogHost())
+    public UnitsDialog(
+        IContentDialogService dialogService,
+        IUnitsViewModel viewModel,
+        INavigationService navigationService)
+        : base(dialogService.GetDialogHost())
     {
         _viewModel = viewModel;
+        _navigationService = navigationService;
         DataContext = _viewModel;
         InitializeComponent();
     }
@@ -73,8 +80,8 @@ public sealed partial class UnitsDialog
 
     private void OnMouseEnter(object sender, RoutedEventArgs routedEventArgs)
     {
-        var element = (FrameworkElement)sender;
-        var unitInfo = (UnitInfo)element.DataContext;
+        var element = (FrameworkElement) sender;
+        var unitInfo = (UnitInfo) element.DataContext;
         CreateTreeContextMenu(unitInfo, element);
     }
 
@@ -105,20 +112,12 @@ public sealed partial class UnitsDialog
 
         contextMenu.AddMenuItem("SnoopMenuItem")
             .SetHeader("Snoop")
-            .SetCommand(info, unitInfo =>
+            .SetCommand(info, async unitInfo =>
             {
-                // var obj = unitInfo.UnitObject switch
-                // {
-                //     BuiltInParameter parameter => RevitShell.GetBuiltinParameter(parameter),
-                //     BuiltInCategory category => RevitShell.GetBuiltinCategory(category),
-                //     _ => unitInfo.UnitObject
-                // };
-
                 Hide();
-                // _serviceProvider.GetRequiredService<ISnoopVisualService>().Snoop(new SnoopableObject(obj));
-                // _serviceProvider.GetRequiredService<INavigationService>().Navigate(typeof(SnoopPage));
+                await _viewModel.DecomposeAsync(unitInfo);
+                _navigationService.Navigate(typeof(SummaryViewBase));
             });
-
 
         row.ContextMenu = contextMenu;
     }

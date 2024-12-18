@@ -33,7 +33,6 @@ public sealed class MockRevitLookupUiService : IRevitLookupUiService
     public ILookupServiceDependsStage Decompose(KnownDecompositionObject decompositionObject)
     {
         _activeTask.ContinueWith(_ => _decompositionService.VisualizeDecompositionAsync(decompositionObject), TaskScheduler.FromCurrentSynchronizationContext());
-
         return this;
     }
 

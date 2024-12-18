@@ -13,12 +13,12 @@ public sealed partial class MockSearchElementsViewModel(
 {
     [ObservableProperty] private string _searchText = string.Empty;
 
-    public bool SearchElements()
+    public async Task<bool> SearchElementsAsync()
     {
         var result = SearchText != string.Empty;
         if (result)
         {
-            decompositionService.VisualizeDecompositionAsync((object)SearchText);
+            await decompositionService.VisualizeDecompositionAsync((object) SearchText);
         }
         else
         {

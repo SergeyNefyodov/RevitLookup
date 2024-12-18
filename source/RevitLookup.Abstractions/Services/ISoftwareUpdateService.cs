@@ -25,7 +25,7 @@ public interface ISoftwareUpdateService
     public string? NewVersion { get; }
     public string? ReleaseNotesUrl { get; }
     public string? LocalFilePath { get; }
-    public string? LatestCheckDate { get; }
+    public DateTime? LatestCheckDate { get; }
 
     Task<bool> CheckUpdatesAsync();
     Task DownloadUpdate();

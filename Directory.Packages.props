@@ -1,5 +1,6 @@
 ﻿<Project>
 
+    <!-- Global NuGet configuration -->
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
@@ -20,6 +21,7 @@
 
         <!-- MVVM -->
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
+        <PackageVersion Include="Riok.Mapperly" Version="4.1.1"/>
 
         <!-- IOC -->
         <PackageVersion Include="Scrutor" Version="5.0.2"/>
@@ -36,7 +38,6 @@
 
         <!-- Data Generation -->
         <PackageVersion Include="Bogus" Version="35.6.1"/>
-        <PackageVersion Include="Riok.Mapperly" Version="4.1.1"/>
 
         <!-- Automation Tools -->
         <PackageVersion Include="Nuke.Common" Version="9.0.3"/>

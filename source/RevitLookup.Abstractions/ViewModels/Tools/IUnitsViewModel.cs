@@ -10,4 +10,5 @@ public interface IUnitsViewModel
     void InitializeParameters();
     void InitializeCategories();
     void InitializeForgeSchema();
+    Task DecomposeAsync(UnitInfo unitInfo);
 }

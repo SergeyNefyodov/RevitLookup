@@ -13,7 +13,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- Data Generation -->
         <PackageReference Include="Bogus"/>
+
+        <!-- MVVM -->
         <PackageReference Include="Riok.Mapperly"/>
 
         <!--IOC-->
