@@ -46,6 +46,13 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
             nameof(CompoundStructure.GetRegionsAssociatedToLayer) => ResolveGetRegionsAssociatedToLayer,
             nameof(CompoundStructure.GetSegmentCoordinate) => ResolveGetSegmentCoordinate,
             nameof(CompoundStructure.GetSegmentOrientation) => ResolveGetSegmentOrientation,
+            nameof(CompoundStructure.GetWallSweepsInfo) => ResolveGetWallSweepsInfo,
+            nameof(CompoundStructure.GetWidth) when parameters.Length == 1 => ResolveGetWidth,
+            nameof(CompoundStructure.IsCoreLayer) => ResolveIsCoreLayer,
+            nameof(CompoundStructure.IsRectangularRegion) => ResolveIsRectangularRegion,
+            nameof(CompoundStructure.IsSimpleRegion) => ResolveIsSimpleRegion,
+            nameof(CompoundStructure.IsStructuralDeck) => ResolveIsStructuralDeck,
+            nameof(CompoundStructure.ParticipatesInWrapping) => ResolveParticipatesInWrapping,
             _ => null
         };
 
@@ -58,10 +65,10 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.CanLayerBeStructuralMaterial(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveCanLayerBeVariable()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -71,10 +78,10 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.CanLayerBeVariable(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveCanLayerWidthBeNonZero()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -84,38 +91,39 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.CanLayerWidthBeNonZero(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
+
             return variants;
         }
-        
+
         IVariants ResolveGetAdjacentRegions()
         {
             var regionsCount = compoundStructure.GetRegionIds().Count;
             var variants = new Variants<IList<int>>(regionsCount);
-            
+
             for (var i = 0; i < regionsCount; i++)
             {
                 var result = compoundStructure.GetAdjacentRegions(i);
                 variants.Add(result, $"Region" +
                                      $" {i}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetCoreBoundaryLayerIndex()
         {
             var values = Enum.GetValues(typeof(ShellLayerType));
             var variants = new Variants<int>(values.Length);
-            
+
             foreach (ShellLayerType value in values)
             {
                 var result = compoundStructure.GetCoreBoundaryLayerIndex(value);
                 variants.Add(result, $"{value.ToString()}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetDeckEmbeddingType()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -125,24 +133,24 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetDeckEmbeddingType(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetLayerAssociatedToRegion()
         {
             var regionsCount = compoundStructure.GetRegionIds().Count;
             var variants = new Variants<int>(regionsCount);
-            
+
             for (var i = 0; i < regionsCount; i++)
             {
                 var result = compoundStructure.GetLayerAssociatedToRegion(i);
                 variants.Add(result, $"Region {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetLayerFunction()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -152,10 +160,10 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetLayerFunction(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetDeckProfileId()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -165,10 +173,10 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetDeckProfileId(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetLayerWidth()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -178,10 +186,10 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetLayerWidth(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetMaterialId()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -191,38 +199,38 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetMaterialId(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetNumberOfShellLayers()
         {
             var values = Enum.GetValues(typeof(ShellLayerType));
             var variants = new Variants<int>(values.Length);
-            
+
             foreach (ShellLayerType value in values)
             {
                 var result = compoundStructure.GetNumberOfShellLayers(value);
                 variants.Add(result, $"{value.ToString()}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetOffsetForLocationLine()
         {
             var values = Enum.GetValues(typeof(WallLocationLine));
             var variants = new Variants<double>(values.Length);
-            
+
             foreach (WallLocationLine value in values)
             {
                 var result = compoundStructure.GetOffsetForLocationLine(value);
                 variants.Add(result, $"{value.ToString()}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetPreviousNonZeroLayerIndex()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -232,24 +240,24 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetPreviousNonZeroLayerIndex(i);
                 variants.Add(result, $"Layer {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetRegionEnvelope()
         {
             var regionsCount = compoundStructure.GetRegionIds().Count;
             var variants = new Variants<BoundingBoxUV>(regionsCount);
-            
+
             for (var i = 0; i < regionsCount; i++)
             {
                 var result = compoundStructure.GetRegionEnvelope(i);
-                variants.Add(result, $"Region {i}: {result}");
+                variants.Add(result, $"Region {i}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetRegionsAssociatedToLayer()
         {
             var layerCount = compoundStructure.LayerCount;
@@ -259,10 +267,10 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetRegionsAssociatedToLayer(i);
                 variants.Add(result, $"Layer {i}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetSegmentCoordinate()
         {
             var segmentCount = compoundStructure.GetSegmentIds().Count;
@@ -272,10 +280,10 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetSegmentCoordinate(i);
                 variants.Add(result, $"Segment {i}: {result}");
             }
-            
+
             return variants;
         }
-        
+
         IVariants ResolveGetSegmentOrientation()
         {
             var segmentCount = compoundStructure.GetSegmentIds().Count;
@@ -285,7 +293,102 @@ public class CompoundStructureDescriptor(CompoundStructure compoundStructure) : 
                 var result = compoundStructure.GetSegmentOrientation(i);
                 variants.Add(result, $"Segment {i}: {result}");
             }
-            
+
+            return variants;
+        }
+
+        IVariants ResolveGetWallSweepsInfo()
+        {
+            var values = Enum.GetValues(typeof(WallSweepType));
+            var variants = new Variants<IList<WallSweepInfo>>(values.Length);
+
+            foreach (WallSweepType value in values)
+            {
+                var result = compoundStructure.GetWallSweepsInfo(value);
+                variants.Add(result, value.ToString());
+            }
+
+            return variants;
+        }
+
+        IVariants ResolveGetWidth()
+        {
+            var regionsCount = compoundStructure.GetRegionIds().Count;
+            var variants = new Variants<double>(regionsCount);
+
+            for (var i = 0; i < regionsCount; i++)
+            {
+                var result = compoundStructure.GetWidth(i);
+                variants.Add(result, $"Region {i}: {result}");
+            }
+
+            return variants;
+        }
+        
+        IVariants ResolveIsCoreLayer()
+        {
+            var layerCount = compoundStructure.LayerCount;
+            var variants = new Variants<bool>(layerCount);
+            for (var i = 0; i < layerCount; i++)
+            {
+                var result = compoundStructure.IsCoreLayer(i);
+                variants.Add(result, $"Layer {i}: {result}");
+            }
+
+            return variants;
+        }
+        
+        IVariants ResolveIsRectangularRegion()
+        {
+            var regionsCount = compoundStructure.GetRegionIds().Count;
+            var variants = new Variants<bool>(regionsCount);
+
+            for (var i = 0; i < regionsCount; i++)
+            {
+                var result = compoundStructure.IsRectangularRegion(i);
+                variants.Add(result, $"Region {i}: {result}");
+            }
+
+            return variants;
+        }
+        
+        IVariants ResolveIsSimpleRegion()
+        {
+            var regionsCount = compoundStructure.GetRegionIds().Count;
+            var variants = new Variants<bool>(regionsCount);
+
+            for (var i = 0; i < regionsCount; i++)
+            {
+                var result = compoundStructure.IsSimpleRegion(i);
+                variants.Add(result, $"Region {i}: {result}");
+            }
+
+            return variants;
+        }
+        
+        IVariants ResolveIsStructuralDeck()
+        {
+            var layerCount = compoundStructure.LayerCount;
+            var variants = new Variants<bool>(layerCount);
+            for (var i = 0; i < layerCount; i++)
+            {
+                var result = compoundStructure.IsStructuralDeck(i);
+                variants.Add(result, $"Layer {i}: {result}");
+            }
+
+            return variants;
+        }
+        
+        IVariants ResolveParticipatesInWrapping()
+        {
+            var layerCount = compoundStructure.LayerCount;
+            var variants = new Variants<bool>(layerCount);
+            for (var i = 0; i < layerCount; i++)
+            {
+                var result = compoundStructure.ParticipatesInWrapping(i);
+                variants.Add(result, $"Layer {i}: {result}");
+            }
+
             return variants;
         }
     }
