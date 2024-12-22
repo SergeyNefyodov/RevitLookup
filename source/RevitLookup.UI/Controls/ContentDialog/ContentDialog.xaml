@@ -87,7 +87,7 @@
                                         </ContentPresenter.Resources>
                                     </ContentPresenter>
 
-                                    <controls:DynamicScrollViewer
+                                    <controls:PassiveScrollViewer
                                         x:Name="PART_ContentScroll"
                                         Grid.Row="1"
                                         Margin="0,20"
@@ -97,8 +97,6 @@
                                         IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
                                         VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
                                         <ContentPresenter
-                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                             Content="{TemplateBinding Content}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}"
                                             ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}">
@@ -110,7 +108,7 @@
                                                 </Style>
                                             </ContentPresenter.Resources>
                                         </ContentPresenter>
-                                    </controls:DynamicScrollViewer>
+                                    </controls:PassiveScrollViewer>
                                 </Grid>
 
                                 <Border

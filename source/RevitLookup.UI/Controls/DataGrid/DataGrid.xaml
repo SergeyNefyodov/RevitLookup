@@ -28,7 +28,7 @@
 
     <!--  TODO  -->
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-    <system:Double x:Key="DefaultDataGridFontSize">12</system:Double>
+    <system:Double x:Key="DefaultDataGridFontSize">14</system:Double>
 
     <Color x:Key="DisabledControlLightColor">#FFE8EDF9</Color>
     <Color x:Key="DisabledControlDarkColor">#FFC5CBF9</Color>
@@ -144,7 +144,7 @@
                         SnapsToDevicePixels="True">
                         <ContentPresenter 
                             VerticalAlignment="Center"
-                            Margin="4,0,4,0"
+                            Margin="6 0"
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="FocusStates">
@@ -499,7 +499,7 @@
                     <Grid>
                         <Border
                             x:Name="columnHeaderBorder"
-                            Padding="7,0,7,0"
+                            Padding="7 0"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="0,0,1,1">
@@ -507,7 +507,7 @@
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                TextBlock.FontWeight="Bold" />
+                                TextBlock.FontWeight="Medium" />
                         </Border>
 
                         <Thumb
@@ -663,7 +663,6 @@
         <Setter Property="CellStyle" Value="{StaticResource DefaultDataGridCellStyle}" />
         <Setter Property="ColumnHeaderStyle" Value="{StaticResource DefaultDataGridColumnHeaderStyle}" />
         <Setter Property="DragIndicatorStyle" Value="{StaticResource DefaultDragIndicatorStyleStyle}" />
-        <Setter Property="VerticalScrollBarVisibility" Value="Visible" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
@@ -676,7 +675,7 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding Border.CornerRadius}"
                         SnapsToDevicePixels="True">
-                        <controls:PassiveScrollViewer x:Name="DG_ScrollViewer" Focusable="False" VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}">
+                        <controls:PassiveScrollViewer x:Name="DG_ScrollViewer" Focusable="False">
                             <controls:PassiveScrollViewer.Template>
                                 <ControlTemplate TargetType="{x:Type controls:PassiveScrollViewer}">
                                     <Grid>
@@ -922,12 +921,12 @@
         x:Key="DefaultUiDataGridStyle"
         BasedOn="{StaticResource DefaultDataGridStyle}"
         TargetType="{x:Type controls:DataGrid}">
-        <Setter Property="CheckBoxColumnEditingElementStyle" Value="{StaticResource DataGridCheckBoxEditingElementDefaultStyle}" />
-        <Setter Property="CheckBoxColumnElementStyle" Value="{StaticResource DataGridCheckBoxElementDefaultStyle}" />
+        <!-- <Setter Property="CheckBoxColumnEditingElementStyle" Value="{StaticResource DataGridCheckBoxEditingElementDefaultStyle}" /> -->
+        <!-- <Setter Property="CheckBoxColumnElementStyle" Value="{StaticResource DataGridCheckBoxElementDefaultStyle}" /> -->
     </Style>
 
     <Style BasedOn="{StaticResource DefaultDataGridColumnHeadersPresenterStyle}" TargetType="{x:Type DataGridColumnHeadersPresenter}" />
     <Style BasedOn="{StaticResource DefaultDataGridStyle}" TargetType="{x:Type DataGrid}" />
-    <Style BasedOn="{StaticResource DefaultDataGridStyle}" TargetType="{x:Type controls:DataGrid}" />
+    <Style BasedOn="{StaticResource DefaultUiDataGridStyle}" TargetType="{x:Type controls:DataGrid}" />
 
 </ResourceDictionary>

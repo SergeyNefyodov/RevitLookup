@@ -32,16 +32,15 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="JournalOwnership" Value="OwnsJournal" />
-        <Setter Property="Template" Value="{StaticResource DefaultNavigationViewContentPresenterControlTemplate}" />
 
-        <!-- <Style.Triggers> -->
-        <!--     <Trigger Property="IsDynamicScrollViewerEnabled" Value="True"> -->
-        <!--         <Setter Property="Template" Value="{StaticResource DefaultNavigationViewContentPresenterWithDynamicScrollViewerControlTemplate}" /> -->
-        <!--     </Trigger> -->
-        <!--     <Trigger Property="IsDynamicScrollViewerEnabled" Value="False"> -->
-        <!--         <Setter Property="Template" Value="{StaticResource DefaultNavigationViewContentPresenterControlTemplate}" /> -->
-        <!--     </Trigger> -->
-        <!-- </Style.Triggers> -->
+        <Style.Triggers>
+            <Trigger Property="IsDynamicScrollViewerEnabled" Value="True">
+                <Setter Property="Template" Value="{StaticResource DefaultNavigationViewContentPresenterWithDynamicScrollViewerControlTemplate}" />
+            </Trigger>
+            <Trigger Property="IsDynamicScrollViewerEnabled" Value="False">
+                <Setter Property="Template" Value="{StaticResource DefaultNavigationViewContentPresenterControlTemplate}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style BasedOn="{StaticResource DefaultNavigationViewContentPresenterStyle}" TargetType="{x:Type controls:NavigationViewContentPresenter}" />

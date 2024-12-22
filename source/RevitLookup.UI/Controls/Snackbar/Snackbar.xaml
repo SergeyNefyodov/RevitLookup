@@ -77,28 +77,28 @@
                                         Margin="0"
                                         Content="{TemplateBinding Title}"
                                         ContentTemplate="{TemplateBinding TitleTemplate}"
-                                        TextElement.FontWeight="SemiBold"
                                         TextElement.Foreground="{TemplateBinding Foreground}">
                                         <ContentPresenter.Resources>
                                             <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
                                                 <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="FontWeight" Value="SemiBold" />
                                             </Style>
                                         </ContentPresenter.Resources>
                                     </ContentPresenter>
 
                                     <ContentPresenter
                                         Grid.Row="1"
-                                        Margin="0,4,0,0"
                                         Content="{TemplateBinding Content}"
                                         ContentStringFormat="{TemplateBinding ContentStringFormat}"
                                         ContentTemplate="{TemplateBinding ContentTemplate}"
                                         ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
-                                        TextElement.FontSize="12"
-                                        TextElement.FontWeight="Regular"
                                         TextElement.Foreground="{TemplateBinding ContentForeground}">
                                         <ContentPresenter.Resources>
                                             <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
                                                 <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                                                <Setter Property="FontSize" Value="12" />
+                                                <Setter Property="FontWeight" Value="Regular" />
                                             </Style>
                                         </ContentPresenter.Resources>
                                     </ContentPresenter>

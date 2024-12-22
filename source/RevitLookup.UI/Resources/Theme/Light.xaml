@@ -260,7 +260,7 @@
 
     <LinearGradientBrush x:Key="AccentControlElevationBorderBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,3">
         <LinearGradientBrush.RelativeTransform>
-            <ScaleTransform CenterY="0.0" ScaleY="-0" />
+            <ScaleTransform CenterY="0.5" ScaleY="-1" />
         </LinearGradientBrush.RelativeTransform>
         <LinearGradientBrush.GradientStops>
             <GradientStop Offset="0.33" Color="{StaticResource ControlStrokeColorOnAccentSecondary}" />
@@ -268,13 +268,10 @@
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="TextControlElevationBorderBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,3">
-        <LinearGradientBrush.RelativeTransform>
-            <ScaleTransform CenterY="0.0" ScaleY="-1" />
-        </LinearGradientBrush.RelativeTransform>
+    <LinearGradientBrush x:Key="TextControlElevationBorderBrush" MappingMode="RelativeToBoundingBox" StartPoint="0,0" EndPoint="0,2">
         <LinearGradientBrush.GradientStops>
-            <GradientStop Offset="0.33" Color="{StaticResource ControlStrokeColorSecondary}" />
-            <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}" />
+            <GradientStop Offset="0.0" Color="{StaticResource ControlStrokeColorDefault}" />
+            <GradientStop Offset="1.0" Color="{StaticResource ControlStrongStrokeColorDefault}" />
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
 
@@ -320,9 +317,8 @@
     <!--  Control brushes  -->
 
     <!--  Badge  -->
-
     <SolidColorBrush x:Key="BadgeForeground" Color="{StaticResource TextOnAccentFillColorPrimary}" />
-    <SolidColorBrush x:Key="BadgeBackground" Color="{DynamicResource SystemAccentColorPrimary}" />
+    <SolidColorBrush x:Key="BadgeBackground" Color="{StaticResource SystemAccentColorPrimary}" />
 
     <!--  BreadcrumbBar  -->
     <SolidColorBrush x:Key="BreadcrumbBarNormalForegroundBrush" Color="{StaticResource TextFillColorPrimary}" />
@@ -488,7 +484,7 @@
     <SolidColorBrush x:Key="InfoBarInformationalSeverityIconBackground" Color="{DynamicResource SystemAccentColorPrimary}" />
 
     <!--  Label  -->
-    <SolidColorBrush x:Key="LabelForeground" Color="{StaticResource TextFillColorPrimary}" />
+    <SolidColorBrush x:Key="LabelForeground" Color="{StaticResource TextFillColorSecondary}" />
 
     <!--  ListBox  -->
     <SolidColorBrush x:Key="ListBoxItemForeground" Color="{StaticResource TextFillColorPrimary}" />

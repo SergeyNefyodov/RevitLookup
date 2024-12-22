@@ -1,25 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+// This Source Code Form is subject to the terms of the MIT License.
+// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
+// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
+// All Rights Reserved.
+
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using Wpf.Ui.Controls;
 
 namespace Wpf.Ui.AutomationPeers;
 
-internal class CardControlAutomationPeer : FrameworkElementAutomationPeer
+/// <summary>
+/// Provides UI Automation peer for the CardControl.
+/// </summary>
+internal class CardControlAutomationPeer(CardControl owner) : FrameworkElementAutomationPeer(owner)
 {
-    private readonly CardControl _owner;
-
-    public CardControlAutomationPeer(CardControl owner)
-        : base(owner)
-    {
-        this._owner = owner;
-    }
-
     protected override string GetClassNameCore()
     {
         return "CardControl";
@@ -42,7 +36,7 @@ internal class CardControlAutomationPeer : FrameworkElementAutomationPeer
 
     protected override AutomationPeer GetLabeledByCore()
     {
-        if (this._owner.Header is UIElement element)
+        if (owner.Header is UIElement element)
         {
             return CreatePeerForElement(element);
         }
@@ -52,19 +46,19 @@ internal class CardControlAutomationPeer : FrameworkElementAutomationPeer
 
     protected override string GetNameCore()
     {
-        string result = base.GetNameCore() ?? String.Empty;
+        var result = base.GetNameCore() ?? string.Empty;
 
-        if (result == String.Empty)
+        if (result == string.Empty)
         {
-            result = AutomationProperties.GetName(this._owner);
+            result = AutomationProperties.GetName(owner);
         }
 
-        if (result == String.Empty && this._owner.Header is DependencyObject d)
+        if (result == string.Empty && owner.Header is DependencyObject d)
         {
             result = AutomationProperties.GetName(d);
         }
 
-        if (result == String.Empty && this._owner.Header is string s)
+        if (result == string.Empty && owner.Header is string s)
         {
             result = s;
         }
