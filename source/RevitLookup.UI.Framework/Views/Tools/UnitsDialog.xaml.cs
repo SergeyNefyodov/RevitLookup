@@ -121,7 +121,7 @@ public sealed partial class UnitsDialog
             {
                 Hide();
                 await _viewModel.DecomposeAsync(unitInfo);
-                _navigationService.Navigate(typeof(SummaryViewBase));
+                _navigationService.Navigate(typeof(DecompositionSummaryPage));
             });
 
         row.ContextMenu = contextMenu;
