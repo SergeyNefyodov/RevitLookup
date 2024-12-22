@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
@@ -20,7 +18,7 @@ public class EnumCollapsedVisibilityConverter<TEnum> : MarkupExtension, IValueCo
         {
             throw new ArgumentException($"{nameof(parameter)} is not type: {typeof(TEnum)}");
         }
-        
+
         return EqualityComparer<TEnum>.Default.Equals(valueEnum, parameterEnum) ? Visibility.Visible : Visibility.Collapsed;
     }
 

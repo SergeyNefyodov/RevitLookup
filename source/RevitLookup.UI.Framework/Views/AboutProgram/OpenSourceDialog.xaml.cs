@@ -20,6 +20,7 @@
 
 using System.Windows;
 using System.Windows.Documents;
+using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.ViewModels.AboutProgram;
 using RevitLookup.Common.Tools;
 using Wpf.Ui;
@@ -28,15 +29,21 @@ namespace RevitLookup.UI.Framework.Views.AboutProgram;
 
 public sealed partial class OpenSourceDialog
 {
-    public OpenSourceDialog(IContentDialogService dialogService, IOpenSourceViewModel viewModel) : base(dialogService.GetDialogHost())
+    public OpenSourceDialog(
+        IContentDialogService dialogService,
+        IOpenSourceViewModel viewModel,
+        IThemeWatcherService themeWatcherService)
+        : base(dialogService.GetDialogHost())
     {
+        themeWatcherService.Watch(this);
+
         DataContext = viewModel;
         InitializeComponent();
     }
 
     private void OpenLink(object sender, RoutedEventArgs args)
     {
-        var link = (Hyperlink)args.OriginalSource;
+        var link = (Hyperlink) args.OriginalSource;
         ProcessTasks.StartShell(link.NavigateUri.OriginalString);
     }
 }

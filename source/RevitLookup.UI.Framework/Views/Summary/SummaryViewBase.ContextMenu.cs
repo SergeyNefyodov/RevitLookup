@@ -79,7 +79,7 @@ public partial class SummaryViewBase
         dataGrid.ContextMenu = contextMenu;
 
         contextMenu.AddMenuItem("RefreshMenuItem")
-            .SetCommand(ViewModel.RefreshMembersCommand)
+            .SetCommand(ViewModel, async parameter => { await parameter.RefreshMembersCommand.ExecuteAsync(null); })
             .SetGestureText(Key.F5);
 
         contextMenu.AddSeparator();

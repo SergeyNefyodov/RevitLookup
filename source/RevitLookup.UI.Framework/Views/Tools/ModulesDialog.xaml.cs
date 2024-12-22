@@ -18,6 +18,7 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using Wpf.Ui;
 
@@ -25,8 +26,13 @@ namespace RevitLookup.UI.Framework.Views.Tools;
 
 public sealed partial class ModulesDialog
 {
-    public ModulesDialog(IContentDialogService dialogService, IModulesViewModel viewModel) : base(dialogService.GetDialogHost())
+    public ModulesDialog(
+        IContentDialogService dialogService,
+        IModulesViewModel viewModel, IThemeWatcherService themeWatcherService)
+        : base(dialogService.GetDialogHost())
     {
+        themeWatcherService.Watch(this);
+
         DataContext = viewModel;
         InitializeComponent();
 

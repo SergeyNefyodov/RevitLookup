@@ -3,6 +3,7 @@ using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.UI.Framework.Controls.Automation;
 using Wpf.Ui;
 

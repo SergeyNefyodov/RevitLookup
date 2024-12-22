@@ -18,6 +18,7 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using RevitLookup.Abstractions.Services.Appearance;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -25,8 +26,9 @@ namespace RevitLookup.UI.Framework.Views.EditDialogs;
 
 public sealed partial class EditValueDialog
 {
-    public EditValueDialog(IContentDialogService dialogService) : base(dialogService.GetDialogHost())
+    public EditValueDialog(IContentDialogService dialogService, IThemeWatcherService themeWatcherService) : base(dialogService.GetDialogHost())
     {
+        themeWatcherService.Watch(this);
         InitializeComponent();
     }
 

@@ -1,0 +1,61 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:decomposition="clr-namespace:RevitLookup.Abstractions.ObservableModels.Decomposition;assembly=RevitLookup.Abstractions"
+    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters;assembly=RevitLookup.UI.Framework"
+    xmlns:ui="http://revitlookup.com/xaml"
+    xmlns:converters="clr-namespace:RevitLookup.Styles.Converters"
+    mc:Ignorable="d">
+
+    <DataTemplate
+        x:Key="DefaultSummaryCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <ui:TextBlock
+            VerticalAlignment="Center"
+            FontTypography="Caption"
+            Text="{Binding .,
+                Converter={valueConverters:CombinedDescriptorLabelConverter},
+                Mode=OneTime}" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="SummaryMediaColorCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <StackPanel
+            Orientation="Horizontal">
+            <ui:TextBlock
+                VerticalAlignment="Center"
+                FontTypography="Caption"
+                Text="{Binding .,
+                    Converter={valueConverters:CombinedDescriptorLabelConverter},
+                    Mode=OneTime}" />
+            <Border
+                CornerRadius="4"
+                Padding="4 2"
+                Margin="4 0 0 0"
+                VerticalAlignment="Center"
+                d:DataContext="{d:DesignInstance decomposition:ObservableDecomposedMember}">
+                <Border.Background>
+                    <SolidColorBrush
+                        Opacity="0.05"
+                        Color="{DynamicResource FocusStrokeColorOuter}">
+                    </SolidColorBrush>
+                </Border.Background>
+                <Border
+                    Width="10"
+                    Height="10">
+                    <Border.Background>
+                        <SolidColorBrush
+                            Color="{Binding Value.RawValue,
+                            Converter={converters:ObjectColorConverter},
+                            Mode=OneTime}">
+                        </SolidColorBrush>
+                    </Border.Background>
+                </Border>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>

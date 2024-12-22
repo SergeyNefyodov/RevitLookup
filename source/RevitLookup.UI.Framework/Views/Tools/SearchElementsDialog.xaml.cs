@@ -19,7 +19,8 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using Microsoft.Extensions.Logging;
-using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.UI.Framework.Views.Summary;
 using Wpf.Ui;
@@ -38,6 +39,7 @@ public sealed partial class SearchElementsDialog
         IContentDialogService dialogService,
         ISearchElementsViewModel viewModel,
         INavigationService navigationService,
+        IThemeWatcherService themeWatcherService,
         INotificationService notificationService,
         ILogger<SearchElementsDialog> logger)
         : base(dialogService.GetDialogHost())
@@ -46,6 +48,8 @@ public sealed partial class SearchElementsDialog
         _navigationService = navigationService;
         _notificationService = notificationService;
         _logger = logger;
+
+        themeWatcherService.Watch(this);
 
         DataContext = viewModel;
         InitializeComponent();

@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.ObservableModels.Entries;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.Common.Tools;
 using RevitLookup.UI.Framework.Views.EditDialogs;

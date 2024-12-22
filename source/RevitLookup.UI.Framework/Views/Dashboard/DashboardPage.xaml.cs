@@ -18,6 +18,7 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.ViewModels.Dashboard;
 using Wpf.Ui.Abstractions.Controls;
 
@@ -25,8 +26,10 @@ namespace RevitLookup.UI.Framework.Views.Dashboard;
 
 public sealed partial class DashboardPage : INavigableView<IDashboardViewModel>
 {
-    public DashboardPage(IDashboardViewModel viewModel)
+    public DashboardPage(IDashboardViewModel viewModel, IThemeWatcherService themeWatcherService)
     {
+        themeWatcherService.Watch(this);
+
         ViewModel = viewModel;
         DataContext = this;
         InitializeComponent();

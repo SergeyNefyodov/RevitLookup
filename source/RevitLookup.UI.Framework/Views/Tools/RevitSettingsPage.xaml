@@ -14,7 +14,8 @@
     d:DesignWidth="500"
     d:DataContext="{d:DesignInstance tools:RevitSettingsPage}"
     rl:NavigationView.HeaderContent="Revit settings"
-    ScrollViewer.CanContentScroll="False">
+    ScrollViewer.CanContentScroll="False"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
     <Page.Resources>
         <ResourceDictionary>

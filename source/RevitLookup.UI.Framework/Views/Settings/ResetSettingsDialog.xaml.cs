@@ -18,26 +18,19 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using RevitLookup.Abstractions.Services.Appearance;
 using Wpf.Ui;
 
 namespace RevitLookup.UI.Framework.Views.Settings;
 
 public sealed partial class ResetSettingsDialog
 {
-    public ResetSettingsDialog(IContentDialogService dialogService) : base(dialogService.GetDialogHost())
+    public ResetSettingsDialog(IContentDialogService dialogService, IThemeWatcherService themeWatcherService) : base(dialogService.GetDialogHost())
     {
+        themeWatcherService.Watch(this);
         InitializeComponent();
     }
 
-    // public List<ISettings> SelectedSettings
-    // {
-    //     get
-    //     {
-    //         var checkedSettings = new List<ISettings>();
-    //         if (GeneralBox.IsChecked == true) checkedSettings.Add(_settingsService.GeneralSettings);
-    //         if (RenderBox.IsChecked == true) checkedSettings.Add(_settingsService.RenderSettings);
-    //
-    //         return checkedSettings;
-    //     }
-    // }
+    public bool CanResetGeneralSettings => GeneralBox.IsChecked == true;
+    public bool CanResetRenderSettings => RenderBox.IsChecked == true;
 }

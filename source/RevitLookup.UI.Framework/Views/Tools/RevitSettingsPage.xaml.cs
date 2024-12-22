@@ -23,7 +23,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using RevitLookup.Abstractions.ObservableModels.Entries;
-using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -39,9 +40,12 @@ public sealed partial class RevitSettingsPage
         IRevitSettingsViewModel viewModel,
         IContentDialogService dialogService,
         INavigationService navigationService,
+        IThemeWatcherService themeWatcherService,
         INotificationService notificationService)
     {
         _notificationService = notificationService;
+
+        themeWatcherService.Watch(this);
 
         ViewModel = viewModel;
         DataContext = this;

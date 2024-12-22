@@ -14,7 +14,8 @@
     d:DesignHeight="500"
     d:DesignWidth="700"
     d:DataContext="{d:DesignInstance summary:DecompositionSummaryPage}"
-    ScrollViewer.CanContentScroll="False">
+    ScrollViewer.CanContentScroll="False"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
     <Grid
         Margin="12">

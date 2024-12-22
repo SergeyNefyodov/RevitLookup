@@ -19,6 +19,7 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using RevitLookup.Abstractions.ObservableModels.Entries;
+using RevitLookup.Abstractions.Services.Appearance;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -28,8 +29,12 @@ public sealed partial class EditSettingsEntryDialog
 {
     private ObservableIniEntry? _entry;
 
-    public EditSettingsEntryDialog(IContentDialogService dialogService) : base(dialogService.GetDialogHost())
+    public EditSettingsEntryDialog(
+        IContentDialogService dialogService,
+        IThemeWatcherService themeWatcherService)
+        : base(dialogService.GetDialogHost())
     {
+        themeWatcherService.Watch(this);
         InitializeComponent();
     }
 

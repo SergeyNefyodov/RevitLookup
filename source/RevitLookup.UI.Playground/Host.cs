@@ -1,10 +1,20 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Application;
+using RevitLookup.Abstractions.Services.Presentation;
+using RevitLookup.Abstractions.Services.Settings;
+using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.UI.Framework.Services;
+using RevitLookup.UI.Framework.Services.Presentation;
 using RevitLookup.UI.Playground.Client.Services;
 using RevitLookup.UI.Playground.Config;
 using RevitLookup.UI.Playground.Services;
+using RevitLookup.UI.Playground.Services.Appearance;
+using RevitLookup.UI.Playground.Services.Application;
+using RevitLookup.UI.Playground.Services.Settings;
+using RevitLookup.UI.Playground.Services.Summary;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 
@@ -43,6 +53,7 @@ public static class Host
         //Services
         services.AddSingleton<ISoftwareUpdateService, MockSoftwareUpdateService>();
         services.AddSingleton<ISettingsService, MockSettingsService>();
+        services.AddSingleton<IThemeWatcherService, MockThemeWatcherService>();
         services.AddScoped<IVisualDecompositionService, MockVisualDecompositionService>();
         services.AddTransient<IRevitLookupUiService, MockRevitLookupUiService>();
 

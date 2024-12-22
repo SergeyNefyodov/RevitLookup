@@ -28,6 +28,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RevitLookup.Abstractions.Options;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.States;
 using RevitLookup.Abstractions.ViewModels.AboutProgram;
 using RevitLookup.UI.Framework.Views.AboutProgram;

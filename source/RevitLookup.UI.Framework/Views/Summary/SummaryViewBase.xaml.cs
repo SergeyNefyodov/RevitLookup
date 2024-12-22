@@ -26,7 +26,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
-using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Presentation;
+using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.UI.Framework.Utils;
 using Wpf.Ui.Abstractions.Controls;
@@ -87,7 +88,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     /// </summary>
     private static void OnTreeSourceChanged(object? sender, IEnumerable enumerable)
     {
-        var treeView = (TreeView)sender!;
+        var treeView = (TreeView) sender!;
 
         if (treeView.IsLoaded)
         {
@@ -100,7 +101,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
 
         void OnLoaded(object nestedSender, RoutedEventArgs args)
         {
-            var self = (TreeView)nestedSender;
+            var self = (TreeView) nestedSender;
             self.Loaded -= OnLoaded;
             ExpandFirstTreeGroup(treeView);
         }
@@ -115,16 +116,16 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
         try
         {
             // Await Frame transition. GetMembers freezes the thread and breaks the animation
-            var transitionDuration = (int)NavigationView.TransitionDurationProperty.DefaultMetadata.DefaultValue;
+            var transitionDuration = (int) NavigationView.TransitionDurationProperty.DefaultMetadata.DefaultValue;
             await Task.Delay(transitionDuration);
 
             //3 is optimal groups count for expanding
             if (treeView.Items.Count > 3) return;
 
-            var rootItem = (TreeViewItem?)treeView.GetItemAtIndex(0);
+            var rootItem = (TreeViewItem?) treeView.GetItemAtIndex(0);
             if (rootItem is null) return;
 
-            var nestedItem = (TreeViewItem?)rootItem.GetItemAtIndex(0);
+            var nestedItem = (TreeViewItem?) rootItem.GetItemAtIndex(0);
             if (nestedItem is null) return;
 
             nestedItem.IsSelected = true;
@@ -143,12 +144,12 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     /// </remarks>
     private void OnTreeViewItemGenerated(object? sender, EventArgs _)
     {
-        var generator = (ItemContainerGenerator)sender!;
+        var generator = (ItemContainerGenerator) sender!;
         if (generator.Status == GeneratorStatus.ContainersGenerated)
         {
             foreach (var item in generator.Items)
             {
-                var treeItem = (ItemsControl)generator.ContainerFromItem(item);
+                var treeItem = (ItemsControl) generator.ContainerFromItem(item);
                 if (treeItem is null) continue;
 
                 treeItem.MouseEnter -= OnTreeItemCaptured;
@@ -171,7 +172,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     /// </summary>
     private void OnTreeItemCaptured(object? sender, RoutedEventArgs args)
     {
-        var element = (FrameworkElement)sender!;
+        var element = (FrameworkElement) sender!;
         switch (element.DataContext)
         {
             case ObservableDecomposedObjectsGroup decomposedGroup:
@@ -216,7 +217,7 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     /// </summary>
     private static void ApplySorting(object? sender, EventArgs eventArgs)
     {
-        var dataGrid = (DataGrid)sender!;
+        var dataGrid = (DataGrid) sender!;
 
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Depth), ListSortDirection.Descending));
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.MemberAttributes), ListSortDirection.Ascending));
@@ -244,8 +245,8 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     /// </remarks>
     private void OnGridRowCaptured(object sender, RoutedEventArgs args)
     {
-        var element = (FrameworkElement)sender;
-        var member = (ObservableDecomposedMember)element.DataContext;
+        var element = (FrameworkElement) sender;
+        var member = (ObservableDecomposedMember) element.DataContext;
         CreateGridRowTooltip(member, element);
         CreateGridRowContextMenu(member, element);
     }

@@ -17,11 +17,13 @@
 
     <rl:ContentDialog.Resources>
         <ResourceDictionary>
-            <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
+            <ResourceDictionary.MergedDictionaries>
+                <rl:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+            <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
             <Style
                 BasedOn="{StaticResource DefaultContentDialogStyle}"
                 TargetType="{x:Type editDialogs:EditValueDialog}" />
-            <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
         </ResourceDictionary>
     </rl:ContentDialog.Resources>
 

@@ -24,7 +24,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Presentation;
+using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Settings;
 using RevitLookup.UI.Framework.Views.Settings;
 using RevitLookup.UI.Framework.Views.Windows;
@@ -42,6 +44,7 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
     private readonly INavigationService _navigationService;
     private readonly INotificationService _notificationService;
     private readonly ISettingsService _settingsService;
+    private readonly IThemeWatcherService _themeWatcherService;
     private readonly IWindowIntercomService _intercomService;
     private readonly bool _initialized;
 
@@ -58,12 +61,14 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
         INavigationService navigationService,
         INotificationService notificationService,
         ISettingsService settingsService,
+        IThemeWatcherService themeWatcherService,
         IWindowIntercomService intercomService)
     {
         _serviceProvider = serviceProvider;
         _navigationService = navigationService;
         _notificationService = notificationService;
         _settingsService = settingsService;
+        _themeWatcherService = themeWatcherService;
         _intercomService = intercomService;
 
         ApplySettings();
@@ -95,7 +100,16 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
             var result = await dialog.ShowAsync();
             if (result != ContentDialogResult.Primary) return;
 
-            _settingsService.ResetSettings();
+            if (dialog.CanResetGeneralSettings)
+            {
+                _settingsService.ResetGeneralSettings();
+            }
+
+            if (dialog.CanResetRenderSettings)
+            {
+                _settingsService.ResetRenderSettings();
+            }
+
             ApplySettings();
             _notificationService.ShowSuccess("Reset settings", "Settings successfully reset to default");
         }
@@ -110,7 +124,7 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
         if (!_initialized) return;
 
         _settingsService.GeneralSettings.Theme = value;
-        ApplicationThemeManager.Apply(value, Background);
+        _themeWatcherService.Watch();
     }
 
     partial void OnBackgroundChanged(WindowBackdropType value)
@@ -118,7 +132,7 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
         if (!_initialized) return;
 
         _settingsService.GeneralSettings.Background = value;
-        ApplicationThemeManager.Apply(Theme, value);
+        WindowBackgroundManager.UpdateBackground(_intercomService.GetHost(), _settingsService.GeneralSettings.Theme, value);
     }
 
     partial void OnUseTransitionChanged(bool value)

@@ -21,6 +21,9 @@
 using System.Windows;
 using System.Windows.Automation.Peers;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Presentation;
+using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.UI.Framework.Controls.Automation;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
@@ -39,12 +42,14 @@ public sealed partial class RevitLookupView
         ISnackbarService snackbarService,
         IWindowIntercomService intercomService,
         ISoftwareUpdateService updateService,
-        ISettingsService settingsService)
+        ISettingsService settingsService, 
+        IThemeWatcherService themeWatcherService)
     {
         _intercomService = intercomService;
         _updateService = updateService;
         _settingsService = settingsService;
 
+        themeWatcherService.Watch(this);
         InitializeComponent();
 
         intercomService.SetSharedHost(this);
@@ -52,9 +57,9 @@ public sealed partial class RevitLookupView
         dialogService.SetDialogHost(RootContentDialog);
         snackbarService.SetSnackbarPresenter(RootSnackbar);
 
+        ApplyEffects();
         AddShortcuts();
         AddBadges();
-        ApplyTheme();
         ApplyWindowSize();
     }
 
@@ -66,11 +71,11 @@ public sealed partial class RevitLookupView
         UpdatesNotifier.Visibility = Visibility.Visible;
     }
 
-    private void ApplyTheme()
+    private void ApplyEffects()
     {
         WindowBackdropType = _settingsService.GeneralSettings.Background;
         RootNavigation.Transition = _settingsService.GeneralSettings.Transition;
-        ApplicationThemeManager.Apply(_settingsService.GeneralSettings.Theme, _settingsService.GeneralSettings.Background);
+        WindowBackgroundManager.UpdateBackground(this, _settingsService.GeneralSettings.Theme, WindowBackdropType);
     }
 
     private void ApplyWindowSize()
@@ -95,7 +100,7 @@ public sealed partial class RevitLookupView
 
     private static void OnSizeChanged(object sender, SizeChangedEventArgs args)
     {
-        var self = (RevitLookupView)sender;
+        var self = (RevitLookupView) sender;
         self._settingsService.GeneralSettings.WindowWidth = args.NewSize.Width;
         self._settingsService.GeneralSettings.WindowHeight = args.NewSize.Height;
     }

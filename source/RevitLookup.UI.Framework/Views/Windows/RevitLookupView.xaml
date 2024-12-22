@@ -38,7 +38,7 @@
                     TargetPageType="{x:Type dashboard:DashboardPage}"
                     Icon="{rl:SymbolIcon AppGeneric24}" />
                 <rl:NavigationViewItem
-                    Content="Decomposition summary"
+                    Content="Summary"
                     TargetPageType="{x:Type pages:DecompositionSummaryPage}"
                     Icon="{rl:SymbolIcon SlideSearch24}" />
                 <rl:NavigationViewItem

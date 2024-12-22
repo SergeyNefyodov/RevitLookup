@@ -18,6 +18,7 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.ViewModels.Settings;
 using Wpf.Ui.Abstractions.Controls;
 
@@ -25,8 +26,10 @@ namespace RevitLookup.UI.Framework.Views.Settings;
 
 public sealed partial class SettingsPage : INavigableView<ISettingsViewModel>
 {
-    public SettingsPage(ISettingsViewModel viewModel)
+    public SettingsPage(ISettingsViewModel viewModel, IThemeWatcherService themeWatcherService)
     {
+        themeWatcherService.Watch(this);
+
         ViewModel = viewModel;
         DataContext = this;
         InitializeComponent();

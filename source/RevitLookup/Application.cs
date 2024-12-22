@@ -20,9 +20,12 @@
 
 using System.Windows.Interop;
 using System.Windows.Media;
+using Autodesk.Revit.UI;
 using Nice3point.Revit.Toolkit.External;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Settings;
+using RevitLookup.Commands;
 using RevitLookup.Core;
-using RevitLookup.Services.Contracts;
 
 namespace RevitLookup;
 
@@ -31,15 +34,43 @@ public class Application : ExternalApplication
 {
     public override void OnStartup()
     {
-        RevitShell.RegisterHandlers();
         Host.Start();
+        RevitShell.RegisterHandlers();
 
-        RibbonController.CreatePanel(Application);
+        EnableThemes();
+        CreateRibbon(Application);
+        EnableHardwareRendering();
     }
 
     public override void OnShutdown()
     {
         Host.Stop();
+    }
+
+    private static void CreateRibbon(UIControlledApplication application)
+    {
+        var panel = application.CreatePanel("Revit Lookup");
+        var pullButton = panel.AddPullDownButton("RevitLookupButton", "RevitLookup");
+        pullButton.SetImage("/RevitLookup;component/Resources/Images/RibbonIcon16.png");
+        pullButton.SetLargeImage("/RevitLookup;component/Resources/Images/RibbonIcon32.png");
+
+        pullButton.AddPushButton<DashboardCommand>("Dashboard");
+        pullButton.AddPushButton<SnoopSelectionCommand>("Snoop Selection");
+        pullButton.AddPushButton<SnoopViewCommand>("Snoop Active view");
+        pullButton.AddPushButton<SnoopDocumentCommand>("Snoop Document");
+        pullButton.AddPushButton<SnoopDatabaseCommand>("Snoop Database");
+        pullButton.AddPushButton<SnoopFaceCommand>("Snoop Face");
+        pullButton.AddPushButton<SnoopEdgeCommand>("Snoop Edge");
+        pullButton.AddPushButton<SnoopPointCommand>("Snoop Point");
+        pullButton.AddPushButton<SnoopLinkedElementCommand>("Snoop Linked element");
+        pullButton.AddPushButton<SearchElementsCommand>("Search Elements");
+        pullButton.AddPushButton<EventMonitorCommand>("Event monitor");
+    }
+
+    private static void EnableThemes()
+    {
+        var themeWatcherService = Host.GetService<IThemeWatcherService>();
+        themeWatcherService.Initialize();
     }
 
     public static void EnableHardwareRendering()

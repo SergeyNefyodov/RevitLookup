@@ -19,7 +19,9 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using Microsoft.Extensions.Logging;
-using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Presentation;
+using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Summary;
 
 namespace RevitLookup.UI.Framework.Views.Summary;
@@ -31,9 +33,12 @@ public sealed partial class EventsSummaryPage
         ISettingsService settingsService,
         IWindowIntercomService intercomService,
         INotificationService notificationService,
+        IThemeWatcherService themeWatcherService,
         ILoggerFactory loggerFactory)
         : base(settingsService, intercomService, notificationService, loggerFactory)
     {
+        themeWatcherService.Watch(this);
+
         DataContext = this;
         ViewModel = viewModel;
         InitializeComponent();

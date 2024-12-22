@@ -37,7 +37,7 @@ public static class ContextMenuExtensions
 
     public static void AddLabel(this ContextMenu menu, string text)
     {
-        var label = (MenuItem?)menu.Resources["Label"];
+        var label = (MenuItem?) menu.Resources["Label"];
         if (label is null) throw new InvalidOperationException("Resource \"Label\" not found");
 
         label.Header = text;
@@ -54,7 +54,7 @@ public static class ContextMenuExtensions
 
     public static MenuItem AddMenuItem(this ContextMenu menu, string resource)
     {
-        var item = (MenuItem?)menu.Resources[resource];
+        var item = (MenuItem?) menu.Resources[resource];
         if (item is null) throw new InvalidOperationException($"Resource \"{resource}\" not found");
 
         menu.Items.Add(item);
@@ -72,6 +72,13 @@ public static class ContextMenuExtensions
     public static MenuItem SetCommand(this MenuItem item, ICommand command)
     {
         item.Command = command;
+
+        return item;
+    }
+
+    public static MenuItem SetCommand(this MenuItem item, Func<Task> command)
+    {
+        item.Command = new AsyncRelayCommand(command);
 
         return item;
     }
@@ -98,7 +105,7 @@ public static class ContextMenuExtensions
         var menu = item.FindLogicalParent<ContextMenu>();
         if (menu is null) throw new InvalidOperationException("Unable to find context menu");
 
-        menu.PlacementTarget.InputBindings.Add(new InputBinding(item.Command, inputGesture) { CommandParameter = item.CommandParameter });
+        menu.PlacementTarget.InputBindings.Add(new InputBinding(item.Command, inputGesture) {CommandParameter = item.CommandParameter});
         item.InputGestureText = inputGesture.GetDisplayStringForCulture(CultureInfo.InvariantCulture);
 
         return item;
@@ -110,7 +117,7 @@ public static class ContextMenuExtensions
         var menu = item.FindLogicalParent<ContextMenu>();
         if (menu is null) throw new InvalidOperationException("Unable to find context menu");
 
-        menu.PlacementTarget.InputBindings.Add(new InputBinding(item.Command, inputGesture) { CommandParameter = item.CommandParameter });
+        menu.PlacementTarget.InputBindings.Add(new InputBinding(item.Command, inputGesture) {CommandParameter = item.CommandParameter});
         item.InputGestureText = inputGesture.GetDisplayStringForCulture(CultureInfo.InvariantCulture);
 
         return item;

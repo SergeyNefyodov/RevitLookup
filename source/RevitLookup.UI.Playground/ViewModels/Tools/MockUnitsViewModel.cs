@@ -23,6 +23,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
 using RevitLookup.Abstractions.Models.Tools;
 using RevitLookup.Abstractions.Services;
+using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Tools;
 #if NETFRAMEWORK
 using RevitLookup.UI.Framework.Extensions;

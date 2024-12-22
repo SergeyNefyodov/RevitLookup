@@ -16,11 +16,13 @@
 
     <rl:ContentDialog.Resources>
         <ResourceDictionary>
-            <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
+            <ResourceDictionary.MergedDictionaries>
+                <rl:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+            <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
             <Style
                 BasedOn="{StaticResource DefaultContentDialogStyle}"
                 TargetType="{x:Type local:UnitsDialog}" />
-            <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
         </ResourceDictionary>
     </rl:ContentDialog.Resources>
 
@@ -82,22 +84,20 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.CellStyle>
-                <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
+                <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
                 <Style
                     TargetType="DataGridCell"
                     BasedOn="{StaticResource DefaultDataGridCellStyle}">
-                    <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
                     <Setter
                         Property="Height"
                         Value="15" />
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.RowStyle>
-                <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
+                <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
                 <Style
                     TargetType="DataGridRow"
                     BasedOn="{StaticResource DefaultDataGridRowStyle}">
-                    <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
                     <EventSetter
                         Event="MouseEnter"
                         Handler="OnMouseEnter" />

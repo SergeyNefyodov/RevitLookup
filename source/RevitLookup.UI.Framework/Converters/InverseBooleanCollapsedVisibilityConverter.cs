@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
@@ -10,12 +9,12 @@ public sealed class InverseBooleanCollapsedVisibilityConverter : MarkupExtension
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return (bool)value! == false ? Visibility.Visible : Visibility.Collapsed;
+        return (bool) value! == false ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return (Visibility)value! != Visibility.Visible;
+        return (Visibility) value! != Visibility.Visible;
     }
 
     public override object ProvideValue(IServiceProvider serviceProvider)
