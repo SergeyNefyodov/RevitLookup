@@ -14,14 +14,14 @@ public sealed class DataGridCellTemplateSelector : DataTemplateSelector
     {
         if (item is null) return null;
 
-        var member = (ObservableDecomposedMember)item;
-        var presenter = (FrameworkElement)container;
+        var member = (ObservableDecomposedMember) item;
+        var presenter = (FrameworkElement) container;
         var templateName = member.Value.RawValue switch
         {
             Color => "SummaryMediaColorCellTemplate",
             _ => "DefaultSummaryCellTemplate"
         };
 
-        return (DataTemplate)presenter.FindResource(templateName);
+        return (DataTemplate) presenter.FindResource(templateName);
     }
 }

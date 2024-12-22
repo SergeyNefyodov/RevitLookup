@@ -18,7 +18,6 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.ViewModels.Visualization;
 using Wpf.Ui;
@@ -31,14 +30,14 @@ public sealed partial class FaceVisualizationDialog
 
     public FaceVisualizationDialog(
         IContentDialogService dialogService,
-        IFaceVisualizationViewModel viewModel, 
+        IFaceVisualizationViewModel viewModel,
         IThemeWatcherService themeWatcherService)
         : base(dialogService.GetDialogHost())
     {
         _viewModel = viewModel;
 
         themeWatcherService.Watch(this);
-        
+
         DataContext = _viewModel;
         InitializeComponent();
     }

@@ -20,7 +20,6 @@
 
 using System.Windows;
 using System.Windows.Automation.Peers;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
@@ -42,7 +41,7 @@ public sealed partial class RevitLookupView
         ISnackbarService snackbarService,
         IWindowIntercomService intercomService,
         ISoftwareUpdateService updateService,
-        ISettingsService settingsService, 
+        ISettingsService settingsService,
         IThemeWatcherService themeWatcherService)
     {
         _intercomService = intercomService;

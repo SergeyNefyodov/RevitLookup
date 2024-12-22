@@ -28,7 +28,7 @@ public sealed class TimeToStringConverter : MarkupExtension, IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var milliseconds = (double)value!;
+        var milliseconds = (double) value!;
         return milliseconds switch
         {
             0 => string.Empty,

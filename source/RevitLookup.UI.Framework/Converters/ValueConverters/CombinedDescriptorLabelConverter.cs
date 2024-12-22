@@ -9,7 +9,7 @@ public sealed class SingleDescriptorLabelConverter : DescriptorLabelConverter
 {
     public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var member = (ObservableDecomposedObject)value!;
+        var member = (ObservableDecomposedObject) value!;
         if (!TryConvertInvalidNames(member.Name, out var name))
         {
             name = CreateSingleName(member.Name, member.Description);
@@ -28,7 +28,7 @@ public sealed class CombinedDescriptorLabelConverter : DescriptorLabelConverter
 {
     public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var member = (ObservableDecomposedMember)value!;
+        var member = (ObservableDecomposedMember) value!;
         if (!TryConvertInvalidNames(member.Value.Name, out var name))
         {
             name = CreateCombinedName(member.Value.Name, member.Description);

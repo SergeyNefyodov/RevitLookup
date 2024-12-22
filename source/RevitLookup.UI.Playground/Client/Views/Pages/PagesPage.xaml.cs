@@ -3,7 +3,7 @@ using Wpf.Ui.Abstractions.Controls;
 
 namespace RevitLookup.UI.Playground.Client.Views.Pages;
 
-public sealed partial class PagesPage: INavigableView<PagesViewModel>
+public sealed partial class PagesPage : INavigableView<PagesViewModel>
 {
     public PagesPage(PagesViewModel viewModel)
     {

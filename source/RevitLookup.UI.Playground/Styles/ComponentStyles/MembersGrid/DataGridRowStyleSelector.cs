@@ -13,13 +13,13 @@ public sealed class DataGridRowStyleSelector : StyleSelector
 {
     public override Style? SelectStyle(object item, DependencyObject container)
     {
-        var member = (ObservableDecomposedMember)item;
-        var presenter = (FrameworkElement)container;
+        var member = (ObservableDecomposedMember) item;
+        var presenter = (FrameworkElement) container;
 
         var styleName = SelectByType(member.Value.RawValue) ??
                         SelectByDescriptor(member.Value.Descriptor);
 
-        return (Style)presenter.FindResource(styleName);
+        return (Style) presenter.FindResource(styleName);
     }
 
     private static string? SelectByType(object? value)
@@ -35,7 +35,7 @@ public sealed class DataGridRowStyleSelector : StyleSelector
     {
         return descriptor switch
         {
-            IDescriptorEnumerator { IsEmpty: false } => "HandledDataGridRowStyle",
+            IDescriptorEnumerator {IsEmpty: false} => "HandledDataGridRowStyle",
             IDescriptorEnumerator => "DefaultLookupDataGridRowStyle",
             IDescriptorCollector => "HandledDataGridRowStyle",
             _ => "DefaultLookupDataGridRowStyle"

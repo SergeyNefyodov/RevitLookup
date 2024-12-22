@@ -8,13 +8,13 @@ public static class VisualExtensions
 {
     public static T? FindVisualParent<T>(this DependencyObject element) where T : FrameworkElement
     {
-        var parentElement = (FrameworkElement?)VisualTreeHelper.GetParent(element);
+        var parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(element);
         while (parentElement != null)
         {
             if (parentElement is T parent)
                 return parent;
 
-            parentElement = (FrameworkElement?)VisualTreeHelper.GetParent(parentElement);
+            parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(parentElement);
         }
 
         return null;
@@ -22,14 +22,14 @@ public static class VisualExtensions
 
     public static T? FindVisualParent<T>(this DependencyObject element, string name) where T : FrameworkElement
     {
-        var parentElement = (FrameworkElement?)VisualTreeHelper.GetParent(element);
+        var parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(element);
         while (parentElement != null)
         {
             if (parentElement is T parent)
                 if (parentElement.Name == name)
                     return parent;
 
-            parentElement = (FrameworkElement?)VisualTreeHelper.GetParent(parentElement);
+            parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(parentElement);
         }
 
         return null;
@@ -39,7 +39,7 @@ public static class VisualExtensions
     {
         for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
         {
-            var childElement = (FrameworkElement?)VisualTreeHelper.GetChild(element, i);
+            var childElement = (FrameworkElement?) VisualTreeHelper.GetChild(element, i);
             if (childElement is null) return null;
 
             if (childElement is T child)
@@ -56,7 +56,7 @@ public static class VisualExtensions
     {
         for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
         {
-            var childElement = (FrameworkElement?)VisualTreeHelper.GetChild(element, i);
+            var childElement = (FrameworkElement?) VisualTreeHelper.GetChild(element, i);
             if (childElement is null) return null;
 
             if (childElement is T child)
@@ -99,11 +99,11 @@ public static class VisualExtensions
     {
         if (container.Items.Count == 0) return null;
 
-        if (container is TreeViewItem { IsExpanded: false } viewItem)
+        if (container is TreeViewItem {IsExpanded: false} viewItem)
             viewItem.SetCurrentValue(TreeViewItem.IsExpandedProperty, true);
 
         container.ApplyTemplate();
-        var itemsPresenter = (ItemsPresenter)container.Template.FindName("ItemsHost", container);
+        var itemsPresenter = (ItemsPresenter) container.Template.FindName("ItemsHost", container);
         if (itemsPresenter != null)
         {
             itemsPresenter.ApplyTemplate();
@@ -120,7 +120,7 @@ public static class VisualExtensions
 
         if (itemsPresenter is null) return null;
 
-        var itemsHostPanel = (VirtualizingPanel)VisualTreeHelper.GetChild(itemsPresenter, 0);
+        var itemsHostPanel = (VirtualizingPanel) VisualTreeHelper.GetChild(itemsPresenter, 0);
         itemsHostPanel.BringIndexIntoViewPublic(index);
         return container.ItemContainerGenerator.ContainerFromIndex(index);
     }

@@ -14,14 +14,14 @@ public sealed class TreeViewItemTemplateSelector : DataTemplateSelector
     {
         if (item is null) return null;
 
-        var presenter = (FrameworkElement)container;
-        var decomposedObject = (ObservableDecomposedObject)item;
+        var presenter = (FrameworkElement) container;
+        var decomposedObject = (ObservableDecomposedObject) item;
         var templateName = decomposedObject.RawValue switch
         {
             Color => "SummaryMediaColorItemTemplate",
             _ => "DefaultSummaryTreeItemTemplate"
         };
 
-        return (DataTemplate)presenter.FindResource(templateName);
+        return (DataTemplate) presenter.FindResource(templateName);
     }
 }

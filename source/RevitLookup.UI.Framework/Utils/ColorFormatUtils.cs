@@ -46,7 +46,7 @@ public static class ColorFormatUtils
     public static (double Cyan, double Magenta, double Yellow, double BlackKey) ConvertToCmykColor(Color color)
     {
         // special case for black (avoid division by zero)
-        if (color is { R: 0, G: 0, B: 0})
+        if (color is {R: 0, G: 0, B: 0})
         {
             return (0d, 0d, 0d, 1d);
         }

@@ -3,7 +3,6 @@ using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.UI.Framework.Views.AboutProgram;
@@ -61,7 +60,7 @@ public sealed partial class PagesViewModel : ObservableObject
 
         viewer.Closing += (sender, _) =>
         {
-            var self = (PageViewer)sender!;
+            var self = (PageViewer) sender!;
             self.RunService<IEventsSummaryViewModel>(service => { service.OnNavigatedFromAsync(); });
         };
 

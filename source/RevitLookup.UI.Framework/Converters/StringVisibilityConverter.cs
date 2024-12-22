@@ -32,12 +32,12 @@ public sealed class StringVisibilityConverter : MarkupExtension, IValueConverter
         if (value is not string text) return Visibility.Collapsed;
         return string.IsNullOrEmpty(text) ? Visibility.Collapsed : Visibility.Visible;
     }
-    
+
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return Convert(value, targetType, parameter, culture);
     }
-    
+
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
         return this;

@@ -14,7 +14,7 @@ public sealed class EmptyCollectionsVisibilityConverter : MarkupExtension, IMult
         {
             switch (value)
             {
-                case ICollection { Count: > 1 }:
+                case ICollection {Count: > 1}:
                 case > 1:
                     return Visibility.Collapsed;
             }

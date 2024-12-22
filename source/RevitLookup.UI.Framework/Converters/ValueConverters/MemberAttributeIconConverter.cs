@@ -32,7 +32,7 @@ public sealed class MemberAttributeIconConverter : MarkupExtension, IValueConver
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var attributes = (MemberAttributes)value!;
+        var attributes = (MemberAttributes) value!;
 
         if ((attributes & MemberAttributes.Property) != 0 && (attributes & MemberAttributes.Private) != 0 && (attributes & MemberAttributes.Static) != 0)
             return SymbolRegular.CalendarLock16;

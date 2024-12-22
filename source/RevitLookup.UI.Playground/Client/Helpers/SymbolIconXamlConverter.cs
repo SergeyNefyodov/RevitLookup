@@ -12,8 +12,8 @@ public sealed class SymbolIconXamlConverter : MarkupExtension, IMultiValueConver
     {
         if (values[0] is string text) return text;
 
-        var icon = (SymbolRegular)values[0];
-        var filled = (bool)values[1];
+        var icon = (SymbolRegular) values[0];
+        var filled = (bool) values[1];
 
         var builder = new StringBuilder();
         builder.Append("<ui:SymbolIcon Symbol=\"");

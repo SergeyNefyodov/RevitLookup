@@ -25,7 +25,7 @@ public partial class SymbolIconsPageViewModel : ObservableObject
             {
                 Name = symbol.ToString(),
                 Icon = symbol,
-                Code = ((int)symbol).ToString("X4")
+                Code = ((int) symbol).ToString("X4")
             })
             .OrderBy(data => data.Name)
             .ToList();

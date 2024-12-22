@@ -61,7 +61,7 @@ public partial class SummaryViewBase
         if ((Keyboard.Modifiers & ModifierKeys.Control) == 0) return;
         args.Handled = true;
 
-        var element = (FrameworkElement)args.OriginalSource;
+        var element = (FrameworkElement) args.OriginalSource;
         switch (element.DataContext)
         {
             case ObservableDecomposedObject item:
@@ -81,13 +81,13 @@ public partial class SummaryViewBase
     /// </remarks>
     private void OnGridRowClicked(object sender, RoutedEventArgs args)
     {
-        var row = (DataGridRow)sender;
+        var row = (DataGridRow) sender;
         if (row.DataContext is not ObservableDecomposedMember context) return;
 
         if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)
         {
             if (context.Value.Descriptor is not IDescriptorCollector) return;
-            if (context.Value.Descriptor is IDescriptorEnumerator { IsEmpty: true }) return;
+            if (context.Value.Descriptor is IDescriptorEnumerator {IsEmpty: true}) return;
         }
 
         ViewModel.Navigate(context.Value.RawValue);
@@ -98,7 +98,7 @@ public partial class SummaryViewBase
     /// </summary>
     private static void OnPresenterCursorInteracted(object sender, MouseEventArgs args)
     {
-        var presenter = (FrameworkElement)sender;
+        var presenter = (FrameworkElement) sender;
         if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)
         {
             presenter.Cursor = null;
@@ -107,8 +107,8 @@ public partial class SummaryViewBase
 
         FrameworkElement? item = sender switch
         {
-            DataGrid => ((DependencyObject)args.OriginalSource).FindVisualParent<DataGridRow>(),
-            TreeView => ((DependencyObject)args.OriginalSource).FindVisualParent<TreeViewItem>(),
+            DataGrid => ((DependencyObject) args.OriginalSource).FindVisualParent<DataGridRow>(),
+            TreeView => ((DependencyObject) args.OriginalSource).FindVisualParent<TreeViewItem>(),
             _ => throw new NotSupportedException()
         };
 
@@ -127,7 +127,7 @@ public partial class SummaryViewBase
     /// </summary>
     private static void OnPresenterCursorRestored(object sender, KeyEventArgs e)
     {
-        var presenter = (FrameworkElement)sender;
+        var presenter = (FrameworkElement) sender;
         presenter.PreviewKeyUp -= OnPresenterCursorRestored;
         presenter.Cursor = null;
     }

@@ -31,7 +31,7 @@ public sealed class PlaygroundViewModel : ObservableObject
 
     public List<object> FooterItems { get; } =
     [
-        new NavigationViewItem("Switch theme", SymbolRegular.DarkTheme24, null!) { Command = new RelayCommand(SwitchApplicationTheme) }
+        new NavigationViewItem("Switch theme", SymbolRegular.DarkTheme24, null!) {Command = new RelayCommand(SwitchApplicationTheme)}
     ];
 
     private static void SwitchApplicationTheme()

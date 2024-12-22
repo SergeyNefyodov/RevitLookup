@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Automation.Peers;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.UI.Framework.Controls.Automation;
 using RevitLookup.UI.Playground.Client.ViewModels;
@@ -32,7 +31,7 @@ public sealed partial class PlaygroundView
 
         Loaded += (sender, _) =>
         {
-            var self = (PlaygroundView)sender;
+            var self = (PlaygroundView) sender;
             self._navigationService.Navigate(typeof(DashboardPage));
         };
     }

@@ -12,7 +12,7 @@ public sealed class SettingsEmptySearchResultsVisibilityConverter : MarkupExtens
     {
         if (values.Length != 3) throw new ArgumentException("Invalid parameters");
 
-        var items = (ICollection)values[0]!;
+        var items = (ICollection) values[0]!;
         if (items.Count > 0) return Visibility.Collapsed;
 
         if (values[1] is > 0) return Visibility.Collapsed;

@@ -22,7 +22,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using RevitLookup.Abstractions.Models.Tools;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.UI.Framework.Extensions;
@@ -40,15 +39,15 @@ public sealed partial class UnitsDialog
     public UnitsDialog(
         IContentDialogService dialogService,
         IUnitsViewModel viewModel,
-        INavigationService navigationService, 
+        INavigationService navigationService,
         IThemeWatcherService themeWatcherService)
         : base(dialogService.GetDialogHost())
     {
         _viewModel = viewModel;
         _navigationService = navigationService;
-        
+
         themeWatcherService.Watch(this);
-        
+
         DataContext = _viewModel;
         InitializeComponent();
     }

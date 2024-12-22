@@ -28,7 +28,7 @@ public static class LoggerConfigurator
 
     private static void OnOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
     {
-        var exception = (Exception)args.ExceptionObject;
+        var exception = (Exception) args.ExceptionObject;
         var logger = Host.GetService<ILogger<AppDomain>>();
         logger.LogCritical(exception, "Domain unhandled exception");
     }

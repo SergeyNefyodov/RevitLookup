@@ -28,11 +28,11 @@ namespace RevitLookup.UI.Playground.Services.Appearance;
 public sealed class MockThemeWatcherService(ISettingsService settingsService) : IThemeWatcherService
 {
     private readonly List<FrameworkElement> _observedElements = [];
-    
+
     public void Initialize()
     {
     }
-    
+
     public void Watch()
     {
         var theme = settingsService.GeneralSettings.Theme;
@@ -49,7 +49,7 @@ public sealed class MockThemeWatcherService(ISettingsService settingsService) : 
     public void Unwatch()
     {
     }
-    
+
     private void OnWatchedElementLoaded(object sender, RoutedEventArgs e)
     {
         var element = (FrameworkElement) sender;
@@ -61,7 +61,7 @@ public sealed class MockThemeWatcherService(ISettingsService settingsService) : 
         var element = (FrameworkElement) sender;
         _observedElements.Remove(element);
     }
-    
+
     private void UpdateBackground(ApplicationTheme theme)
     {
         foreach (var window in _observedElements.Select(Window.GetWindow).Distinct())

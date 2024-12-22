@@ -52,7 +52,7 @@ public partial class SummaryViewBase
     /// </remarks>
     private static void FixInitialGridColumnSize(object sender, RoutedEventArgs args)
     {
-        var dataGrid = (DataGrid)sender;
+        var dataGrid = (DataGrid) sender;
         var passiveScrollViewer = dataGrid.FindVisualChild<PassiveScrollViewer>();
         if (passiveScrollViewer is null)
         {
@@ -75,7 +75,7 @@ public partial class SummaryViewBase
     /// </remarks>
     private static void FixCanContentScrollResizing(object sender, SizeChangedEventArgs e)
     {
-        var scrollViewer = (PassiveScrollViewer)sender;
+        var scrollViewer = (PassiveScrollViewer) sender;
         var dataGrid = scrollViewer.FindVisualParent<System.Windows.Controls.DataGrid>(); //find parent to avoid closure allocations
         InternalGridOnViewportSizeChangedMethod.Invoke(dataGrid, [e.PreviousSize, e.NewSize]);
     }

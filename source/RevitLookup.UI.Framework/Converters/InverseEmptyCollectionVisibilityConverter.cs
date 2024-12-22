@@ -10,7 +10,7 @@ public sealed class InverseEmptyCollectionVisibilityConverter : MarkupExtension,
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var collection = (ICollection)value!;
+        var collection = (ICollection) value!;
         return collection.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
     }
 

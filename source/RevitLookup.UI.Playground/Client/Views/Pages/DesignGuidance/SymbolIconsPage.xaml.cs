@@ -19,7 +19,7 @@ public sealed partial class SymbolIconsPage
 
     private static void OnCopyContentClicked(object sender, RoutedEventArgs args)
     {
-        var routedArgs = (ExecutedRoutedEventArgs)args;
+        var routedArgs = (ExecutedRoutedEventArgs) args;
         var parameter = routedArgs.Parameter.ToString();
 
         if (!string.IsNullOrEmpty(parameter))

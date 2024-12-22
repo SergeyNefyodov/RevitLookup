@@ -28,7 +28,7 @@ public sealed class BytesToStringConverter : MarkupExtension, IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var bytes = (long)value!;
+        var bytes = (long) value!;
         return bytes switch
         {
             0 => string.Empty,
