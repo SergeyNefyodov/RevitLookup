@@ -16,11 +16,11 @@ using RevitLookup.UI.Framework.Extensions;
 namespace RevitLookup.ViewModels.Summary;
 
 [UsedImplicitly]
-public sealed partial class MockDecompositionSummaryViewModel(
+public sealed partial class DecompositionSummaryViewModel(
     ISettingsService settingsService,
     IWindowIntercomService intercomService,
     INotificationService notificationService,
-    ILogger<MockDecompositionSummaryViewModel> logger)
+    ILogger<DecompositionSummaryViewModel> logger)
     : ObservableObject, IDecompositionSummaryViewModel
 {
     [ObservableProperty] private string _searchText = string.Empty;

@@ -20,12 +20,12 @@ using RevitLookup.UI.Framework.Extensions;
 namespace RevitLookup.ViewModels.Summary;
 
 [UsedImplicitly]
-public sealed partial class MockEventsSummaryViewModel(
+public sealed partial class EventsSummaryViewModel(
     ISettingsService settingsService,
     IWindowIntercomService intercomService,
     INotificationService notificationService,
     EventsMonitoringService monitoringService,
-    ILogger<MockDecompositionSummaryViewModel> logger)
+    ILogger<DecompositionSummaryViewModel> logger)
     : ObservableObject, IEventsSummaryViewModel
 {
     [ObservableProperty] private string _searchText = string.Empty;
