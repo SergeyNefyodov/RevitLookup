@@ -36,10 +36,10 @@ public sealed partial class PolylineVisualizationDialog
     {
         _viewModel = viewModel;
 
-        themeWatcherService.Watch(this);
-
         DataContext = _viewModel;
         InitializeComponent();
+
+        themeWatcherService.Watch(this);
     }
 
     public async Task ShowDialogAsync(object curveOrEdge)

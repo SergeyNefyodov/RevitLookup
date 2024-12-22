@@ -34,6 +34,7 @@ public sealed partial class RevitLookupView
     private readonly IWindowIntercomService _intercomService;
     private readonly ISoftwareUpdateService _updateService;
     private readonly ISettingsService _settingsService;
+    private readonly IThemeWatcherService _themeWatcherService;
 
     public RevitLookupView(
         INavigationService navigationService,
@@ -47,6 +48,7 @@ public sealed partial class RevitLookupView
         _intercomService = intercomService;
         _updateService = updateService;
         _settingsService = settingsService;
+        _themeWatcherService = themeWatcherService;
 
         themeWatcherService.Watch(this);
         InitializeComponent();
@@ -60,6 +62,7 @@ public sealed partial class RevitLookupView
         AddShortcuts();
         AddBadges();
         ApplyWindowSize();
+        FixComponentsTheme();
     }
 
     private void AddBadges()

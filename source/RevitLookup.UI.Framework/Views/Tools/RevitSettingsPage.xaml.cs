@@ -45,13 +45,12 @@ public sealed partial class RevitSettingsPage
     {
         _notificationService = notificationService;
 
-        themeWatcherService.Watch(this);
-
         ViewModel = viewModel;
         DataContext = this;
 
         InitializeComponent();
         ApplyGrouping();
+        themeWatcherService.Watch(this);
 
         if (viewModel.Entries.Count == 0)
         {

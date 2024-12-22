@@ -46,10 +46,10 @@ public sealed partial class UnitsDialog
         _viewModel = viewModel;
         _navigationService = navigationService;
 
-        themeWatcherService.Watch(this);
-
         DataContext = _viewModel;
         InitializeComponent();
+
+        themeWatcherService.Watch(this);
     }
 
     public async Task ShowParametersDialogAsync()

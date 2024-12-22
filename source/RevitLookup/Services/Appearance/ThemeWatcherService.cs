@@ -42,6 +42,7 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
             Source = new Uri("pack://application:,,,/RevitLookup;component/Styles/App.Resources.xaml", UriKind.Absolute)
         };
 
+        ApplicationThemeManager.Apply(settingsService.GeneralSettings.Theme, settingsService.GeneralSettings.Background);
         ApplicationThemeManager.Changed += ApplicationThemeManagerOnChanged;
     }
 

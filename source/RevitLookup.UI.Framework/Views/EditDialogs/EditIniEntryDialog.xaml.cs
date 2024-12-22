@@ -34,8 +34,8 @@ public sealed partial class EditSettingsEntryDialog
         IThemeWatcherService themeWatcherService)
         : base(dialogService.GetDialogHost())
     {
-        themeWatcherService.Watch(this);
         InitializeComponent();
+        themeWatcherService.Watch(this);
     }
 
     public ObservableIniEntry Entry

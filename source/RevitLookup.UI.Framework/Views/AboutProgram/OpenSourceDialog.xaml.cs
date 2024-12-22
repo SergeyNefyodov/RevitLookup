@@ -35,10 +35,10 @@ public sealed partial class OpenSourceDialog
         IThemeWatcherService themeWatcherService)
         : base(dialogService.GetDialogHost())
     {
-        themeWatcherService.Watch(this);
-
         DataContext = viewModel;
         InitializeComponent();
+
+        themeWatcherService.Watch(this);
     }
 
     private void OpenLink(object sender, RoutedEventArgs args)

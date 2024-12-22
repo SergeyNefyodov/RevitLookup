@@ -31,10 +31,10 @@ public sealed partial class ModulesDialog
         IModulesViewModel viewModel, IThemeWatcherService themeWatcherService)
         : base(dialogService.GetDialogHost())
     {
-        themeWatcherService.Watch(this);
-
         DataContext = viewModel;
         InitializeComponent();
+
+        themeWatcherService.Watch(this);
 
 #if NETFRAMEWORK
         ContainerColumn.Header = "Domain";

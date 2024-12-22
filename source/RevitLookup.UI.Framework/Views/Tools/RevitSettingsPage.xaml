@@ -19,6 +19,9 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <rl:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
 
             <GroupStyle
                 x:Key="ListGroupStyle">
@@ -280,11 +283,9 @@
                     </contentPlaceholder:ContentPlaceholder.Visibility>
                     <contentPlaceholder:ContentPlaceholder.Content>
                         <StackPanel>
-                            <TextBlock
-                                Text="Not found"
-                                FontSize="24"
-                                FontWeight="Medium"
-                                HorizontalAlignment="Center" />
+                            <rl:TextBlock
+                                FontTypography="Subtitle"
+                                Text="Not found" />
                             <rl:HyperlinkButton
                                 Margin="0 12 0 0"
                                 HorizontalAlignment="Center"

@@ -155,15 +155,16 @@ public sealed partial class EventsSummaryViewModel(
             var decomposedObject = await RevitShell.AsyncObjectHandler.RaiseAsync(application =>
             {
                 var result = LookupComposer.Decompose(args.Arguments, options);
-                var convert = DecompositionResultMapper.Convert(result);
-                convert.Name += DateTime.Now.ToString("HH:mm:ss");
-                return convert;
+                return DecompositionResultMapper.Convert(result);
             });
 
+            decomposedObject.Name = $"{args.EventName} {DateTime.Now:HH:mm:ss}";
             DecomposedObjects.Insert(0, decomposedObject);
 
-            if (SearchText == string.Empty) FilteredDecomposedObjects.Insert(0, decomposedObject);
-            else OnSearchTextChanged(SearchText);
+            //TODO: fox thread
+            // if (SearchText == string.Empty) FilteredDecomposedObjects.Insert(0, decomposedObject);
+            // else
+            OnSearchTextChanged(SearchText);
         }
         catch (Exception exception)
         {

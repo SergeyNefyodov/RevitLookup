@@ -27,8 +27,8 @@ public sealed partial class ResetSettingsDialog
 {
     public ResetSettingsDialog(IContentDialogService dialogService, IThemeWatcherService themeWatcherService) : base(dialogService.GetDialogHost())
     {
-        themeWatcherService.Watch(this);
         InitializeComponent();
+        themeWatcherService.Watch(this);
     }
 
     public bool CanResetGeneralSettings => GeneralBox.IsChecked == true;

@@ -28,8 +28,8 @@ public sealed partial class EditValueDialog
 {
     public EditValueDialog(IContentDialogService dialogService, IThemeWatcherService themeWatcherService) : base(dialogService.GetDialogHost())
     {
-        themeWatcherService.Watch(this);
         InitializeComponent();
+        themeWatcherService.Watch(this);
     }
 
     public async Task<ContentDialogResult> ShowAsync(string name, string value)

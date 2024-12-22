@@ -49,10 +49,10 @@ public sealed partial class SearchElementsDialog
         _notificationService = notificationService;
         _logger = logger;
 
-        themeWatcherService.Watch(this);
-
         DataContext = viewModel;
         InitializeComponent();
+
+        themeWatcherService.Watch(this);
     }
 
     protected override async void OnButtonClick(ContentDialogButton button)
