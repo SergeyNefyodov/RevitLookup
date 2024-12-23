@@ -32,7 +32,7 @@ public sealed partial class LookupComposer
         foreach (var member in members)
         {
             if (member.IsSpecialName) continue;
-            if (member.IsFamily && member.IsSecurityCritical) continue; //Object-critical methods cause CLR exception
+            if (member is {IsFamily: true, IsSecurityCritical: true}) continue; //Object-critical methods cause CLR exception
 
             object? value;
             var parameters = member.GetParameters();

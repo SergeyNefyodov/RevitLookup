@@ -75,7 +75,7 @@ public sealed partial class LookupComposer
         {
             Depth = _depth,
             Value = CreateValue(nameof(IEnumerable), value),
-            Name = $"{DeclaringType.Name.Replace("[]", string.Empty)}[{index}]",
+            Name = $"{ReflexionFormater.FormatTypeName(DeclaringType).Replace("[]", string.Empty)}[{index}]",
             MemberAttributes = MemberAttributes.Property,
             DeclaringTypeName = nameof(IEnumerable),
             DeclaringTypeFullName = $"{nameof(System)}.{nameof(System.Collections)}.{nameof(IEnumerable)}",
