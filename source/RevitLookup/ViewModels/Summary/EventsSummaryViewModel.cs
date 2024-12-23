@@ -26,6 +26,8 @@ public sealed partial class EventsSummaryViewModel(
     ILogger<DecompositionSummaryViewModel> logger)
     : ObservableObject, IEventsSummaryViewModel
 {
+    private readonly SynchronizationContext _synchronizationContext = SynchronizationContext.Current;
+
     [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private ObservableDecomposedObject? _selectedDecomposedObject;
     [ObservableProperty] private List<ObservableDecomposedObject> _decomposedObjects = [];
@@ -112,8 +114,7 @@ public sealed partial class EventsSummaryViewModel(
                 // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var item in DecomposedObjects)
                 {
-                    if (StringExtensions.Contains(item.Name, formattedText, StringComparison.OrdinalIgnoreCase) ||
-                        StringExtensions.Contains(item.Name, formattedText, StringComparison.OrdinalIgnoreCase))
+                    if (IsSearchValueMatching(item, formattedText))
                     {
                         searchResults.Add(item);
                     }
@@ -131,6 +132,12 @@ public sealed partial class EventsSummaryViewModel(
         {
             // ignored
         }
+    }
+
+    private bool IsSearchValueMatching(ObservableDecomposedObject item, string formattedText)
+    {
+        return StringExtensions.Contains(item.Name, formattedText, StringComparison.OrdinalIgnoreCase) ||
+               StringExtensions.Contains(item.Name, formattedText, StringComparison.OrdinalIgnoreCase);
     }
 
     async partial void OnSelectedDecomposedObjectChanged(ObservableDecomposedObject? value)
@@ -151,19 +158,28 @@ public sealed partial class EventsSummaryViewModel(
         try
         {
             var options = CreateDecomposeOptions();
-            var decomposedObject = await RevitShell.AsyncObjectHandler.RaiseAsync(application =>
+            var decomposedObject = await RevitShell.AsyncObjectHandler.RaiseAsync(_ =>
             {
                 var result = LookupComposer.Decompose(args.Arguments, options);
-                return DecompositionResultMapper.Convert(result);
+                var convertedResult = DecompositionResultMapper.Convert(result);
+                convertedResult.Name = $"{args.EventName} {DateTime.Now:HH:mm:ss}";
+                return convertedResult;
             });
 
-            decomposedObject.Name = $"{args.EventName} {DateTime.Now:HH:mm:ss}";
-            DecomposedObjects.Insert(0, decomposedObject);
+            _synchronizationContext.Post(state =>
+            {
+                var viewModel = (EventsSummaryViewModel) state;
+                viewModel.DecomposedObjects.Insert(0, decomposedObject);
 
-            //TODO: fox thread
-            // if (SearchText == string.Empty) FilteredDecomposedObjects.Insert(0, decomposedObject);
-            // else
-            OnSearchTextChanged(SearchText);
+                if (viewModel.IsSearchValueMatching(decomposedObject, viewModel.SearchText))
+                {
+                    viewModel.FilteredDecomposedObjects.Insert(0, decomposedObject);
+                }
+                else
+                {
+                    viewModel.OnSearchTextChanged(viewModel.SearchText);
+                }
+            }, this);
         }
         catch (Exception exception)
         {
