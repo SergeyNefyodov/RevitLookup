@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.ObservableModels.Entries;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.Common.Tools;
@@ -50,7 +49,7 @@ public sealed partial class MockRevitSettingsViewModel(
                 .RuleFor(entry => entry.DefaultValue, faker => faker.Internet.UrlRootedPath().OrNull(faker, 0.3f))
                 .RuleFor(entry => entry.Category, faker => faker.Company.CompanyName("{{name.lastName}}"))
                 .RuleFor(entry => entry.IsActive, faker => faker.Random.Bool())
-                .Generate(500);
+                .Generate(10000);
         });
 
         Entries = await InitializationTask;

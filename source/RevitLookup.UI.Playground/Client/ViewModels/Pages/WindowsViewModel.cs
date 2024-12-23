@@ -4,7 +4,6 @@ using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.UI.Framework.Views.Dashboard;
 using RevitLookup.UI.Framework.Views.Summary;
@@ -57,7 +56,7 @@ public sealed partial class WindowsViewModel : ObservableObject
         var strings = new List<string>();
         for (var i = 0; i < 1000; i++)
         {
-            strings.Add(faker.Lorem.Sentence(69));
+            strings.Add(faker.Lorem.Sentence(666));
         }
 
         Host.GetService<IRevitLookupUiService>()

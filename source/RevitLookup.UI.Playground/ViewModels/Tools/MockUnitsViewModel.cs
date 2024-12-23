@@ -22,7 +22,6 @@ using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
 using RevitLookup.Abstractions.Models.Tools;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Tools;
 #if NETFRAMEWORK
@@ -44,7 +43,7 @@ public sealed partial class MockUnitsViewModel(IVisualDecompositionService decom
             .RuleFor(info => info.Unit, faker => faker.Lorem.Sentence())
             .RuleFor(info => info.Label, faker => faker.Lorem.Word())
             .RuleFor(info => info.Value, faker => faker.Lorem.Word())
-            .Generate(200);
+            .Generate(20);
     }
 
     public void InitializeCategories()
@@ -63,7 +62,7 @@ public sealed partial class MockUnitsViewModel(IVisualDecompositionService decom
             .RuleFor(info => info.Label, faker => faker.Lorem.Word())
             .RuleFor(info => info.Value, faker => faker.Lorem.Word())
             .RuleFor(info => info.Class, faker => faker.Lorem.Sentence())
-            .Generate(200);
+            .Generate(2000);
     }
 
     public async Task DecomposeAsync(UnitInfo unitInfo)
