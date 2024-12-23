@@ -25,12 +25,6 @@
 
             <GroupStyle
                 x:Key="ListGroupStyle">
-                <GroupStyle.Panel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel
-                            VirtualizationMode="Recycling" />
-                    </ItemsPanelTemplate>
-                </GroupStyle.Panel>
                 <GroupStyle.ContainerStyle>
                     <Style
                         TargetType="{x:Type GroupItem}">
@@ -169,7 +163,7 @@
                     FontSize="12"
                     SelectedItem="{Binding ViewModel.SelectedEntry}"
                     ItemsSource="{Binding ViewModel.FilteredEntries}"
-                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.VirtualizationMode="Recycling"
                     VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                     ScrollViewer.CanContentScroll="True"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -247,12 +241,6 @@
                             </DockPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel
-                                VirtualizationMode="Recycling" />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
                 </rl:ListView>
                 <contentPlaceholder:ContentPlaceholder
                     Content="Nothing to show"

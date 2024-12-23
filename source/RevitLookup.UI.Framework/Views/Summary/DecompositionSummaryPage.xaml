@@ -80,17 +80,12 @@
                 RowStyle="{x:Null}"
                 RowStyleSelector="{StaticResource DataGridRowStyleSelector}"
                 ScrollViewer.CanContentScroll="True"
+                VirtualizingPanel.VirtualizationMode="Recycling"
                 VirtualizingPanel.IsVirtualizingWhenGrouping="True">
                 <DataGrid.GroupStyle>
                     <StaticResource
                         ResourceKey="DefaultSummaryGridGroupStyle" />
                 </DataGrid.GroupStyle>
-                <DataGrid.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <DataGridRowsPresenter
-                            VirtualizationMode="Recycling" />
-                    </ItemsPanelTemplate>
-                </DataGrid.ItemsPanel>
                 <DataGrid.Columns>
                     <DataGridTemplateColumn
                         Width="*">
