@@ -43,10 +43,10 @@ public sealed class TimeDiagnoser : IEngineDiagnoser
         var elapsed = Stopwatch.GetElapsedTime(_startTimeStamp, _endTimeStamp);
 #else
         var tickFrequency = (double) TimeSpan.TicksPerSecond / Stopwatch.Frequency;
-        var elapsed = new TimeSpan((long)((_startTimeStamp - _endTimeStamp) * tickFrequency));
+        var elapsed = new TimeSpan((long)((_endTimeStamp - _startTimeStamp) * tickFrequency));
 #endif
-        _startTimeStamp = default;
-        _endTimeStamp = default;
+        _startTimeStamp = 0;
+        _endTimeStamp = 0;
 
         return elapsed;
     }
