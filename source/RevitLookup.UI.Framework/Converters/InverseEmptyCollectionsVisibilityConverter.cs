@@ -14,8 +14,8 @@ public sealed class InverseEmptyCollectionsVisibilityConverter : MarkupExtension
         {
             switch (value)
             {
-                case ICollection {Count: > 1}:
-                case > 1:
+                case ICollection {Count: > 0}:
+                case > 0:
                     return Visibility.Visible;
             }
         }
