@@ -40,12 +40,12 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
     private readonly ILogger<AboutViewModel> _logger;
 
     [ObservableProperty] private SoftwareUpdateState _state = (SoftwareUpdateState) (-1);
-    [ObservableProperty] private Version _currentVersion;
+    [ObservableProperty] private Version? _currentVersion;
     [ObservableProperty] private string? _newVersion;
     [ObservableProperty] private string? _releaseNotesUrl;
     [ObservableProperty] private string? _latestCheckDate;
     [ObservableProperty] private string? _errorMessage;
-    [ObservableProperty] private string _runtime;
+    [ObservableProperty] private string? _runtime;
 
     public AboutViewModel(
         IServiceProvider serviceProvider,

@@ -20,11 +20,10 @@
 
 
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Loader;
 using RevitLookup.Abstractions.Models.Tools;
 using RevitLookup.Abstractions.ViewModels.Tools;
-#if NETFRAMEWORK
-using RevitLookup.UI.Framework.Extensions;
+#if NETCOREAPP
+using System.Runtime.Loader;
 #endif
 
 namespace RevitLookup.ViewModels.Tools;

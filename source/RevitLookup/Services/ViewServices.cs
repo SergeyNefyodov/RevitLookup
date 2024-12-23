@@ -16,12 +16,12 @@ public static class ViewServices
             .AddClasses(filter =>
             {
                 filter.AssignableTo<Page>();
-                filter.Where(type => type.IsAssignableTo(typeof(INavigableView<object>)));
+                filter.Where(type => typeof(INavigableView<object>).IsAssignableFrom(type));
             }).AsSelf().WithScopedLifetime()
             .AddClasses(filter =>
             {
                 filter.AssignableTo<Page>();
-                filter.Where(type => !type.IsAssignableTo(typeof(INavigableView<object>)));
+                filter.Where(type => !typeof(INavigableView<object>).IsAssignableFrom(type));
             }).AsSelf().WithTransientLifetime());
     }
 }

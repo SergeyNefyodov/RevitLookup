@@ -9,7 +9,7 @@ using RevitLookup.Abstractions.Services.Settings;
 
 namespace RevitLookup.Services.Settings;
 
-public sealed partial class SoftwareUpdateService(
+public sealed class SoftwareUpdateService(
     IOptions<AssemblyOptions> assemblyOptions,
     IOptions<FoldersOptions> foldersOptions)
     : ISoftwareUpdateService
@@ -17,7 +17,7 @@ public sealed partial class SoftwareUpdateService(
     private string? _downloadUrl;
     private readonly AssemblyOptions _assemblyOptions = assemblyOptions.Value;
     private readonly FoldersOptions _folderOptions = foldersOptions.Value;
-    private readonly Regex _versionRegex = CreateVersionRegex();
+    private readonly Regex _versionRegex = new(@"(\d+\.)+\d+", RegexOptions.Compiled);
 
     public string? NewVersion { get; private set; }
     public string? ReleaseNotesUrl { get; private set; }
@@ -107,7 +107,7 @@ public sealed partial class SoftwareUpdateService(
         if (string.IsNullOrEmpty(LocalFilePath)) return false;
         if (!File.Exists(LocalFilePath)) return false;
 
-        var fileName = Path.GetFileName(LocalFilePath);
+        var fileName = Path.GetFileName(LocalFilePath)!;
         if (NewVersion is null) return false;
         if (!fileName.Contains(NewVersion)) return false;
 
@@ -119,14 +119,11 @@ public sealed partial class SoftwareUpdateService(
         string releasesJson;
         using (var gitHubClient = new HttpClient())
         {
-            gitHubClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "RevitLookup");
+            gitHubClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"RevitLookup-{Guid.NewGuid().ToString()}");
             releasesJson = await gitHubClient.GetStringAsync("https://api.github.com/repos/jeremytammik/RevitLookup/releases");
         }
 
         var responses = JsonSerializer.Deserialize<List<GitHubResponse>>(releasesJson);
         return responses ?? [];
     }
-
-    [GeneratedRegex(@"(\d+\.)+\d+", RegexOptions.Compiled)]
-    private static partial Regex CreateVersionRegex();
 }

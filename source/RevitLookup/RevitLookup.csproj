@@ -61,12 +61,4 @@
         <ApplicationDefinition Remove="App.xaml"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Page Update="Styles\App.Resources.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <XamlRuntime>Wpf</XamlRuntime>
-            <SubType>Designer</SubType>
-        </Page>
-    </ItemGroup>
-
 </Project>

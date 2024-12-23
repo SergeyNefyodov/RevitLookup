@@ -24,9 +24,6 @@ using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.Core;
 using RevitLookup.Core.Tools.Units;
-#if NETFRAMEWORK
-using RevitLookup.UI.Framework.Extensions;
-#endif
 
 namespace RevitLookup.ViewModels.Tools;
 

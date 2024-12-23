@@ -9,9 +9,6 @@ using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.Core;
 using RevitLookup.Mappers;
 using RevitLookup.UI.Framework.Views.Summary;
-#if NETFRAMEWORK
-using RevitLookup.UI.Framework.Extensions;
-#endif
 
 namespace RevitLookup.ViewModels.Summary;
 
@@ -148,7 +145,6 @@ public sealed partial class DecompositionSummaryViewModel(
             EnableExtensions = settingsService.GeneralSettings.IncludeExtensions
         };
 
-        //TODO test task run
         return await RevitShell.AsyncMembersHandler.RaiseAsync(_ =>
         {
             var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);

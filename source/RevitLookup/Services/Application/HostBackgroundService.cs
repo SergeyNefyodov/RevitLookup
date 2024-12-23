@@ -35,10 +35,12 @@ public sealed class HostBackgroundService(
     ILogger<HostBackgroundService> logger)
     : IHostedService
 {
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
         LoadSettings();
-        await CheckUpdatesAsync();
+        _ = CheckUpdatesAsync();
+
+        return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -68,7 +70,7 @@ public sealed class HostBackgroundService(
         if (!File.Exists(updateService.LocalFilePath)) return;
 
         logger.LogInformation("Installing RevitLookup {Version} version", updateService.NewVersion);
-        ProcessTasks.StartShell(updateService.LocalFilePath);
+        ProcessTasks.StartShell(updateService.LocalFilePath!);
     }
 
     private void SaveSettings()

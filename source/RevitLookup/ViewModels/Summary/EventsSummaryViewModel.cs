@@ -13,9 +13,7 @@ using RevitLookup.Mappers;
 using RevitLookup.Services.Summary;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Summary;
-#if NETFRAMEWORK
-using RevitLookup.UI.Framework.Extensions;
-#endif
+using StringExtensions = RevitLookup.UI.Framework.Extensions.StringExtensions;
 
 namespace RevitLookup.ViewModels.Summary;
 
@@ -114,7 +112,8 @@ public sealed partial class EventsSummaryViewModel(
                 // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var item in DecomposedObjects)
                 {
-                    if (item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase) || item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
+                    if (StringExtensions.Contains(item.Name, formattedText, StringComparison.OrdinalIgnoreCase) ||
+                        StringExtensions.Contains(item.Name, formattedText, StringComparison.OrdinalIgnoreCase))
                     {
                         searchResults.Add(item);
                     }
@@ -185,8 +184,6 @@ public sealed partial class EventsSummaryViewModel(
     private async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
     {
         var options = CreateDecomposeOptions();
-
-        //TODO test task run
         return await RevitShell.AsyncMembersHandler.RaiseAsync(_ =>
         {
             var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);

@@ -80,7 +80,8 @@ public static class UnitsCollector
                 {
                     Unit = typeId.TypeId,
                     Label = GetLabel(typeId, info),
-                    Value = GetClassName(info)
+                    Class = GetClassName(info),
+                    Value = typeId
                 };
             })
             .ToList();

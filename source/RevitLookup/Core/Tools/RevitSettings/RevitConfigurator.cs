@@ -246,8 +246,13 @@ public sealed class RevitConfigurator
                 _backupDone = true;
             }
 
+#if NETCOREAPP
             await using var stream = new FileStream(_userIniPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read, DefaultBufferSize, FileOptions.Asynchronous);
             await using var writer = new StreamWriter(stream, Encoding.Unicode);
+#else
+            using var stream = new FileStream(_userIniPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read, DefaultBufferSize, FileOptions.Asynchronous);
+            using var writer = new StreamWriter(stream, Encoding.Unicode);
+#endif
             foreach (var line in lines)
             {
                 await writer.WriteLineAsync(line);
