@@ -113,7 +113,7 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
     public void OnHandlingEvent(object sender, EventArgs args)
     {
         var stackTrace = new StackTrace();
-        var stackFrames = stackTrace.GetFrames();
+        var stackFrames = stackTrace.GetFrames()!;
         var eventName = stackFrames[1].GetMethod()!.Name;
 
         EventInvoked?.Invoke(sender, new EventInfoArgs
