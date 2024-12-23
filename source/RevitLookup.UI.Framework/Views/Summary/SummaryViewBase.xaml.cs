@@ -233,6 +233,10 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     private void OnGridRowLoading(object? sender, DataGridRowEventArgs args)
     {
         var row = args.Row;
+
+        row.MouseEnter -= OnGridRowCaptured;
+        row.PreviewMouseLeftButtonUp -= OnGridRowClicked;
+
         row.MouseEnter += OnGridRowCaptured;
         row.PreviewMouseLeftButtonUp += OnGridRowClicked;
     }

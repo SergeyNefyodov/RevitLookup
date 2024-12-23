@@ -90,7 +90,7 @@ public partial class SummaryViewBase
             if (context.Value.Descriptor is IDescriptorEnumerator {IsEmpty: true}) return;
         }
 
-        ViewModel.Navigate(context.Value.RawValue);
+        ViewModel.Navigate(context.Value);
     }
 
     /// <summary>

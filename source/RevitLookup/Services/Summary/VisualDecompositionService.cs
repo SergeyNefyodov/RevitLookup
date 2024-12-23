@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
+using LookupEngine.Abstractions.Configuration;
 using RevitLookup.Abstractions.Models.Summary;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.Core;
+using RevitLookup.Core.Summary;
 using RevitLookup.Mappers;
 using Visibility = System.Windows.Visibility;
 
@@ -33,8 +35,9 @@ public sealed class VisualDecompositionService(
                     break;
             }
 
-            //TODO: pass object
-            summaryViewModel.DecomposedObjects = await DecomposeAsync(new object[] {decompositionObject});
+            var objects = await RevitShell.AsyncCollectionHandler.RaiseAsync(_ => RevitObjectsCollector.GetObjects(decompositionObject));
+            summaryViewModel.SelectedDecomposedObject = null;
+            summaryViewModel.DecomposedObjects = await DecomposeAsync(objects);
         }
         catch (OperationCanceledException)
         {
@@ -52,7 +55,14 @@ public sealed class VisualDecompositionService(
 
     public async Task VisualizeDecompositionAsync(object? obj)
     {
-        summaryViewModel.DecomposedObjects = await DecomposeAsync(new[] {obj});
+        var values = obj switch
+        {
+            ObservableDecomposedValue {Descriptor: IDescriptorEnumerator} decomposedValue => (IEnumerable) decomposedValue.RawValue!,
+            ObservableDecomposedValue decomposedValue => new[] {decomposedValue.RawValue},
+            _ => new[] {obj}
+        };
+
+        summaryViewModel.DecomposedObjects = await DecomposeAsync(values);
     }
 
     public async Task VisualizeDecompositionAsync(IEnumerable objects)
@@ -75,7 +85,6 @@ public sealed class VisualDecompositionService(
     [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
     private static async Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects)
     {
-        //TODO: check TASK.RUN performance
         return await RevitShell.AsyncObjectsHandler.RaiseAsync(_ =>
         {
             var count = objects is ICollection collection ? collection.Count : 4;

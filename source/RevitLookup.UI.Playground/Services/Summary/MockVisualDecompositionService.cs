@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using LookupEngine;
+using LookupEngine.Abstractions.Configuration;
 using RevitLookup.Abstractions.Models.Summary;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
@@ -51,7 +52,14 @@ public sealed class MockVisualDecompositionService(
 
     public async Task VisualizeDecompositionAsync(object? obj)
     {
-        summaryViewModel.DecomposedObjects = await DecomposeAsync(new[] {obj});
+        var objects = obj switch
+        {
+            ObservableDecomposedValue {Descriptor: IDescriptorEnumerator} decomposedValue => (IEnumerable) decomposedValue.RawValue!,
+            ObservableDecomposedValue decomposedValue => new[] {decomposedValue.RawValue},
+            _ => new[] {obj}
+        };
+
+        summaryViewModel.DecomposedObjects = await DecomposeAsync(objects);
     }
 
     public async Task VisualizeDecompositionAsync(IEnumerable objects)

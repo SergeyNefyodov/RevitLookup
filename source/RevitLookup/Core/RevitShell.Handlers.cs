@@ -18,6 +18,7 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
+using System.Collections;
 using Nice3point.Revit.Toolkit.External.Handlers;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 
@@ -29,6 +30,7 @@ public static partial class RevitShell
     private static AsyncEventHandler<ObservableDecomposedObject>? _asyncObjectHandler;
     private static AsyncEventHandler<List<ObservableDecomposedObject>>? _asyncObjectsHandler;
     private static AsyncEventHandler<List<ObservableDecomposedMember>>? _asyncMembersHandler;
+    private static AsyncEventHandler<IEnumerable>? _asyncCollectionHandler;
 
     public static ActionEventHandler ActionEventHandler
     {
@@ -54,11 +56,18 @@ public static partial class RevitShell
         private set => _asyncMembersHandler = value;
     }
 
+    public static AsyncEventHandler<IEnumerable> AsyncCollectionHandler
+    {
+        get => _asyncCollectionHandler ?? throw new InvalidOperationException("The Handler was never set.");
+        private set => _asyncCollectionHandler = value;
+    }
+
     public static void RegisterHandlers()
     {
         ActionEventHandler = new ActionEventHandler();
         AsyncObjectHandler = new AsyncEventHandler<ObservableDecomposedObject>();
         AsyncObjectsHandler = new AsyncEventHandler<List<ObservableDecomposedObject>>();
         AsyncMembersHandler = new AsyncEventHandler<List<ObservableDecomposedMember>>();
+        AsyncCollectionHandler = new AsyncEventHandler<IEnumerable>();
     }
 }
