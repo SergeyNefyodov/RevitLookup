@@ -36,13 +36,15 @@ public sealed class RevitRibbonService(ISettingsService settingsService)
     {
         RevitShell.ActionEventHandler.Raise(_ =>
         {
-            if (_createdPanels.Count > 0)
+            if (_createdPanels.Count == 0)
             {
-                RemovePanels();
+                CreatePanels();
+                return;
             }
 
+            RemovePanels();
             CreatePanels();
-            ShortcutsHelper.ReloadCommands();
+            ShortcutsHelper.LoadCommands();
         });
     }
 

@@ -32,7 +32,10 @@ namespace RevitLookup.Services.Appearance;
 
 public sealed class ThemeWatcherService(ISettingsService settingsService) : IThemeWatcherService
 {
+#if REVIT2024_OR_GREATER
     private bool _isWatching;
+#endif
+
     private readonly List<FrameworkElement> _observedElements = [];
 
     public void Initialize()
@@ -82,17 +85,15 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
 #endif
     }
 
+#if REVIT2024_OR_GREATER
     private void OnRevitThemeChanged(object? sender, ThemeChangedEventArgs args)
     {
-#if REVIT2024_OR_GREATER
         if (args.ThemeChangedType != ThemeType.UITheme) return;
 
         var theme = GetRevitTheme();
         ApplicationThemeManager.Apply(theme, settingsService.GeneralSettings.Background);
         UpdateBackground(theme);
-#endif
     }
-#if REVIT2024_OR_GREATER
 
     private static ApplicationTheme GetRevitTheme()
     {
