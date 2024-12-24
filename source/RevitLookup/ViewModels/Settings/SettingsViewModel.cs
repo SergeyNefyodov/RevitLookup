@@ -24,12 +24,14 @@ using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Settings;
+using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Views.Settings;
 using RevitLookup.UI.Framework.Views.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Animations;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using ApplicationTheme = Wpf.Ui.Appearance.ApplicationTheme;
 
 namespace RevitLookup.ViewModels.Settings;
 
@@ -42,6 +44,7 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
     private readonly ISettingsService _settingsService;
     private readonly IWindowIntercomService _intercomService;
     private readonly IThemeWatcherService _themeWatcherService;
+    private readonly RevitRibbonService _ribbonService;
     private readonly bool _initialized;
 
     [ObservableProperty] private ApplicationTheme _theme;
@@ -58,7 +61,8 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
         INotificationService notificationService,
         ISettingsService settingsService,
         IWindowIntercomService intercomService,
-        IThemeWatcherService themeWatcherService)
+        IThemeWatcherService themeWatcherService,
+        RevitRibbonService ribbonService)
     {
         _serviceProvider = serviceProvider;
         _navigationService = navigationService;
@@ -66,6 +70,7 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
         _settingsService = settingsService;
         _intercomService = intercomService;
         _themeWatcherService = themeWatcherService;
+        _ribbonService = ribbonService;
 
         ApplySettings();
         _initialized = true;
@@ -190,6 +195,7 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
         if (!_initialized) return;
 
         _settingsService.GeneralSettings.UseModifyTab = value;
+        _ribbonService.CreateRibbon();
     }
 
     private void ApplySettings()

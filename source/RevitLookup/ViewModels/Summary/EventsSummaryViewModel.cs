@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
 using Microsoft.Extensions.Logging;
-using RevitLookup.Abstractions.Models.EventArgs;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Presentation;
@@ -54,17 +53,13 @@ public sealed partial class EventsSummaryViewModel(
 
     public Task OnNavigatedToAsync()
     {
-        monitoringService.Subscribe();
-        monitoringService.EventInvoked += OnEventInvoked;
-
+        monitoringService.RegisterEventInvocationCallback(OnEventInvoked);
         return Task.CompletedTask;
     }
 
     public Task OnNavigatedFromAsync()
     {
-        monitoringService.EventInvoked -= OnEventInvoked;
-        monitoringService.Unsubscribe();
-
+        monitoringService.Unregister();
         return Task.CompletedTask;
     }
 
@@ -153,16 +148,16 @@ public sealed partial class EventsSummaryViewModel(
         }
     }
 
-    private async void OnEventInvoked(object? sender, EventInfoArgs args)
+    private async void OnEventInvoked(object value, string eventName)
     {
         try
         {
             var options = CreateDecomposeOptions();
             var decomposedObject = await RevitShell.AsyncObjectHandler.RaiseAsync(_ =>
             {
-                var result = LookupComposer.Decompose(args.Arguments, options);
+                var result = LookupComposer.Decompose(value, options);
                 var convertedResult = DecompositionResultMapper.Convert(result);
-                convertedResult.Name = $"{args.EventName} {DateTime.Now:HH:mm:ss}";
+                convertedResult.Name = $"{eventName} {DateTime.Now:HH:mm:ss}";
                 return convertedResult;
             });
 

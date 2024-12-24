@@ -22,13 +22,13 @@ using System.Diagnostics;
 using System.Reflection;
 using Autodesk.Revit.UI;
 using Microsoft.Extensions.Logging;
-using RevitLookup.Abstractions.Models.EventArgs;
 using RevitLookup.Core;
 
 namespace RevitLookup.Services.Summary;
 
 public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> logger)
 {
+    private Action<object, string>? _callback;
     private readonly Dictionary<EventInfo, Delegate> _handlersMap = new(16);
 
     private readonly Assembly[] _assemblies = AppDomain.CurrentDomain
@@ -47,12 +47,13 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
         nameof(Autodesk.Revit.ApplicationServices.Application.ProgressChanged)
     ];
 
-    public void Subscribe()
+    public void RegisterEventInvocationCallback(Action<object, string> callback)
     {
+        _callback = callback;
         RevitShell.ActionEventHandler.Raise(Subscribe);
     }
 
-    public void Unsubscribe()
+    public void Unregister()
     {
         RevitShell.ActionEventHandler.Raise(Unsubscribe);
     }
@@ -114,14 +115,9 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
     {
         var stackTrace = new StackTrace();
         var stackFrames = stackTrace.GetFrames()!;
-        var eventName = stackFrames[1].GetMethod()!.Name;
+        var eventType = stackFrames[1].GetMethod()!.Name;
+        var eventName = eventType.Replace(nameof(EventHandler), "");
 
-        EventInvoked?.Invoke(sender, new EventInfoArgs
-        {
-            EventName = eventName.Replace(nameof(EventHandler), ""),
-            Arguments = args
-        });
+        _callback?.Invoke(args, eventName);
     }
-
-    public event EventHandler<EventInfoArgs>? EventInvoked;
 }

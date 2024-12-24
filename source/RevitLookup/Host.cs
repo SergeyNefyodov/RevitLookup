@@ -71,6 +71,7 @@ public static class Host
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
         builder.Services.AddSingleton<ISoftwareUpdateService, SoftwareUpdateService>();
         builder.Services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
+        builder.Services.AddSingleton<RevitRibbonService>();
         builder.Services.AddHostedService<HostBackgroundService>();
 
         //Services
