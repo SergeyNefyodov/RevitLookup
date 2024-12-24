@@ -94,12 +94,18 @@ public static class RibbonExtensions
     /// </summary>
     /// <param name="panel">The <see cref="RibbonPanel"/> to extract the internal <see cref="Autodesk.Windows.RibbonPanel"/> from.</param>
     /// <returns>The internal <see cref="Autodesk.Windows.RibbonPanel"/> instance.</returns>
-    public static Autodesk.Windows.RibbonPanel GetInternalPanel(this RibbonPanel panel)
+    private static Autodesk.Windows.RibbonPanel GetInternalPanel(this RibbonPanel panel)
     {
         var panelField = panel.GetType().GetField("m_RibbonPanel", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
         return (Autodesk.Windows.RibbonPanel) panelField.GetValue(panel)!;
     }
 
+    /// <summary>
+    ///     Creates a new internal <see cref="Autodesk.Windows.RibbonPanel"/> and its corresponding <see cref="Autodesk.Revit.UI.RibbonPanel"/> for the specified tab and panel name.
+    /// </summary>
+    /// <param name="tabId">The ID of the tab where the panel should be added.</param>
+    /// <param name="panelName">The name of the panel to create.</param>
+    /// <returns>A tuple containing the internal <see cref="Autodesk.Windows.RibbonPanel"/> and the corresponding <see cref="Autodesk.Revit.UI.RibbonPanel"/>.</returns>
     private static (Autodesk.Windows.RibbonPanel internalPanel, RibbonPanel panel) CreateInternalPanel(string tabId, string panelName)
     {
         var internalPanel = new Autodesk.Windows.RibbonPanel
@@ -123,6 +129,12 @@ public static class RibbonExtensions
         return (internalPanel, panel);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="Autodesk.Revit.UI.RibbonPanel"/> using the specified internal <see cref="Autodesk.Windows.RibbonPanel"/>.
+    /// </summary>
+    /// <param name="panel">The internal <see cref="Autodesk.Windows.RibbonPanel"/> instance.</param>
+    /// <param name="tabId">The ID of the tab where the panel should be added.</param>
+    /// <returns>The created <see cref="Autodesk.Revit.UI.RibbonPanel"/>.</returns>
     private static RibbonPanel CreatePanel(Autodesk.Windows.RibbonPanel panel, string tabId)
     {
         var type = typeof(RibbonPanel);
@@ -138,6 +150,10 @@ public static class RibbonExtensions
         return (RibbonPanel) constructorInfo.Invoke([panel, tabId]);
     }
 
+    /// <summary>
+    ///     Retrieves the cached dictionary of tabs and panels within the Revit application.
+    /// </summary>
+    /// <returns>A dictionary where keys are tab IDs and values are dictionaries of tab names and their corresponding <see cref="Autodesk.Revit.UI.RibbonPanel"/> instances.</returns>
     [Pure]
     private static Dictionary<string, Dictionary<string, RibbonPanel>> GetCachedTabs()
     {
@@ -147,9 +163,9 @@ public static class RibbonExtensions
     }
 
     /// <summary>
-    ///     
+    ///     Removes a specified <see cref="Autodesk.Revit.UI.RibbonPanel"/> from the Revit ribbon.
     /// </summary>
-    /// <param name="panel"></param>
+    /// <param name="panel">The <see cref="Autodesk.Revit.UI.RibbonPanel"/> to remove.</param>
     public static void RemovePanel(this RibbonPanel panel)
     {
         var cachedPanels = GetCachedTabs();
@@ -161,11 +177,6 @@ public static class RibbonExtensions
 
         var ribbonPanels = cachedPanels[internalTab.Id];
         ribbonPanels.Remove(panel.Name);
-
-        if (ribbonPanels.Count == 0)
-        {
-            cachedPanels.Remove(internalTab.Id);
-        }
 
         if (internalTab.Panels.Count == 0)
         {
