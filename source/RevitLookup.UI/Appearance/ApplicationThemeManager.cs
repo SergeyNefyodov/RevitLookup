@@ -3,6 +3,8 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
+using System.Collections;
+using System.Diagnostics;
 using Wpf.Ui.Controls;
 
 namespace Wpf.Ui.Appearance;
@@ -92,7 +94,7 @@ public static class ApplicationThemeManager
                 themeDictionaryName = "Dark";
                 break;
             case ApplicationTheme.HighContrast:
-                themeDictionaryName = ApplicationThemeManager.GetSystemTheme() switch
+                themeDictionaryName = GetSystemTheme() switch
                 {
                     SystemTheme.HC1 => "HC1",
                     SystemTheme.HC2 => "HC2",
@@ -108,7 +110,7 @@ public static class ApplicationThemeManager
             new Uri(ThemesDictionaryPath + themeDictionaryName + ".xaml", UriKind.Absolute)
         );
 
-        System.Diagnostics.Debug.WriteLine(
+        Debug.WriteLine(
             $"INFO | {typeof(ApplicationThemeManager)} tries to update theme to {themeDictionaryName} ({applicationTheme}): {isUpdated}",
             nameof(ApplicationThemeManager)
         );
@@ -143,7 +145,7 @@ public static class ApplicationThemeManager
             }
         }
 
-        foreach (System.Collections.DictionaryEntry resource in UiApplication.Current.Resources)
+        foreach (DictionaryEntry resource in UiApplication.Current.Resources)
         {
             frameworkElement.Resources[resource.Key] = resource.Value;
         }
@@ -263,19 +265,19 @@ public static class ApplicationThemeManager
             return;
         }
 
-        string themeUri = themeDictionary.Source.ToString().Trim().ToLower();
+        string themeUri = themeDictionary.Source.ToString();
 
-        if (themeUri.Contains("light"))
+        if (themeUri.Contains("light", StringComparison.OrdinalIgnoreCase))
         {
             _cachedApplicationTheme = ApplicationTheme.Light;
         }
 
-        if (themeUri.Contains("dark"))
+        if (themeUri.Contains("dark", StringComparison.OrdinalIgnoreCase))
         {
             _cachedApplicationTheme = ApplicationTheme.Dark;
         }
 
-        if (themeUri.Contains("highcontrast"))
+        if (themeUri.Contains("highcontrast", StringComparison.OrdinalIgnoreCase))
         {
             _cachedApplicationTheme = ApplicationTheme.HighContrast;
         }
