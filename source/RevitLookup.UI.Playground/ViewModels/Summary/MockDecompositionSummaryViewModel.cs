@@ -1,11 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using LookupEngine;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
@@ -31,25 +29,6 @@ public sealed partial class MockDecompositionSummaryViewModel(
     [ObservableProperty] private List<ObservableDecomposedObject> _decomposedObjects = [];
     [ObservableProperty] private List<ObservableDecomposedObjectsGroup> _filteredDecomposedObjects = [];
 
-    [RelayCommand]
-    private async Task RefreshMembersAsync()
-    {
-        foreach (var decomposedObject in DecomposedObjects)
-        {
-            decomposedObject.Members.Clear();
-        }
-
-        try
-        {
-            await FetchMembersAsync(SelectedDecomposedObject);
-        }
-        catch (Exception exception)
-        {
-            logger.LogError(exception, "Members decomposing failed");
-            notificationService.ShowError("Lookup engine error", exception);
-        }
-    }
-
     public void Navigate(object? value)
     {
         Host.GetService<IRevitLookupUiService>()
@@ -72,6 +51,24 @@ public sealed partial class MockDecompositionSummaryViewModel(
             .Decompose(values)
             .DependsOn(intercomService.GetHost())
             .Show<DecompositionSummaryPage>();
+    }
+
+    public async Task RefreshMembersAsync()
+    {
+        foreach (var decomposedObject in DecomposedObjects)
+        {
+            decomposedObject.Members.Clear();
+        }
+
+        try
+        {
+            await FetchMembersAsync(SelectedDecomposedObject);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Members decomposing failed");
+            notificationService.ShowError("Lookup engine error", exception);
+        }
     }
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)

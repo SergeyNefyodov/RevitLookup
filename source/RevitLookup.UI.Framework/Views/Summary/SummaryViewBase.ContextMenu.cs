@@ -79,7 +79,7 @@ public partial class SummaryViewBase
         dataGrid.ContextMenu = contextMenu;
 
         contextMenu.AddMenuItem("RefreshMenuItem")
-            .SetCommand(ViewModel, async parameter => { await parameter.RefreshMembersCommand.ExecuteAsync(null); })
+            .SetCommand(ViewModel, async parameter => await parameter.RefreshMembersAsync())
             .SetGestureText(Key.F5);
 
         contextMenu.AddSeparator();
@@ -115,7 +115,7 @@ public partial class SummaryViewBase
             .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeEvents = !parameter.IncludeEvents;
-                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersAsync();
             });
         contextMenu.AddMenuItem()
             .SetHeader("Extensions")
@@ -124,7 +124,7 @@ public partial class SummaryViewBase
             .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeExtensions = !parameter.IncludeExtensions;
-                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersAsync();
             });
         contextMenu.AddMenuItem()
             .SetHeader("Fields")
@@ -133,7 +133,7 @@ public partial class SummaryViewBase
             .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeFields = !parameter.IncludeFields;
-                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersAsync();
             });
         contextMenu.AddMenuItem()
             .SetHeader("Non-public")
@@ -142,7 +142,7 @@ public partial class SummaryViewBase
             .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludePrivate = !parameter.IncludePrivate;
-                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersAsync();
             });
         contextMenu.AddMenuItem()
             .SetHeader("Root")
@@ -151,7 +151,7 @@ public partial class SummaryViewBase
             .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeRootHierarchy = !parameter.IncludeRootHierarchy;
-                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersAsync();
             });
         contextMenu.AddMenuItem()
             .SetHeader("Static")
@@ -160,7 +160,7 @@ public partial class SummaryViewBase
             .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeStatic = !parameter.IncludeStatic;
-                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersAsync();
             });
         contextMenu.AddMenuItem()
             .SetHeader("Unsupported")
@@ -169,7 +169,7 @@ public partial class SummaryViewBase
             .SetCommand(_settingsService.GeneralSettings, async parameter =>
             {
                 parameter.IncludeUnsupported = !parameter.IncludeUnsupported;
-                await ViewModel.RefreshMembersCommand.ExecuteAsync(null);
+                await ViewModel.RefreshMembersAsync();
             });
     }
 

@@ -25,25 +25,6 @@ public sealed partial class DecompositionSummaryViewModel(
     [ObservableProperty] private List<ObservableDecomposedObject> _decomposedObjects = [];
     [ObservableProperty] private List<ObservableDecomposedObjectsGroup> _filteredDecomposedObjects = [];
 
-    [RelayCommand]
-    private async Task RefreshMembersAsync()
-    {
-        foreach (var decomposedObject in DecomposedObjects)
-        {
-            decomposedObject.Members.Clear();
-        }
-
-        try
-        {
-            await FetchMembersAsync(SelectedDecomposedObject);
-        }
-        catch (Exception exception)
-        {
-            logger.LogError(exception, "Members decomposing failed");
-            notificationService.ShowError("Lookup engine error", exception);
-        }
-    }
-
     public void Navigate(object? value)
     {
         Host.GetService<IRevitLookupUiService>()
@@ -66,6 +47,24 @@ public sealed partial class DecompositionSummaryViewModel(
             .Decompose(values)
             .DependsOn(intercomService.GetHost())
             .Show<DecompositionSummaryPage>();
+    }
+
+    public async Task RefreshMembersAsync()
+    {
+        foreach (var decomposedObject in DecomposedObjects)
+        {
+            decomposedObject.Members.Clear();
+        }
+
+        try
+        {
+            await FetchMembersAsync(SelectedDecomposedObject);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Members decomposing failed");
+            notificationService.ShowError("Lookup engine error", exception);
+        }
     }
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)

@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using RevitLookup.Abstractions.ObservableModels.Decomposition;
+﻿using RevitLookup.Abstractions.ObservableModels.Decomposition;
 
 namespace RevitLookup.Abstractions.ViewModels.Summary;
 
@@ -12,7 +11,7 @@ public interface ISummaryViewModel
     List<ObservableDecomposedObject> DecomposedObjects { get; set; }
 
     //Commands
-    IAsyncRelayCommand RefreshMembersCommand { get; }
+    Task RefreshMembersAsync();
 
     //Navigation
     void Navigate(object? value);

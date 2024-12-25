@@ -3,12 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using LookupEngine;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
@@ -37,8 +35,31 @@ public sealed partial class MockEventsSummaryViewModel(
     [ObservableProperty] private List<ObservableDecomposedObject> _decomposedObjects = [];
     [ObservableProperty] private ObservableCollection<ObservableDecomposedObject> _filteredDecomposedObjects = [];
 
-    [RelayCommand]
-    private async Task RefreshMembersAsync()
+    public void Navigate(object? value)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(value)
+            .DependsOn(intercomService.GetHost())
+            .Show<DecompositionSummaryPage>();
+    }
+
+    public void Navigate(ObservableDecomposedObject value)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(value)
+            .DependsOn(intercomService.GetHost())
+            .Show<DecompositionSummaryPage>();
+    }
+
+    public void Navigate(List<ObservableDecomposedObject> values)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(values)
+            .DependsOn(intercomService.GetHost())
+            .Show<DecompositionSummaryPage>();
+    }
+
+    public async Task RefreshMembersAsync()
     {
         foreach (var decomposedObject in DecomposedObjects)
         {
@@ -83,30 +104,6 @@ public sealed partial class MockEventsSummaryViewModel(
         _cancellationTokenSource = null;
 
         return Task.CompletedTask;
-    }
-
-    public void Navigate(object? value)
-    {
-        Host.GetService<IRevitLookupUiService>()
-            .Decompose(value)
-            .DependsOn(intercomService.GetHost())
-            .Show<DecompositionSummaryPage>();
-    }
-
-    public void Navigate(ObservableDecomposedObject value)
-    {
-        Host.GetService<IRevitLookupUiService>()
-            .Decompose(value)
-            .DependsOn(intercomService.GetHost())
-            .Show<DecompositionSummaryPage>();
-    }
-
-    public void Navigate(List<ObservableDecomposedObject> values)
-    {
-        Host.GetService<IRevitLookupUiService>()
-            .Decompose(values)
-            .DependsOn(intercomService.GetHost())
-            .Show<DecompositionSummaryPage>();
     }
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)

@@ -12,7 +12,6 @@ using RevitLookup.Mappers;
 using RevitLookup.Services.Summary;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Summary;
-using StringExtensions = RevitLookup.UI.Framework.Extensions.StringExtensions;
 
 namespace RevitLookup.ViewModels.Summary;
 
@@ -25,15 +24,38 @@ public sealed partial class EventsSummaryViewModel(
     ILogger<DecompositionSummaryViewModel> logger)
     : ObservableObject, IEventsSummaryViewModel
 {
-    private readonly SynchronizationContext _synchronizationContext = SynchronizationContext.Current;
+    private readonly SynchronizationContext _synchronizationContext = SynchronizationContext.Current!;
 
     [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private ObservableDecomposedObject? _selectedDecomposedObject;
     [ObservableProperty] private List<ObservableDecomposedObject> _decomposedObjects = [];
     [ObservableProperty] private ObservableCollection<ObservableDecomposedObject> _filteredDecomposedObjects = [];
 
-    [RelayCommand]
-    private async Task RefreshMembersAsync()
+    public void Navigate(object? value)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(value)
+            .DependsOn(intercomService.GetHost())
+            .Show<DecompositionSummaryPage>();
+    }
+
+    public void Navigate(ObservableDecomposedObject value)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(value)
+            .DependsOn(intercomService.GetHost())
+            .Show<DecompositionSummaryPage>();
+    }
+
+    public void Navigate(List<ObservableDecomposedObject> values)
+    {
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(values)
+            .DependsOn(intercomService.GetHost())
+            .Show<DecompositionSummaryPage>();
+    }
+
+    public async Task RefreshMembersAsync()
     {
         foreach (var decomposedObject in DecomposedObjects)
         {
@@ -61,30 +83,6 @@ public sealed partial class EventsSummaryViewModel(
     {
         monitoringService.Unregister();
         return Task.CompletedTask;
-    }
-
-    public void Navigate(object? value)
-    {
-        Host.GetService<IRevitLookupUiService>()
-            .Decompose(value)
-            .DependsOn(intercomService.GetHost())
-            .Show<DecompositionSummaryPage>();
-    }
-
-    public void Navigate(ObservableDecomposedObject value)
-    {
-        Host.GetService<IRevitLookupUiService>()
-            .Decompose(value)
-            .DependsOn(intercomService.GetHost())
-            .Show<DecompositionSummaryPage>();
-    }
-
-    public void Navigate(List<ObservableDecomposedObject> values)
-    {
-        Host.GetService<IRevitLookupUiService>()
-            .Decompose(values)
-            .DependsOn(intercomService.GetHost())
-            .Show<DecompositionSummaryPage>();
     }
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)
@@ -163,7 +161,7 @@ public sealed partial class EventsSummaryViewModel(
 
             _synchronizationContext.Post(state =>
             {
-                var viewModel = (EventsSummaryViewModel) state;
+                var viewModel = (EventsSummaryViewModel) state!;
                 viewModel.DecomposedObjects.Insert(0, decomposedObject);
 
                 if (viewModel.IsSearchValueMatching(decomposedObject, viewModel.SearchText))
