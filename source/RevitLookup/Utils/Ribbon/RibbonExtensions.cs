@@ -3,7 +3,6 @@ using System.Windows.Media.Imaging;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Events;
 using Autodesk.Windows;
-using Kinship.Revit.Toolkit.Ribbon;
 using ComboBox = Autodesk.Revit.UI.ComboBox;
 using RibbonButton = Autodesk.Revit.UI.RibbonButton;
 using RibbonItem = Autodesk.Revit.UI.RibbonItem;

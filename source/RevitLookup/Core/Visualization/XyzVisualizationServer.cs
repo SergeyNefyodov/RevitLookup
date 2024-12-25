@@ -20,24 +20,26 @@
 
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExternalService;
-using RevitLookup.Core.Tools.Visualization.Buffers;
-using RevitLookup.Core.Tools.Visualization.Events;
-using RevitLookup.Core.Tools.Visualization.Helpers;
+using RevitLookup.Core.Visualization.Buffers;
+using RevitLookup.Core.Visualization.Events;
+using RevitLookup.Core.Visualization.Helpers;
 
-namespace RevitLookup.Core.Tools.Visualization;
+namespace RevitLookup.Core.Visualization;
 
-public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
+public sealed class XyzVisualizationServer : IDirectContext3DServer
 {
-    private BoundingBoxXYZ _box = null!; //Cant be null after registration
-    private bool _hasGeometryUpdates = true;
+    private XYZ _point = null!; //Cant be null after registration
     private bool _hasEffectsUpdates = true;
+    private bool _hasGeometryUpdates = true;
 
     private readonly Guid _guid = Guid.NewGuid();
     private readonly object _renderLock = new();
-    private readonly RenderingBufferStorage _surfaceBuffer = new();
-    private readonly RenderingBufferStorage _edgeBuffer = new();
 
-    private readonly RenderingBufferStorage[] _axisBuffers = Enumerable.Range(0, 6)
+    private readonly RenderingBufferStorage[] _planeBuffers = Enumerable.Range(0, 3)
+        .Select(_ => new RenderingBufferStorage())
+        .ToArray();
+
+    private readonly RenderingBufferStorage[] _axisBuffers = Enumerable.Range(0, 3)
         .Select(_ => new RenderingBufferStorage())
         .ToArray();
 
@@ -49,29 +51,34 @@ public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
     ];
 
     private double _transparency;
+    private double _axisLength;
 
-    private bool _drawSurface;
-    private bool _drawEdge;
-    private bool _drawAxis;
+    private Color _xColor = Color.InvalidColorValue;
+    private Color _yColor = Color.InvalidColorValue;
+    private Color _zColor = Color.InvalidColorValue;
 
-    private Color _surfaceColor = Color.InvalidColorValue;
-    private Color _edgeColor = Color.InvalidColorValue;
-    private Color _axisColor = Color.InvalidColorValue;
+    private bool _drawPlane;
+    private bool _drawXAxis;
+    private bool _drawYAxis;
+    private bool _drawZAxis;
 
     public Guid GetServerId() => _guid;
     public string GetVendorId() => "RevitLookup";
-    public string GetName() => "BoundingBoxXYZ visualization server";
-    public string GetDescription() => "BoundingBoxXYZ geometry visualization";
+    public string GetName() => "XYZ visualization server";
+    public string GetDescription() => "XYZ geometry visualization";
     public ExternalServiceId GetServiceId() => ExternalServices.BuiltInExternalServices.DirectContext3DService;
     public string GetApplicationId() => string.Empty;
     public string GetSourceId() => string.Empty;
     public bool UsesHandles() => false;
     public bool CanExecute(View view) => true;
-    public bool UseInTransparentPass(View view) => _drawSurface && _transparency > 0;
+    public bool UseInTransparentPass(View view) => _drawPlane && _transparency > 0;
 
     public Outline GetBoundingBox(View view)
     {
-        return new Outline(_box.Min, _box.Max);
+        var minPoint = new XYZ(_point.X - _axisLength, _point.Y - _axisLength, _point.Z - _axisLength);
+        var maxPoint = new XYZ(_point.X + _axisLength, _point.Y + _axisLength, _point.Z + _axisLength);
+
+        return new Outline(minPoint, maxPoint);
     }
 
     public void RenderScene(View view, DisplayStyle displayStyle)
@@ -80,9 +87,9 @@ public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
         {
             try
             {
-                if (_hasGeometryUpdates || !_surfaceBuffer.IsValid() || !_edgeBuffer.IsValid())
+                if (_hasGeometryUpdates)
                 {
-                    MapGeometryBuffer();
+                    UpdateGeometryBuffer();
                     _hasGeometryUpdates = false;
                 }
 
@@ -92,44 +99,22 @@ public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
                     _hasEffectsUpdates = false;
                 }
 
-                if (_drawSurface)
+                if (_drawXAxis)
                 {
-                    var isTransparentPass = DrawContext.IsTransparentPass();
-                    if (isTransparentPass && _transparency > 0 || !isTransparentPass && _transparency == 0)
-                    {
-                        DrawContext.FlushBuffer(_surfaceBuffer.VertexBuffer,
-                            _surfaceBuffer.VertexBufferCount,
-                            _surfaceBuffer.IndexBuffer,
-                            _surfaceBuffer.IndexBufferCount,
-                            _surfaceBuffer.VertexFormat,
-                            _surfaceBuffer.EffectInstance, PrimitiveType.TriangleList, 0,
-                            _surfaceBuffer.PrimitiveCount);
-                    }
+                    RenderAxisBuffer(_axisBuffers[0]);
+                    RenderPlaneBuffer(_planeBuffers[0]);
                 }
 
-                if (_drawEdge)
+                if (_drawYAxis)
                 {
-                    DrawContext.FlushBuffer(_edgeBuffer.VertexBuffer,
-                        _edgeBuffer.VertexBufferCount,
-                        _edgeBuffer.IndexBuffer,
-                        _edgeBuffer.IndexBufferCount,
-                        _edgeBuffer.VertexFormat,
-                        _edgeBuffer.EffectInstance, PrimitiveType.LineList, 0,
-                        _edgeBuffer.PrimitiveCount);
+                    RenderAxisBuffer(_axisBuffers[1]);
+                    RenderPlaneBuffer(_planeBuffers[1]);
                 }
 
-                if (_drawAxis)
+                if (_drawZAxis)
                 {
-                    foreach (var buffer in _axisBuffers)
-                    {
-                        DrawContext.FlushBuffer(buffer.VertexBuffer,
-                            buffer.VertexBufferCount,
-                            buffer.IndexBuffer,
-                            buffer.IndexBufferCount,
-                            buffer.VertexFormat,
-                            buffer.EffectInstance, PrimitiveType.LineList, 0,
-                            buffer.PrimitiveCount);
-                    }
+                    RenderAxisBuffer(_axisBuffers[2]);
+                    RenderPlaneBuffer(_planeBuffers[2]);
                 }
             }
             catch (Exception exception)
@@ -142,84 +127,134 @@ public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
         }
     }
 
-    private void MapGeometryBuffer()
+    private void RenderPlaneBuffer(RenderingBufferStorage buffer)
     {
-        RenderHelper.MapBoundingBoxSurfaceBuffer(_surfaceBuffer, _box);
-        RenderHelper.MapBoundingBoxEdgeBuffer(_edgeBuffer, _box);
-        MapAxisBuffers();
+        if (!_drawPlane) return;
+
+        var isTransparentPass = DrawContext.IsTransparentPass();
+        if (isTransparentPass && _transparency > 0 || !isTransparentPass && _transparency == 0)
+        {
+            DrawContext.FlushBuffer(buffer.VertexBuffer,
+                buffer.VertexBufferCount,
+                buffer.IndexBuffer,
+                buffer.IndexBufferCount,
+                buffer.VertexFormat,
+                buffer.EffectInstance, PrimitiveType.TriangleList, 0,
+                buffer.PrimitiveCount);
+        }
     }
 
-    private void MapAxisBuffers()
+    private void RenderAxisBuffer(RenderingBufferStorage buffer)
     {
-        var unitVector = new XYZ(1, 1, 1);
-        var minPoint = _box.Transform.OfPoint(_box.Min);
-        var maxPoint = _box.Transform.OfPoint(_box.Max);
-        var axisLength = RenderGeometryHelper.InterpolateAxisLengthByPoints(minPoint, maxPoint);
+        DrawContext.FlushBuffer(buffer.VertexBuffer,
+            buffer.VertexBufferCount,
+            buffer.IndexBuffer,
+            buffer.IndexBufferCount,
+            buffer.VertexFormat,
+            buffer.EffectInstance, PrimitiveType.LineList, 0,
+            buffer.PrimitiveCount);
+    }
 
+    private void UpdateGeometryBuffer()
+    {
+        MapNormalBuffer();
+        MapPlaneBuffer();
+    }
+
+    private void MapNormalBuffer()
+    {
+        var normalExtendLength = _axisLength > 1 ? 0.8 : _axisLength * 0.8;
         for (var i = 0; i < _normals.Length; i++)
         {
             var normal = _normals[i];
-            var minBuffer = _axisBuffers[i];
-            var maxBuffer = _axisBuffers[i + _normals.Length];
+            var buffer = _axisBuffers[i];
+            RenderHelper.MapNormalVectorBuffer(buffer, _point - normal * (_axisLength + normalExtendLength), normal, 2 * (_axisLength + normalExtendLength));
+        }
+    }
 
-            RenderHelper.MapNormalVectorBuffer(minBuffer, minPoint - unitVector * Context.Application.ShortCurveTolerance, normal, axisLength);
-            RenderHelper.MapNormalVectorBuffer(maxBuffer, maxPoint + unitVector * Context.Application.ShortCurveTolerance, -normal, axisLength);
+    private void MapPlaneBuffer()
+    {
+        for (var i = 0; i < _normals.Length; i++)
+        {
+            var normal = _normals[i];
+            var buffer = _planeBuffers[i];
+            RenderHelper.MapSideBuffer(buffer, _point - normal * _axisLength, _point + normal * _axisLength);
         }
     }
 
     private void UpdateEffects()
     {
-        _surfaceBuffer.EffectInstance ??= new EffectInstance(_surfaceBuffer.FormatBits);
-        _surfaceBuffer.EffectInstance.SetColor(_surfaceColor);
-        _surfaceBuffer.EffectInstance.SetTransparency(_transparency);
+        foreach (var buffer in _planeBuffers)
+        {
+            buffer.EffectInstance ??= new EffectInstance(buffer.FormatBits);
+            buffer.EffectInstance.SetTransparency(_transparency);
+        }
 
-        _edgeBuffer.EffectInstance ??= new EffectInstance(_edgeBuffer.FormatBits);
-        _edgeBuffer.EffectInstance.SetColor(_edgeColor);
+        _planeBuffers[0].EffectInstance!.SetColor(_xColor);
+        _planeBuffers[1].EffectInstance!.SetColor(_yColor);
+        _planeBuffers[2].EffectInstance!.SetColor(_zColor);
 
         foreach (var buffer in _axisBuffers)
         {
-            buffer.EffectInstance ??= new EffectInstance(_edgeBuffer.FormatBits);
-            buffer.EffectInstance.SetColor(_axisColor);
+            buffer.EffectInstance ??= new EffectInstance(buffer.FormatBits);
         }
+
+        _axisBuffers[0].EffectInstance!.SetColor(_xColor);
+        _axisBuffers[1].EffectInstance!.SetColor(_yColor);
+        _axisBuffers[2].EffectInstance!.SetColor(_zColor);
     }
 
-    public void UpdateSurfaceColor(Color color)
+    public void UpdateXColor(Color value)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _surfaceColor = color;
+            _xColor = value;
             _hasEffectsUpdates = true;
 
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void UpdateEdgeColor(Color color)
+    public void UpdateYColor(Color value)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _edgeColor = color;
+            _yColor = value;
             _hasEffectsUpdates = true;
 
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void UpdateAxisColor(Color color)
+    public void UpdateZColor(Color value)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _axisColor = color;
+            _zColor = value;
             _hasEffectsUpdates = true;
+
+            uiDocument.UpdateAllOpenViews();
+        }
+    }
+
+    public void UpdateAxisLength(double value)
+    {
+        var uiDocument = Context.ActiveUiDocument;
+        if (uiDocument is null) return;
+
+        lock (_renderLock)
+        {
+            _axisLength = value;
+            _hasGeometryUpdates = true;
 
             uiDocument.UpdateAllOpenViews();
         }
@@ -239,49 +274,57 @@ public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
         }
     }
 
-
-    public void UpdateSurfaceVisibility(bool visible)
+    public void UpdatePlaneVisibility(bool visible)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _drawSurface = visible;
-
+            _drawPlane = visible;
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void UpdateEdgeVisibility(bool visible)
+    public void UpdateXAxisVisibility(bool visible)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _drawEdge = visible;
-
+            _drawXAxis = visible;
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void UpdateAxisVisibility(bool visible)
+    public void UpdateYAxisVisibility(bool visible)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _drawAxis = visible;
-
+            _drawYAxis = visible;
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void Register(BoundingBoxXYZ box)
+    public void UpdateZAxisVisibility(bool visible)
     {
-        _box = box;
+        var uiDocument = Context.ActiveUiDocument;
+        if (uiDocument is null) return;
+
+        lock (_renderLock)
+        {
+            _drawZAxis = visible;
+            uiDocument.UpdateAllOpenViews();
+        }
+    }
+
+    public void Register(XYZ point)
+    {
+        _point = point;
 
         RevitShell.ActionEventHandler.Raise(application =>
         {

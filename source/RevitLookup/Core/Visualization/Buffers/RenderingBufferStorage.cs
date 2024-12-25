@@ -1,6 +1,6 @@
 ﻿using Autodesk.Revit.DB.DirectContext3D;
 
-namespace RevitLookup.Core.Tools.Visualization.Buffers;
+namespace RevitLookup.Core.Visualization.Buffers;
 
 public sealed class RenderingBufferStorage
 {

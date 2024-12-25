@@ -4,7 +4,7 @@ using Autodesk.Windows;
 using RibbonItem = Autodesk.Revit.UI.RibbonItem;
 using RibbonPanel = Autodesk.Revit.UI.RibbonPanel;
 
-namespace Kinship.Revit.Toolkit.Ribbon;
+namespace RevitLookup.Utils.Ribbon;
 
 internal sealed class RibbonStackPanel : IRibbonStackPanel
 {

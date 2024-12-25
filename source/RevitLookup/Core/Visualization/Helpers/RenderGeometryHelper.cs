@@ -20,7 +20,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace RevitLookup.Core.Tools.Visualization.Helpers;
+namespace RevitLookup.Core.Visualization.Helpers;
 
 public static class RenderGeometryHelper
 {

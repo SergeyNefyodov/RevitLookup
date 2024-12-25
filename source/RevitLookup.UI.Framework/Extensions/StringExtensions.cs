@@ -1,10 +1,10 @@
-﻿using JetBrains.Annotations;
+﻿#if !NETCOREAPP
+using JetBrains.Annotations;
 
 namespace RevitLookup.UI.Framework.Extensions;
 
 public static class StringExtensions
 {
-#if !NETCORE
     /// <summary>
     ///     Returns a value indicating whether a specified substring occurs within this string.
     /// </summary>
@@ -20,5 +20,5 @@ public static class StringExtensions
         if (value is null) return false;
         return source.IndexOf(value, comparison) >= 0;
     }
-#endif
 }
+#endif

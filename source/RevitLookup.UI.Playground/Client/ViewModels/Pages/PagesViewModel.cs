@@ -56,12 +56,12 @@ public sealed partial class PagesViewModel : ObservableObject
         viewer.SizeToContent = SizeToContent.Manual;
         viewer.Height = 500;
         viewer.Width = 900;
-        viewer.RunService<IEventsSummaryViewModel>(service => { service.OnNavigatedToAsync(); });
+        viewer.RunService<IEventsSummaryViewModel>(service => service.OnNavigatedToAsync());
 
         viewer.Closing += (sender, _) =>
         {
             var self = (PageViewer) sender!;
-            self.RunService<IEventsSummaryViewModel>(service => { service.OnNavigatedFromAsync(); });
+            self.RunService<IEventsSummaryViewModel>(service => service.OnNavigatedFromAsync());
         };
 
         viewer.ShowPage<EventsSummaryPage>();

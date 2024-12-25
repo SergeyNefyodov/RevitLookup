@@ -20,47 +20,59 @@
 
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExternalService;
-using RevitLookup.Core.Tools.Visualization.Buffers;
-using RevitLookup.Core.Tools.Visualization.Events;
-using RevitLookup.Core.Tools.Visualization.Helpers;
+using RevitLookup.Core.Visualization.Buffers;
+using RevitLookup.Core.Visualization.Events;
+using RevitLookup.Core.Visualization.Helpers;
 
-namespace RevitLookup.Core.Tools.Visualization;
+namespace RevitLookup.Core.Visualization;
 
-public sealed class MeshVisualizationServer : IDirectContext3DServer
+public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
 {
-    private Mesh _mesh = null!; //Cant be null after registration
-    private bool _hasEffectsUpdates = true;
+    private BoundingBoxXYZ _box = null!; //Cant be null after registration
     private bool _hasGeometryUpdates = true;
+    private bool _hasEffectsUpdates = true;
 
     private readonly Guid _guid = Guid.NewGuid();
     private readonly object _renderLock = new();
-
-    private RenderingBufferStorage[] _normalBuffers = [];
     private readonly RenderingBufferStorage _surfaceBuffer = new();
-    private readonly RenderingBufferStorage _meshGridBuffer = new();
+    private readonly RenderingBufferStorage _edgeBuffer = new();
 
-    private double _extrusion;
+    private readonly RenderingBufferStorage[] _axisBuffers = Enumerable.Range(0, 6)
+        .Select(_ => new RenderingBufferStorage())
+        .ToArray();
+
+    private readonly XYZ[] _normals =
+    [
+        XYZ.BasisX,
+        XYZ.BasisY,
+        XYZ.BasisZ
+    ];
+
     private double _transparency;
 
-    private bool _drawMeshGrid;
-    private bool _drawNormalVector;
     private bool _drawSurface;
+    private bool _drawEdge;
+    private bool _drawAxis;
 
-    private Color _meshColor = Color.InvalidColorValue;
-    private Color _normalColor = Color.InvalidColorValue;
     private Color _surfaceColor = Color.InvalidColorValue;
+    private Color _edgeColor = Color.InvalidColorValue;
+    private Color _axisColor = Color.InvalidColorValue;
 
     public Guid GetServerId() => _guid;
     public string GetVendorId() => "RevitLookup";
-    public string GetName() => "Mesh visualization server";
-    public string GetDescription() => "Mesh geometry visualization";
+    public string GetName() => "BoundingBoxXYZ visualization server";
+    public string GetDescription() => "BoundingBoxXYZ geometry visualization";
     public ExternalServiceId GetServiceId() => ExternalServices.BuiltInExternalServices.DirectContext3DService;
     public string GetApplicationId() => string.Empty;
     public string GetSourceId() => string.Empty;
     public bool UsesHandles() => false;
     public bool CanExecute(View view) => true;
     public bool UseInTransparentPass(View view) => _drawSurface && _transparency > 0;
-    public Outline? GetBoundingBox(View view) => null;
+
+    public Outline GetBoundingBox(View view)
+    {
+        return new Outline(_box.Min, _box.Max);
+    }
 
     public void RenderScene(View view, DisplayStyle displayStyle)
     {
@@ -68,7 +80,7 @@ public sealed class MeshVisualizationServer : IDirectContext3DServer
         {
             try
             {
-                if (_hasGeometryUpdates || !_surfaceBuffer.IsValid() || !_meshGridBuffer.IsValid())
+                if (_hasGeometryUpdates || !_surfaceBuffer.IsValid() || !_edgeBuffer.IsValid())
                 {
                     MapGeometryBuffer();
                     _hasGeometryUpdates = false;
@@ -95,20 +107,20 @@ public sealed class MeshVisualizationServer : IDirectContext3DServer
                     }
                 }
 
-                if (_drawMeshGrid)
+                if (_drawEdge)
                 {
-                    DrawContext.FlushBuffer(_meshGridBuffer.VertexBuffer,
-                        _meshGridBuffer.VertexBufferCount,
-                        _meshGridBuffer.IndexBuffer,
-                        _meshGridBuffer.IndexBufferCount,
-                        _meshGridBuffer.VertexFormat,
-                        _meshGridBuffer.EffectInstance, PrimitiveType.LineList, 0,
-                        _meshGridBuffer.PrimitiveCount);
+                    DrawContext.FlushBuffer(_edgeBuffer.VertexBuffer,
+                        _edgeBuffer.VertexBufferCount,
+                        _edgeBuffer.IndexBuffer,
+                        _edgeBuffer.IndexBufferCount,
+                        _edgeBuffer.VertexFormat,
+                        _edgeBuffer.EffectInstance, PrimitiveType.LineList, 0,
+                        _edgeBuffer.PrimitiveCount);
                 }
 
-                if (_drawNormalVector)
+                if (_drawAxis)
                 {
-                    foreach (var buffer in _normalBuffers)
+                    foreach (var buffer in _axisBuffers)
                     {
                         DrawContext.FlushBuffer(buffer.VertexBuffer,
                             buffer.VertexBufferCount,
@@ -132,94 +144,82 @@ public sealed class MeshVisualizationServer : IDirectContext3DServer
 
     private void MapGeometryBuffer()
     {
-        RenderHelper.MapSurfaceBuffer(_surfaceBuffer, _mesh, _extrusion);
-        RenderHelper.MapMeshGridBuffer(_meshGridBuffer, _mesh, _extrusion);
-        MapNormalsBuffer();
+        RenderHelper.MapBoundingBoxSurfaceBuffer(_surfaceBuffer, _box);
+        RenderHelper.MapBoundingBoxEdgeBuffer(_edgeBuffer, _box);
+        MapAxisBuffers();
     }
 
-    private void MapNormalsBuffer()
+    private void MapAxisBuffers()
     {
-        var area = RenderGeometryHelper.ComputeMeshSurfaceArea(_mesh);
-        var offset = RenderGeometryHelper.InterpolateOffsetByArea(area);
-        var normalLength = RenderGeometryHelper.InterpolateAxisLengthByArea(area);
+        var unitVector = new XYZ(1, 1, 1);
+        var minPoint = _box.Transform.OfPoint(_box.Min);
+        var maxPoint = _box.Transform.OfPoint(_box.Max);
+        var axisLength = RenderGeometryHelper.InterpolateAxisLengthByPoints(minPoint, maxPoint);
 
-        for (var i = 0; i < _mesh.Vertices.Count; i++)
+        for (var i = 0; i < _normals.Length; i++)
         {
-            var vertex = _mesh.Vertices[i];
-            var buffer = _normalBuffers[i];
-            var normal = RenderGeometryHelper.GetMeshVertexNormal(_mesh, i, _mesh.DistributionOfNormals);
+            var normal = _normals[i];
+            var minBuffer = _axisBuffers[i];
+            var maxBuffer = _axisBuffers[i + _normals.Length];
 
-            RenderHelper.MapNormalVectorBuffer(buffer, vertex + normal * (offset + _extrusion), normal, normalLength);
+            RenderHelper.MapNormalVectorBuffer(minBuffer, minPoint - unitVector * Context.Application.ShortCurveTolerance, normal, axisLength);
+            RenderHelper.MapNormalVectorBuffer(maxBuffer, maxPoint + unitVector * Context.Application.ShortCurveTolerance, -normal, axisLength);
         }
     }
 
     private void UpdateEffects()
     {
         _surfaceBuffer.EffectInstance ??= new EffectInstance(_surfaceBuffer.FormatBits);
-        _meshGridBuffer.EffectInstance ??= new EffectInstance(_surfaceBuffer.FormatBits);
-
         _surfaceBuffer.EffectInstance.SetColor(_surfaceColor);
-        _meshGridBuffer.EffectInstance.SetColor(_meshColor);
         _surfaceBuffer.EffectInstance.SetTransparency(_transparency);
 
-        foreach (var normalBuffer in _normalBuffers)
+        _edgeBuffer.EffectInstance ??= new EffectInstance(_edgeBuffer.FormatBits);
+        _edgeBuffer.EffectInstance.SetColor(_edgeColor);
+
+        foreach (var buffer in _axisBuffers)
         {
-            normalBuffer.EffectInstance ??= new EffectInstance(_surfaceBuffer.FormatBits);
-            normalBuffer.EffectInstance.SetColor(_normalColor);
+            buffer.EffectInstance ??= new EffectInstance(_edgeBuffer.FormatBits);
+            buffer.EffectInstance.SetColor(_axisColor);
         }
     }
 
-    public void UpdateSurfaceColor(Color value)
+    public void UpdateSurfaceColor(Color color)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _surfaceColor = value;
+            _surfaceColor = color;
             _hasEffectsUpdates = true;
 
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void UpdateMeshGridColor(Color value)
+    public void UpdateEdgeColor(Color color)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _meshColor = value;
+            _edgeColor = color;
             _hasEffectsUpdates = true;
 
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void UpdateNormalVectorColor(Color value)
+    public void UpdateAxisColor(Color color)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _normalColor = value;
+            _axisColor = color;
             _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateExtrusion(double value)
-    {
-        var uiDocument = Context.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _extrusion = value;
-            _hasGeometryUpdates = true;
 
             uiDocument.UpdateAllOpenViews();
         }
@@ -248,40 +248,40 @@ public sealed class MeshVisualizationServer : IDirectContext3DServer
         lock (_renderLock)
         {
             _drawSurface = visible;
+
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void UpdateMeshGridVisibility(bool visible)
+    public void UpdateEdgeVisibility(bool visible)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _drawMeshGrid = visible;
+            _drawEdge = visible;
+
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void UpdateNormalVectorVisibility(bool visible)
+    public void UpdateAxisVisibility(bool visible)
     {
         var uiDocument = Context.ActiveUiDocument;
         if (uiDocument is null) return;
 
         lock (_renderLock)
         {
-            _drawNormalVector = visible;
+            _drawAxis = visible;
+
             uiDocument.UpdateAllOpenViews();
         }
     }
 
-    public void Register(Mesh mesh)
+    public void Register(BoundingBoxXYZ box)
     {
-        _mesh = mesh;
-        _normalBuffers = Enumerable.Range(0, _mesh.Vertices.Count)
-            .Select(_ => new RenderingBufferStorage())
-            .ToArray();
+        _box = box;
 
         RevitShell.ActionEventHandler.Raise(application =>
         {

@@ -2,8 +2,8 @@
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Visualization;
-using RevitLookup.Core.Tools.Visualization;
-using RevitLookup.Core.Tools.Visualization.Events;
+using RevitLookup.Core.Visualization;
+using RevitLookup.Core.Visualization.Events;
 using Color = System.Windows.Media.Color;
 
 namespace RevitLookup.ViewModels.Visualization;

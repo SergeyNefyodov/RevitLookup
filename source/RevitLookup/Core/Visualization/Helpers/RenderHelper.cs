@@ -19,9 +19,9 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using Autodesk.Revit.DB.DirectContext3D;
-using RevitLookup.Core.Tools.Visualization.Buffers;
+using RevitLookup.Core.Visualization.Buffers;
 
-namespace RevitLookup.Core.Tools.Visualization.Helpers;
+namespace RevitLookup.Core.Visualization.Helpers;
 
 public static class RenderHelper
 {
