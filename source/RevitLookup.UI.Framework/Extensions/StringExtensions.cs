@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace RevitLookup.UI.Framework.Extensions;
 
-public static class StringExtensions
+internal static class StringExtensions
 {
     /// <summary>
     ///     Returns a value indicating whether a specified substring occurs within this string.

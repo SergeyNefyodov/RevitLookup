@@ -10,7 +10,6 @@ using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.Core;
 using RevitLookup.Mappers;
 using RevitLookup.Services.Summary;
-using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Summary;
 
 namespace RevitLookup.ViewModels.Summary;
@@ -129,8 +128,8 @@ public sealed partial class EventsSummaryViewModel(
 
     private bool IsSearchValueMatching(ObservableDecomposedObject item, string formattedText)
     {
-        return StringExtensions.Contains(item.Name, formattedText, StringComparison.OrdinalIgnoreCase) ||
-               StringExtensions.Contains(item.Name, formattedText, StringComparison.OrdinalIgnoreCase);
+        return item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
+               item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase);
     }
 
     async partial void OnSelectedDecomposedObjectChanged(ObservableDecomposedObject? value)
