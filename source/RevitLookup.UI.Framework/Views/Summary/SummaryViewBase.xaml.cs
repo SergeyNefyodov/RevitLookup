@@ -55,8 +55,6 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
         _intercomService = intercomService;
         _notificationService = notificationService;
         _logger = loggerFactory.CreateLogger<SummaryViewBase>();
-
-        AddShortcuts();
     }
 
     public required UIElement SearchBoxControl { get; init; }

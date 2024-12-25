@@ -19,7 +19,6 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Windows.Input;
-using CommunityToolkit.Mvvm.Input;
 using RevitLookup.UI.Framework.Views.Windows;
 using Wpf.Ui.Abstractions.Controls;
 
@@ -50,16 +49,23 @@ public partial class SummaryViewBase : INavigationAware
     /// <summary>
     ///     Page shortcuts
     /// </summary>
-    private void AddShortcuts()
+    private void OnPageKeyPressed(object sender, KeyEventArgs args)
     {
-        var command = new AsyncRelayCommand(() => ViewModel.RefreshMembersCommand.ExecuteAsync(null));
-        InputBindings.Add(new KeyBinding(command, new KeyGesture(Key.F5)));
+        AddRefreshShortcut(args);
+        if (args.Handled) return;
+
+        AddFocusSearchShortcut(sender, args);
     }
 
-    /// <summary>
-    ///     Window shortcuts
-    /// </summary>
-    private void OnPageKeyPressed(object sender, KeyEventArgs args)
+    private void AddRefreshShortcut(KeyEventArgs args)
+    {
+        if (args.Key != Key.F5) return;
+
+        ViewModel.RefreshMembersAsync();
+        args.Handled = true;
+    }
+
+    private void AddFocusSearchShortcut(object sender, KeyEventArgs args)
     {
         if (SearchBoxControl.IsKeyboardFocused) return;
         if (args.KeyboardDevice.Modifiers != ModifierKeys.None) return;
@@ -67,6 +73,10 @@ public partial class SummaryViewBase : INavigationAware
         var rootWindow = (RevitLookupView) sender;
         if (rootWindow.RootContentDialog.Content is not null) return;
 
-        if (args.Key is >= Key.D0 and <= Key.Z or >= Key.NumPad0 and <= Key.NumPad9) SearchBoxControl.Focus();
+        if (args.Key is >= Key.D0 and <= Key.Z or >= Key.NumPad0 and <= Key.NumPad9)
+        {
+            SearchBoxControl.Focus();
+            args.Handled = true;
+        }
     }
 }
