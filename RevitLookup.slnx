@@ -241,7 +241,7 @@
         <Configuration Solution="Release Frontend|Any CPU" Project="Release|Any CPU"/>
         <Configuration Solution="Release R21|Any CPU" Project="Release|Any CPU"/>
         <Configuration Solution="Release R22|Any CPU" Project="Release|Any CPU"/>
-        <Configuration Solution="Release R23|Any CPU" Project="Release|Any CPU|NoBuild"/>
+        <Configuration Solution="Release R23|Any CPU" Project="Release|Any CPU"/>
         <Configuration Solution="Release R24|Any CPU" Project="Release|Any CPU"/>
         <Configuration Solution="Release R25|Any CPU" Project="Release|Any CPU"/>
     </Project>
@@ -257,7 +257,7 @@
         <Configuration Solution="Release Engine|Any CPU" Project="Release|Any CPU|NoBuild"/>
         <Configuration Solution="Release Frontend|Any CPU" Project="Release|Any CPU"/>
         <Configuration Solution="Release R21|Any CPU" Project="Release|Any CPU"/>
-        <Configuration Solution="Release R22|Any CPU" Project="Debug|Any CPU"/>
+        <Configuration Solution="Release R22|Any CPU" Project="Release|Any CPU"/>
         <Configuration Solution="Release R23|Any CPU" Project="Release|Any CPU"/>
         <Configuration Solution="Release R24|Any CPU" Project="Release|Any CPU"/>
         <Configuration Solution="Release R25|Any CPU" Project="Release|Any CPU"/>
