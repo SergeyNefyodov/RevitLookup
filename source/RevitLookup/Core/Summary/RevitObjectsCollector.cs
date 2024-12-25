@@ -19,8 +19,10 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Collections;
+using System.Reflection;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using Autodesk.Revit.DB.ExternalService;
+using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Windows;
 using RevitLookup.Abstractions.Models.Summary;
@@ -37,6 +39,7 @@ public static class RevitObjectsCollector
             KnownDecompositionObject.Document => FindDocument(),
             KnownDecompositionObject.Application => FindApplication(),
             KnownDecompositionObject.UiApplication => FindUiApplication(),
+            KnownDecompositionObject.UiControlledApplication => FindUiControlledApplication(),
             KnownDecompositionObject.Database => FindDatabase(),
             KnownDecompositionObject.DependentElements => FindDependentElements(),
             KnownDecompositionObject.Selection => FindSelection(),
@@ -72,6 +75,20 @@ public static class RevitObjectsCollector
     private static IEnumerable FindUiApplication()
     {
         return new object?[] {Context.UiApplication};
+    }
+
+    private static IEnumerable FindUiControlledApplication()
+    {
+        //TODO use extension
+        return new object?[]
+        {
+            Activator.CreateInstance(
+                typeof(UIControlledApplication),
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null,
+                [Context.UiApplication],
+                null)
+        };
     }
 
     private static IEnumerable FindEdge()

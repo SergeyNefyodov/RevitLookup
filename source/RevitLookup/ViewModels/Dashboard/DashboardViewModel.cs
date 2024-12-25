@@ -41,7 +41,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Active view",
-                        Description = "Explore the active view, which defines how the model is presented visually",
+                        Description = "Explore and analyze the model's visual representation",
                         Icon = SymbolRegular.Image24,
                         Command = NavigatePageCommand,
                         CommandParameter = "view"
@@ -49,7 +49,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Active document",
-                        Description = "Explore the document currently open in the Revit session",
+                        Description = "Explore the open document, including its structure and data",
                         Icon = SymbolRegular.Document24,
                         Command = NavigatePageCommand,
                         CommandParameter = "document"
@@ -57,35 +57,35 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Application",
-                        Description = "Explore the application object, providing access to application wide data and settings",
+                        Description = "Explore application-wide settings and global data",
                         Icon = SymbolRegular.Apps24,
                         Command = NavigatePageCommand,
                         CommandParameter = "application"
                     },
                     new NavigationCardItem
                     {
-                        Title = "UI Application",
-                        Description = "Explore an active session of the Autodesk Revit user interface and its customization options",
+                        Title = "UI application",
+                        Description = "Explore an active session of the Revit user interface",
                         Icon = SymbolRegular.WindowApps24,
                         Command = NavigatePageCommand,
                         CommandParameter = "uiApplication"
                     },
                     new NavigationCardItem
                     {
+                        Title = "UI controlled application",
+                        Description = "Explore the Revit UI customization methods and events",
+                        Icon = SymbolRegular.SquareHintApps24,
+                        Command = NavigatePageCommand,
+                        CommandParameter = "uiControlledApplication"
+                    },
+                    new NavigationCardItem
+                    {
                         Title = "Database",
-                        Description = "Explore the Revit model database containing all elements and their relationships",
+                        Description = "Explore the Revit model database and its elements",
                         Icon = SymbolRegular.Database24,
                         Command = NavigatePageCommand,
                         CommandParameter = "database"
                     },
-                    new NavigationCardItem
-                    {
-                        Title = "Dependent elements",
-                        Description = "Explore the children of the selected elements",
-                        Icon = SymbolRegular.DataLine24,
-                        Command = NavigatePageCommand,
-                        CommandParameter = "dependents"
-                    }
                 ]
             },
             new NavigationCardGroup
@@ -96,7 +96,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Selection",
-                        Description = "Explore the currently selected elements in the model",
+                        Description = "Explore currently selected elements in the model",
                         Icon = SymbolRegular.SquareHint24,
                         Command = NavigatePageCommand,
                         CommandParameter = "selection"
@@ -104,7 +104,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Linked element",
-                        Description = "Select and explore an element from linked model",
+                        Description = "Select and explore an element linked from another model",
                         Icon = SymbolRegular.LinkSquare24,
                         Command = NavigatePageCommand,
                         CommandParameter = "linked"
@@ -128,7 +128,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Point",
-                        Description = "Select and explore a point in the model, such as specific location or coordinate",
+                        Description = "Select and explore a specific location or coordinate",
                         Icon = SymbolRegular.Location24,
                         Command = NavigatePageCommand,
                         CommandParameter = "point"
@@ -136,10 +136,18 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Sub-element",
-                        Description = "Select and explore a sub-element, such as a part or detail of an element",
+                        Description = "Select and explore a sub-element of the selected element",
                         Icon = SymbolRegular.Subtitles24,
                         Command = NavigatePageCommand,
                         CommandParameter = "subElement"
+                    },
+                    new NavigationCardItem
+                    {
+                        Title = "Dependent elements",
+                        Description = "Explore child elements associated with the selection",
+                        Icon = SymbolRegular.DataLine24,
+                        Command = NavigatePageCommand,
+                        CommandParameter = "dependents"
                     }
                 ]
             },
@@ -151,7 +159,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Component manager",
-                        Description = "Explore the component manager, managing the low-level visual representation of Revit",
+                        Description = "Explore low-level visual components in Revit",
                         Icon = SymbolRegular.SlideTextMultiple32,
                         Command = NavigatePageCommand,
                         CommandParameter = "components"
@@ -159,7 +167,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Performance adviser",
-                        Description = "Explore a tool to report performance problems in the active document",
+                        Description = "Explore performance issues in the open document",
                         Icon = SymbolRegular.HeartPulse24,
                         Command = NavigatePageCommand,
                         CommandParameter = "performance"
@@ -174,7 +182,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Updaters",
-                        Description = "Explore the storage of all updaters registered in the current session",
+                        Description = "Explore all registered updaters in the session",
                         Icon = SymbolRegular.Whiteboard24,
                         Command = NavigatePageCommand,
                         CommandParameter = "updaters"
@@ -182,7 +190,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Schemas",
-                        Description = "Explore the memory storage of all schemas registered in the Extensible Storage framework",
+                        Description = "Explore Extensible Storage framework schemas",
                         Icon = SymbolRegular.Box24,
                         Command = NavigatePageCommand,
                         CommandParameter = "schemas"
@@ -190,7 +198,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Services",
-                        Description = "Explore the services that provide extended functionality in Revit",
+                        Description = "Explore services that extend Revit's functionality",
                         Icon = SymbolRegular.WeatherCloudy24,
                         Command = NavigatePageCommand,
                         CommandParameter = "services"
@@ -204,23 +212,23 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                 [
                     new NavigationCardItem
                     {
-                        Title = "BuiltIn Parameters",
-                        Description = "Explore parameters predefined in Revit",
+                        Title = "BuiltIn parameters",
+                        Description = "Explore predefined parameters available in Revit",
                         Icon = SymbolRegular.LeafOne24,
                         Command = OpenDialogCommand,
                         CommandParameter = "parameters"
                     },
                     new NavigationCardItem
                     {
-                        Title = "BuiltIn Categories",
-                        Description = "Explore categories predefined in Revit",
+                        Title = "BuiltIn categories",
+                        Description = "Explore predefined categories available in Revit",
                         Icon = SymbolRegular.LeafTwo24,
                         Command = OpenDialogCommand,
                         CommandParameter = "categories"
                     },
                     new NavigationCardItem
                     {
-                        Title = "Forge Schema",
+                        Title = "Forge schema",
                         Description = "Explore Forge schema definitions used in Revit",
                         Icon = SymbolRegular.LeafThree24,
                         Command = OpenDialogCommand,
@@ -236,7 +244,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Search elements",
-                        Description = "Search specific elements in Revit",
+                        Description = "Search for specific elements in the model",
                         Icon = SymbolRegular.SlideSearch24,
                         Command = OpenDialogCommand,
                         CommandParameter = "search"
@@ -260,7 +268,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Modules",
-                        Description = "Inspect the dynamic link libraries (DLLs) and executables that Revit uses",
+                        Description = "Inspect the dynamic link libraries (DLLs) that Revit uses",
                         Icon = SymbolRegular.BroadActivityFeed24,
                         Command = OpenDialogCommand,
                         CommandParameter = "modules"
@@ -295,6 +303,10 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     break;
                 case "uiApplication":
                     await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.UiApplication);
+                    _navigationService.Navigate(typeof(DecompositionSummaryPage));
+                    break;
+                case "uiControlledApplication":
+                    await _visualDecompositionService.VisualizeDecompositionAsync(KnownDecompositionObject.UiControlledApplication);
                     _navigationService.Navigate(typeof(DecompositionSummaryPage));
                     break;
                 case "database":

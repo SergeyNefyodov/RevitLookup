@@ -6,6 +6,7 @@ public enum KnownDecompositionObject
     Document,
     Application,
     UiApplication,
+    UiControlledApplication,
     Database,
     DependentElements,
     Selection,
