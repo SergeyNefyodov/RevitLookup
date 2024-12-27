@@ -3,7 +3,6 @@ using System.Numerics;
 using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
-using LookupEngine.Abstractions.Descriptors;
 
 namespace RevitLookup.UI.Playground.Mockups.Core.Summary.Descriptors;
 

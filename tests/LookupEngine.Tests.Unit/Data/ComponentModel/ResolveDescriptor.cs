@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
-using LookupEngine.Abstractions.Descriptors;
 
 namespace LookupEngine.Tests.Unit.Data.ComponentModel;
 

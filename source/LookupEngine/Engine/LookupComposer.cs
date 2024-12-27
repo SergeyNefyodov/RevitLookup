@@ -21,7 +21,6 @@
 using JetBrains.Annotations;
 using LookupEngine.Abstractions;
 using LookupEngine.Abstractions.Decomposition;
-using LookupEngine.Abstractions.Descriptors;
 using LookupEngine.Exceptions;
 
 // ReSharper disable once CheckNamespace

@@ -1,5 +1,5 @@
 ﻿using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Descriptors;
+using LookupEngine.Abstractions.Decomposition;
 
 namespace LookupEngine.Tests.Unit.Data.ComponentModel;
 

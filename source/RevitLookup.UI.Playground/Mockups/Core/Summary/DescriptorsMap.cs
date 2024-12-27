@@ -20,8 +20,8 @@
 
 using System.Collections;
 using System.Numerics;
-using LookupEngine.Abstractions.Descriptors;
-using LookupEngine.Abstractions.Descriptors.System;
+using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Descriptors;
 using RevitLookup.UI.Playground.Mockups.Core.Summary.Descriptors;
 
 namespace RevitLookup.UI.Playground.Mockups.Core.Summary;

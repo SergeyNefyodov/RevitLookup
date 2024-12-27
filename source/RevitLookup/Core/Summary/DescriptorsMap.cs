@@ -19,8 +19,8 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Collections;
-using LookupEngine.Abstractions.Descriptors;
-using LookupEngine.Abstractions.Descriptors.System;
+using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Descriptors;
 
 namespace RevitLookup.Core.Summary;
 

@@ -21,7 +21,7 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 
-namespace LookupEngine.Abstractions.Descriptors;
+namespace LookupEngine.Abstractions.Decomposition;
 
 [PublicAPI]
 [DebuggerDisplay("Name = {Name}")]

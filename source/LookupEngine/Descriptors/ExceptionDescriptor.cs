@@ -18,12 +18,21 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-namespace LookupEngine.Abstractions.Descriptors.System;
+using LookupEngine.Abstractions.Decomposition;
 
-public sealed class BooleanDescriptor : Descriptor
+namespace LookupEngine.Descriptors;
+
+public sealed class ExceptionDescriptor : Descriptor
 {
-    public BooleanDescriptor(bool value)
+    public ExceptionDescriptor(Exception exception)
     {
-        Name = value ? "True" : "False";
+        if (exception.InnerException is null)
+        {
+            Name = exception.Message;
+        }
+        else
+        {
+            Name = string.IsNullOrEmpty(exception.InnerException.Message) ? exception.Message : exception.InnerException.Message;
+        }
     }
 }

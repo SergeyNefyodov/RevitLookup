@@ -20,7 +20,6 @@
 
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
-using LookupEngine.Abstractions.Descriptors;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;

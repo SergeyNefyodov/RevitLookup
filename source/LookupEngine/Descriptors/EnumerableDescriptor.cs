@@ -3,7 +3,7 @@ using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
-namespace LookupEngine.Abstractions.Descriptors.System;
+namespace LookupEngine.Descriptors;
 
 public sealed class EnumerableDescriptor : Descriptor, IDescriptorEnumerator, IDescriptorResolver
 {

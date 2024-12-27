@@ -1,4 +1,6 @@
-﻿namespace LookupEngine.Abstractions.Descriptors.System;
+﻿using LookupEngine.Abstractions.Decomposition;
+
+namespace LookupEngine.Descriptors;
 
 public sealed class StringDescriptor : Descriptor
 {

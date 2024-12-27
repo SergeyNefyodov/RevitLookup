@@ -11,6 +11,7 @@ using RevitLookup.Core;
 using RevitLookup.Core.Summary;
 using RevitLookup.Mappers;
 using RevitLookup.Services.Summary;
+using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Summary;
 
 namespace RevitLookup.ViewModels.Summary;

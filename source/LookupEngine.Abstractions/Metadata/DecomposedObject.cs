@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using JetBrains.Annotations;
-using LookupEngine.Abstractions.Descriptors;
+using LookupEngine.Abstractions.Decomposition;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine.Abstractions;

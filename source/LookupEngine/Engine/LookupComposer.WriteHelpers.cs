@@ -21,7 +21,7 @@
 using System.Collections;
 using System.Reflection;
 using LookupEngine.Abstractions;
-using LookupEngine.Abstractions.Descriptors;
+using LookupEngine.Abstractions.Decomposition;
 using LookupEngine.Abstractions.Enums;
 using LookupEngine.Formaters;
 

@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using LookupEngine.Abstractions.Descriptors.System;
+using LookupEngine.Descriptors;
 using LookupEngine.Tests.Unit.Data;
 using LookupEngine.Tests.Unit.Data.ComponentModel;
 
