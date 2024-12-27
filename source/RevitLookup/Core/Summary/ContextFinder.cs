@@ -24,7 +24,7 @@ public static class ContextFinder
 {
     public static Document FindRevitContext(object obj)
     {
-        var context = FindContext(obj);
+        var context = GetKnownContext(obj);
         if (context is not null) return context;
 
         context = Context.ActiveDocument;
@@ -38,14 +38,14 @@ public static class ContextFinder
 
     public static Document FindRevitContext(object obj, Document context)
     {
-        var actualContext = FindContext(obj);
+        var actualContext = GetKnownContext(obj);
 
         if (actualContext is null) return context;
         if (!actualContext.Equals(context)) return actualContext;
         return context;
     }
 
-    private static Document? FindContext(object obj)
+    private static Document? GetKnownContext(object obj)
     {
         return obj switch
         {

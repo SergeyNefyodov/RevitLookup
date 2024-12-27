@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Numerics;
+using System.Reflection;
 using System.Windows.Media;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -65,11 +66,31 @@ public sealed partial class WindowsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ShowDecomposeAssemblyWindow()
+    private void ShowDecomposeTypesWindow()
     {
         var assembly = Assembly.GetExecutingAssembly();
         Host.GetService<IRevitLookupUiService>()
             .Decompose(assembly.GetTypes())
+            .Show<DecompositionSummaryPage>();
+    }
+
+    [RelayCommand]
+    private void ShowDecomposeResolvedValuesWindow()
+    {
+        var faker = new Faker();
+
+        var vectors = new List<Vector3>();
+        for (var i = 0; i < 69; i++)
+        {
+            vectors.Add(new Vector3(
+                faker.Random.Float(),
+                faker.Random.Float(),
+                faker.Random.Float()
+            ));
+        }
+
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(vectors)
             .Show<DecompositionSummaryPage>();
     }
 }

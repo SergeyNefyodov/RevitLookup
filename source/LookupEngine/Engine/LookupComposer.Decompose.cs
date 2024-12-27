@@ -28,15 +28,15 @@ namespace LookupEngine;
 public sealed partial class LookupComposer
 {
     [Pure]
-    private DecomposedObject DecomposeInstance(object instance, bool decomposeMembers)
+    private DecomposedObject DecomposeInstance(bool decomposeMembers)
     {
-        var objectType = instance.GetType();
-        var instanceDescriptor = _options.TypeResolver.Invoke(instance, null);
-        _decomposedObject = CreateInstanceDecomposition(instance, objectType, instanceDescriptor);
+        var objectType = _input.GetType();
+        var instanceDescriptor = _options.TypeResolver.Invoke(_input, null);
+        _decomposedObject = CreateInstanceDecomposition(_input, objectType, instanceDescriptor);
 
         if (decomposeMembers)
         {
-            var members = DecomposeInstanceMembers(instance, objectType);
+            var members = DecomposeInstanceMembers(objectType);
             _decomposedObject.Members.AddRange(members);
         }
 
@@ -59,7 +59,7 @@ public sealed partial class LookupComposer
     }
 
     [Pure]
-    private List<DecomposedMember> DecomposeInstanceMembers(object instance, Type objectType)
+    private List<DecomposedMember> DecomposeInstanceMembers(Type objectType)
     {
         _decomposedMembers = new List<DecomposedMember>(32);
 
@@ -67,7 +67,7 @@ public sealed partial class LookupComposer
         for (var i = objectTypeHierarchy.Count - 1; i >= 0; i--)
         {
             DeclaringType = objectTypeHierarchy[i];
-            DeclaringDescriptor = _options.TypeResolver.Invoke(instance, DeclaringType);
+            DeclaringDescriptor = _options.TypeResolver.Invoke(_input, DeclaringType);
 
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
             if (_options.IncludeStaticMembers) flags |= BindingFlags.Static;

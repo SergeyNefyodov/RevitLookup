@@ -31,7 +31,7 @@ public sealed class CombinedDescriptorLabelConverter : DescriptorLabelConverter
         var member = (ObservableDecomposedMember) value!;
         if (!TryConvertInvalidNames(member.Value.Name, out var name))
         {
-            name = CreateCombinedName(member.Value.Name, member.Description);
+            name = CreateCombinedName(member.Value.Name, member.Value.Description);
         }
 
         return name;

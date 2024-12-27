@@ -41,7 +41,8 @@ public sealed partial class LookupComposer
             {
                 if (!TryResolve(member, parameters, out value))
                 {
-                    if (!TryGetValue(member, parameters, out value)) continue;
+                    if (!TrySuppress(member, parameters, out value)) continue;
+
                     value ??= EvaluateValue(member);
                 }
             }
@@ -71,7 +72,7 @@ public sealed partial class LookupComposer
         return true;
     }
 
-    private bool TryGetValue(MethodInfo member, ParameterInfo[] parameters, out object? value)
+    private bool TrySuppress(MethodInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
         if (member.ReturnType.Name == "Void")

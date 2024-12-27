@@ -18,8 +18,9 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using LookupEngine.Abstractions.ComponentModel;
 using LookupEngine.Abstractions.Configuration;
+using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Descriptors;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
@@ -28,14 +29,32 @@ public sealed partial class LookupComposer
 {
     private Descriptor RedirectValue(string targetMember, ref object value)
     {
-        var valueDescriptor = _options.TypeResolver.Invoke(value, null);
-
-        while (valueDescriptor is IDescriptorRedirection redirection)
+        var variant = value as IVariant;
+        if (variant is not null)
         {
-            if (!redirection.TryRedirect(targetMember, out value)) break;
-            valueDescriptor = _options.TypeResolver.Invoke(value, null);
+            value = variant.Value;
         }
 
+        var valueDescriptor = _options.TypeResolver.Invoke(value, null);
+
+        var description = valueDescriptor.Description;
+        if (variant is not null && description is null)
+        {
+            description = variant.Description;
+        }
+
+        while (valueDescriptor is IDescriptorRedirector redirector)
+        {
+            if (!redirector.TryRedirect(targetMember, out value)) break;
+            valueDescriptor = _options.TypeResolver.Invoke(value, null);
+
+            if (valueDescriptor.Description is not null)
+            {
+                description = valueDescriptor.Description;
+            }
+        }
+
+        valueDescriptor.Description = description;
         return valueDescriptor;
     }
 }

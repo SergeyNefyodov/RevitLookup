@@ -21,7 +21,7 @@
 using System.Collections;
 using System.Reflection;
 using LookupEngine.Abstractions;
-using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Abstractions.Descriptors;
 using LookupEngine.Abstractions.Enums;
 using LookupEngine.Formaters;
 
@@ -44,10 +44,14 @@ public sealed partial class LookupComposer
     private static DecomposedObject CreateInstanceDecomposition(object instance, Type type, Descriptor descriptor)
     {
         var formatTypeName = ReflexionFormater.FormatTypeName(type);
+        var hasUnknownName = string.IsNullOrEmpty(descriptor.Name) ||
+                             type.Namespace is null ||
+                             descriptor.Name!.StartsWith(type.Namespace, StringComparison.OrdinalIgnoreCase);
 
         return new DecomposedObject
         {
-            Name = string.IsNullOrEmpty(descriptor.Name) ? formatTypeName : descriptor.Name!,
+            Name = hasUnknownName ? formatTypeName : descriptor.Name!,
+            Description = descriptor.Description,
             RawValue = instance,
             TypeName = formatTypeName,
             TypeFullName = $"{type.Namespace}.{formatTypeName}",
@@ -58,10 +62,14 @@ public sealed partial class LookupComposer
     private static DecomposedObject CreateStaticDecomposition(Type type, Descriptor descriptor)
     {
         var formatTypeName = ReflexionFormater.FormatTypeName(type);
+        var hasUnknownName = string.IsNullOrEmpty(descriptor.Name) ||
+                             type.Namespace is null ||
+                             descriptor.Name!.StartsWith(type.Namespace, StringComparison.OrdinalIgnoreCase);
 
         return new DecomposedObject
         {
-            Name = string.IsNullOrEmpty(descriptor.Name) ? formatTypeName : descriptor.Name!,
+            Name = hasUnknownName ? formatTypeName : descriptor.Name!,
+            Description = descriptor.Description,
             RawValue = type,
             TypeName = formatTypeName,
             TypeFullName = $"{type.Namespace}.{formatTypeName}",
@@ -82,35 +90,6 @@ public sealed partial class LookupComposer
         };
 
         DecomposedMembers.Add(member);
-    }
-
-    private DecomposedValue CreateNullableValue()
-    {
-        return new DecomposedValue
-        {
-            RawValue = null,
-            Name = string.Empty,
-            TypeName = nameof(Object),
-            TypeFullName = $"{nameof(System)}.{nameof(Object)}"
-        };
-    }
-
-    private DecomposedValue CreateValue(string targetMember, object? value)
-    {
-        if (value is null) return CreateNullableValue();
-
-        var valueDescriptor = RedirectValue(targetMember, ref value);
-        var valueType = value.GetType();
-        var formatTypeName = ReflexionFormater.FormatTypeName(valueType);
-
-        return new DecomposedValue
-        {
-            RawValue = value,
-            Name = string.IsNullOrEmpty(valueDescriptor.Name) ? formatTypeName : valueDescriptor.Name!,
-            TypeName = formatTypeName,
-            TypeFullName = $"{valueType.Namespace}.{formatTypeName}",
-            Descriptor = valueDescriptor
-        };
     }
 
     private void WriteExtensionMember(object? value, string name)
@@ -149,5 +128,38 @@ public sealed partial class LookupComposer
         };
 
         DecomposedMembers.Add(member);
+    }
+
+    private DecomposedValue CreateNullableValue()
+    {
+        return new DecomposedValue
+        {
+            RawValue = null,
+            Name = string.Empty,
+            TypeName = nameof(Object),
+            TypeFullName = $"{nameof(System)}.{nameof(Object)}"
+        };
+    }
+
+    private DecomposedValue CreateValue(string targetMember, object? value)
+    {
+        if (value is null) return CreateNullableValue();
+
+        var valueDescriptor = RedirectValue(targetMember, ref value);
+        var valueType = value.GetType();
+        var formatTypeName = ReflexionFormater.FormatTypeName(valueType);
+        var hasUnknownName = string.IsNullOrEmpty(valueDescriptor.Name) ||
+                             valueType.Namespace is null ||
+                             valueDescriptor.Name!.StartsWith(valueType.Namespace, StringComparison.OrdinalIgnoreCase);
+
+        return new DecomposedValue
+        {
+            RawValue = value,
+            Name = hasUnknownName ? formatTypeName : valueDescriptor.Name!,
+            Description = valueDescriptor.Description,
+            TypeName = formatTypeName,
+            TypeFullName = $"{valueType.Namespace}.{formatTypeName}",
+            Descriptor = valueDescriptor
+        };
     }
 }

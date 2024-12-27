@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Abstractions.Descriptors;
 
 namespace RevitLookup.Abstractions.ObservableModels.Decomposition;
 

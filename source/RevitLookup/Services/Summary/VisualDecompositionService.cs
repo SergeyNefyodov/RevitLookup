@@ -85,13 +85,18 @@ public sealed class VisualDecompositionService(
     [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
     private static async Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects)
     {
+        var options = new DecomposeOptions
+        {
+            TypeResolver = DescriptorsMap.FindDescriptor
+        };
+
         return await RevitShell.AsyncObjectsHandler.RaiseAsync(_ =>
         {
-            var count = objects is ICollection collection ? collection.Count : 4;
-            var decomposedObjects = new List<ObservableDecomposedObject>(count);
+            var capacity = objects is ICollection collection ? collection.Count : 4;
+            var decomposedObjects = new List<ObservableDecomposedObject>(capacity);
             foreach (var obj in objects)
             {
-                var decomposedObject = LookupComposer.DecomposeObject(obj);
+                var decomposedObject = LookupComposer.DecomposeObject(obj, options);
                 decomposedObjects.Add(DecompositionResultMapper.Convert(decomposedObject));
             }
 

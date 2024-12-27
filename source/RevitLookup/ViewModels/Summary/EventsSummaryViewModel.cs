@@ -8,9 +8,9 @@ using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.Core;
+using RevitLookup.Core.Summary;
 using RevitLookup.Mappers;
 using RevitLookup.Services.Summary;
-using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Summary;
 
 namespace RevitLookup.ViewModels.Summary;
@@ -217,7 +217,8 @@ public sealed partial class EventsSummaryViewModel(
             IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
             IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
             IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
-            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions
+            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
+            TypeResolver = DescriptorsMap.FindDescriptor
         };
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using LookupEngine.Abstractions.ComponentModel;
 using LookupEngine.Abstractions.Configuration;
+using LookupEngine.Abstractions.Descriptors;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 
 namespace RevitLookup.Styles.ComponentStyles.MembersGrid;

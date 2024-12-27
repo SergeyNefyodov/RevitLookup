@@ -18,30 +18,40 @@
             Text="Application"
             FontTypography="BodyStrong" />
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon AirplaneTakeOff24}"
             Content="RevitLookup window"
             Command="{Binding ViewModel.ShowRevitLookupWindowCommand}" />
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon DesktopPulse24}"
             Content="Events monitor summary window"
             Command="{Binding ViewModel.ShowEventsWindowCommand}" />
+
+        <ui:TextBlock
+            Text="Decomposition sets"
+            FontTypography="BodyStrong"
+            Margin="0 12 0 0" />
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Color24}"
-            Content="Decompose colors summary window"
+            Content="Colors window"
             Command="{Binding ViewModel.ShowDecomposeColorsWindowCommand}" />
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Textbox24}"
-            Content="Decompose text summary window"
+            Content="Strings window"
             Command="{Binding ViewModel.ShowDecomposeTextWindowCommand}" />
         <ui:CardAction
-            Margin="0 8 0 0"
+            Margin="0 4 0 0"
             Icon="{ui:SymbolIcon BuildingTownhouse24}"
-            Content="Decompose assembly summary window"
-            Command="{Binding ViewModel.ShowDecomposeAssemblyWindowCommand}" />
+            Content="Types window"
+            Command="{Binding ViewModel.ShowDecomposeTypesWindowCommand}" />
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon BranchCompare24}"
+            Content="Resolved members window"
+            Command="{Binding ViewModel.ShowDecomposeResolvedValuesWindowCommand}" />
     </StackPanel>
 
 </Page>

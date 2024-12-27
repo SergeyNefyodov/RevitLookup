@@ -18,11 +18,11 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using LookupEngine.Abstractions.Collections;
+using LookupEngine.Abstractions.Decomposition;
 
 namespace LookupEngine.Abstractions.Configuration;
 
 public interface IExtensionManager
 {
-    void Register(string methodName, Func<IVariants> context);
+    void Register(string name, Func<IVariant> extension);
 }

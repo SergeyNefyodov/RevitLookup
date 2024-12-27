@@ -19,7 +19,7 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Reflection;
-using LookupEngine.Abstractions.Collections;
+using LookupEngine.Abstractions.Decomposition;
 
 namespace LookupEngine.Abstractions.Configuration;
 
@@ -28,5 +28,5 @@ namespace LookupEngine.Abstractions.Configuration;
 /// </summary>
 public interface IDescriptorResolver : IDescriptorCollector
 {
-    Func<IVariants>? Resolve(string target, ParameterInfo[]? parameters);
+    Func<IVariant>? Resolve(string target, ParameterInfo[]? parameters);
 }

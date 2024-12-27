@@ -20,7 +20,8 @@
 
 using JetBrains.Annotations;
 using LookupEngine.Abstractions;
-using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Descriptors;
 using LookupEngine.Exceptions;
 
 // ReSharper disable once CheckNamespace
@@ -29,7 +30,7 @@ namespace LookupEngine;
 [PublicAPI]
 public sealed partial class LookupComposer
 {
-    private readonly object? _input;
+    private readonly object _input;
     private readonly DecomposeOptions _options;
 
     private int _depth;
@@ -92,15 +93,19 @@ public sealed partial class LookupComposer
         if (value is null) return CreateNullableDecomposition();
 
         options ??= DecomposeOptions.Default;
-        var composer = new LookupComposer(value, options);
-
         return value switch
         {
-            Type type => composer.DecomposeType(type, true),
-            _ => composer.DecomposeInstance(value, true)
+            Type type => new LookupComposer(value, options)
+                .DecomposeType(type, true),
+
+            IVariant variant => new LookupComposer(variant.Value, options)
+                .DecomposeInstance(true)
+                .WithDescription(variant.Description),
+
+            _ => new LookupComposer(value, options)
+                .DecomposeInstance(true)
         };
     }
-
 
     [Pure]
     public static DecomposedObject DecomposeObject(object? value, DecomposeOptions? options = null)
@@ -108,12 +113,17 @@ public sealed partial class LookupComposer
         if (value is null) return CreateNullableDecomposition();
 
         options ??= DecomposeOptions.Default;
-        var composer = new LookupComposer(value, options);
-
         return value switch
         {
-            Type type => composer.DecomposeType(type, false),
-            _ => composer.DecomposeInstance(value, false)
+            Type type => new LookupComposer(value, options)
+                .DecomposeType(type, false),
+
+            IVariant variant => new LookupComposer(variant.Value, options)
+                .DecomposeInstance(false)
+                .WithDescription(variant.Description),
+
+            _ => new LookupComposer(value, options)
+                .DecomposeInstance(false)
         };
     }
 
@@ -123,12 +133,10 @@ public sealed partial class LookupComposer
         if (value is null) return [];
 
         options ??= DecomposeOptions.Default;
-        var composer = new LookupComposer(value, options);
-
         return value switch
         {
-            Type type => composer.DecomposeTypeMembers(type),
-            _ => composer.DecomposeInstanceMembers(value, value.GetType())
+            Type type => new LookupComposer(value, options).DecomposeTypeMembers(type),
+            _ => new LookupComposer(value, options).DecomposeInstanceMembers(value.GetType())
         };
     }
 }

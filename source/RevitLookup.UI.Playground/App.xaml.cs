@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using RevitLookup.Abstractions.Services;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.UI.Playground.Client.Views;
 

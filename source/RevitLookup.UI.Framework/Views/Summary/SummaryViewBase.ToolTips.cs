@@ -34,14 +34,22 @@ public partial class SummaryViewBase
     {
         if (row.ToolTip is not null) return;
 
-        row.ToolTip = new StringBuilder()
+        var builder = new StringBuilder()
             .Append("Name: ")
             .AppendLine(decomposedObject.Name)
             .Append("Type: ")
             .AppendLine(decomposedObject.TypeName)
             .Append("Full type: ")
-            .Append(decomposedObject.TypeFullName)
-            .ToString();
+            .Append(decomposedObject.TypeFullName);
+
+        if (decomposedObject.Description is not null)
+        {
+            builder.AppendLine()
+                .Append("Description: ")
+                .Append(decomposedObject.Description);
+        }
+
+        row.ToolTip = builder.ToString();
     }
 
     /// <summary>
@@ -84,11 +92,11 @@ public partial class SummaryViewBase
             .Append("Value: ")
             .Append(member.Value.Name);
 
-        if (member.Description is not null)
+        if (member.Value.Description is not null)
         {
             builder.AppendLine()
                 .Append("Description: ")
-                .Append(member.Description);
+                .Append(member.Value.Description);
         }
 
         if (member.ComputationTime > 0)

@@ -1,13 +1,14 @@
 ﻿using Bogus;
-using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Abstractions.Descriptors.System;
 using LookupEngine.Tests.Unit.Data;
+using LookupEngine.Tests.Unit.Data.ComponentModel;
 
 namespace LookupEngine.Tests.Unit;
 
 public sealed class LookupEngineTests
 {
     [Test]
-    public async Task Decompose_NonZeroMembers()
+    public async Task Decompose_DefaultOptions_HasMembers()
     {
         //Arrange
         var data = new Faker().Random.String();
@@ -20,7 +21,7 @@ public sealed class LookupEngineTests
     }
 
     [Test]
-    public async Task Decompose_IncludingFields_NonZeroFields()
+    public async Task Decompose_IncludingFields_HasFields()
     {
         //Arrange
         var data = new PublicFieldsObject();
@@ -38,7 +39,7 @@ public sealed class LookupEngineTests
     }
 
     [Test]
-    public async Task Decompose_IncludingPrivate_NonZeroPrivateMembers()
+    public async Task Decompose_IncludingPrivate_HasPrivateMembers()
     {
         //Arrange
         var data = new Faker().Random.String();
@@ -56,7 +57,7 @@ public sealed class LookupEngineTests
     }
 
     [Test]
-    public async Task Decompose_IncludingUnsupported_NonZeroUnsupported()
+    public async Task Decompose_IncludingUnsupported_HasUnsupported()
     {
         //Arrange
         var data = new Faker().Random.String();
@@ -74,7 +75,7 @@ public sealed class LookupEngineTests
     }
 
     [Test]
-    public async Task Decompose_IncludingRoot_NonZeroRootMembers()
+    public async Task Decompose_IncludingRoot_HasRootMembers()
     {
         //Arrange
         var data = new Faker().Random.String();
@@ -92,7 +93,7 @@ public sealed class LookupEngineTests
     }
 
     [Test]
-    public async Task Decompose_IncludingStatic_NonZeroStaticMembers()
+    public async Task Decompose_IncludingStatic_HasStaticMembers()
     {
         //Arrange
         var data = new Faker().Date.Future();
@@ -110,7 +111,7 @@ public sealed class LookupEngineTests
     }
 
     [Test]
-    public async Task Decompose_IncludingEvents_NonZeroEvents()
+    public async Task Decompose_IncludingEvents_HasEvents()
     {
         //Arrange
         var data = AppDomain.CurrentDomain;
@@ -153,6 +154,41 @@ public sealed class LookupEngineTests
         var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(() => defaultResult.Members[0].Value.TypeName != comparableResult.Members[0].Value.TypeName).IsTrue();
+        using (Assert.Multiple())
+        {
+            await Assert.That(defaultResult.Members).IsNotEmpty();
+            await Assert.That(comparableResult.Members).IsNotEmpty();
+            await Assert.That(() => defaultResult.Members[0].Value.TypeName != comparableResult.Members[0].Value.TypeName).IsTrue();
+        }
+    }
+
+    [Test]
+    public async Task Decompose_IncludingUnresolvedData_ResolvedData()
+    {
+        //Arrange
+        var data = new ResolveObject();
+        var options = new DecomposeOptions
+        {
+            TypeResolver = (obj, _) =>
+            {
+                return obj switch
+                {
+                    ResolveObject => new ResolveDescriptor(),
+                    _ => new ObjectDescriptor(obj)
+                };
+            }
+        };
+
+        //Act
+        var defaultResult = LookupComposer.Decompose(data);
+        var comparableResult = LookupComposer.Decompose(data, options);
+
+        //Assert
+        using (Assert.Multiple())
+        {
+            await Assert.That(defaultResult.Members).IsEmpty();
+            await Assert.That(comparableResult.Members).IsNotEmpty();
+            await Assert.That(comparableResult.Members[1].Value.Description).IsNotNullOrEmpty();
+        }
     }
 }

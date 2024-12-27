@@ -2,7 +2,7 @@
 
 namespace LookupEngine.Formaters;
 
-public static class ReflexionFormater
+internal static class ReflexionFormater
 {
     public static string FormatTypeName(Type type)
     {

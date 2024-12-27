@@ -7,6 +7,7 @@ using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.Core;
+using RevitLookup.Core.Summary;
 using RevitLookup.Mappers;
 using RevitLookup.UI.Framework.Views.Summary;
 
@@ -141,7 +142,8 @@ public sealed partial class DecompositionSummaryViewModel(
             IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
             IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
             IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
-            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions
+            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
+            TypeResolver = DescriptorsMap.FindDescriptor
         };
 
         return await RevitShell.AsyncMembersHandler.RaiseAsync(_ =>

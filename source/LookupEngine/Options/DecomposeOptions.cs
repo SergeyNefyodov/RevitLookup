@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using JetBrains.Annotations;
-using LookupEngine.Abstractions.ComponentModel;
+using LookupEngine.Abstractions.Descriptors;
+using LookupEngine.Abstractions.Descriptors.System;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;

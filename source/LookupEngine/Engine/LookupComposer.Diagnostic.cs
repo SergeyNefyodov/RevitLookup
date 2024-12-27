@@ -19,7 +19,7 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Reflection;
-using LookupEngine.Abstractions.Collections;
+using LookupEngine.Abstractions.Decomposition;
 using LookupEngine.Diagnostic;
 
 // ReSharper disable once CheckNamespace
@@ -75,7 +75,7 @@ public sealed partial class LookupComposer
         }
     }
 
-    private IVariants EvaluateValue(Func<IVariants> handler)
+    private IVariant EvaluateValue(Func<IVariant> handler)
     {
         try
         {
