@@ -44,7 +44,7 @@ public partial class LookupComposer
     private static DecomposedObject CreateInstanceDecomposition(object instance, Type type, Descriptor descriptor)
     {
         var formatTypeName = ReflexionFormater.FormatTypeName(type);
-        var hasUnknownName = string.IsNullOrEmpty(descriptor.Name) ||
+        var hasUnknownName = descriptor.Name is null ||
                              type.Namespace is null ||
                              descriptor.Name!.StartsWith(type.Namespace, StringComparison.OrdinalIgnoreCase);
 
@@ -62,7 +62,7 @@ public partial class LookupComposer
     private static DecomposedObject CreateStaticDecomposition(Type type, Descriptor descriptor)
     {
         var formatTypeName = ReflexionFormater.FormatTypeName(type);
-        var hasUnknownName = string.IsNullOrEmpty(descriptor.Name) ||
+        var hasUnknownName = descriptor.Name is null ||
                              type.Namespace is null ||
                              descriptor.Name!.StartsWith(type.Namespace, StringComparison.OrdinalIgnoreCase);
 
@@ -148,9 +148,9 @@ public partial class LookupComposer
         var valueDescriptor = RedirectValue(targetMember, ref value);
         var valueType = value.GetType();
         var formatTypeName = ReflexionFormater.FormatTypeName(valueType);
-        var hasUnknownName = string.IsNullOrEmpty(valueDescriptor.Name) ||
+        var hasUnknownName = valueDescriptor.Name is null ||
                              valueType.Namespace is null ||
-                             valueDescriptor.Name!.StartsWith(valueType.Namespace, StringComparison.OrdinalIgnoreCase);
+                             valueDescriptor.Name.StartsWith(valueType.Namespace, StringComparison.OrdinalIgnoreCase);
 
         return new DecomposedValue
         {
