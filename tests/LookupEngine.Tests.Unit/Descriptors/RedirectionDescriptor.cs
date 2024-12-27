@@ -1,7 +1,7 @@
 ﻿using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
-namespace LookupEngine.Tests.Unit.Data.ComponentModel;
+namespace LookupEngine.Tests.Unit.Descriptors;
 
 public sealed class RedirectionDescriptor : Descriptor, IDescriptorRedirector
 {

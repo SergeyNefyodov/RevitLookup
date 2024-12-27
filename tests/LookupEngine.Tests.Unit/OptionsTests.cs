@@ -1,11 +1,9 @@
 ﻿using Bogus;
-using LookupEngine.Descriptors;
-using LookupEngine.Tests.Unit.Data;
-using LookupEngine.Tests.Unit.Data.ComponentModel;
+using LookupEngine.Tests.Unit.Objects;
 
 namespace LookupEngine.Tests.Unit;
 
-public sealed class LookupEngineTests
+public sealed class OptionsTests
 {
     [Test]
     public async Task Decompose_DefaultOptions_HasMembers()
@@ -35,7 +33,7 @@ public sealed class LookupEngineTests
         var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+        await Assert.That(comparableResult.Members.Count).IsGreaterThan(defaultResult.Members.Count);
     }
 
     [Test]
@@ -53,7 +51,7 @@ public sealed class LookupEngineTests
         var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+        await Assert.That(comparableResult.Members.Count).IsGreaterThan(defaultResult.Members.Count);
     }
 
     [Test]
@@ -71,7 +69,7 @@ public sealed class LookupEngineTests
         var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+        await Assert.That(comparableResult.Members.Count).IsGreaterThan(defaultResult.Members.Count);
     }
 
     [Test]
@@ -89,7 +87,7 @@ public sealed class LookupEngineTests
         var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+        await Assert.That(comparableResult.Members.Count).IsGreaterThan(defaultResult.Members.Count);
     }
 
     [Test]
@@ -107,7 +105,7 @@ public sealed class LookupEngineTests
         var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
+        await Assert.That(comparableResult.Members.Count).IsGreaterThan(defaultResult.Members.Count);
     }
 
     [Test]
@@ -125,70 +123,6 @@ public sealed class LookupEngineTests
         var comparableResult = LookupComposer.Decompose(data, options);
 
         //Assert
-        await Assert.That(() => defaultResult.Members.Count < comparableResult.Members.Count).IsTrue();
-    }
-
-    [Test]
-    public async Task Decompose_IncludingRedirection_RedirectedToAnotherValue()
-    {
-        //Arrange
-        var data = new RedirectionObject
-        {
-            Property = new RedirectionObject()
-        };
-
-        var options = new DecomposeOptions
-        {
-            TypeResolver = (obj, _) =>
-            {
-                return obj switch
-                {
-                    RedirectionObject => new RedirectionDescriptor(),
-                    _ => new ObjectDescriptor(obj)
-                };
-            }
-        };
-
-        //Act
-        var defaultResult = LookupComposer.Decompose(data);
-        var comparableResult = LookupComposer.Decompose(data, options);
-
-        //Assert
-        using (Assert.Multiple())
-        {
-            await Assert.That(defaultResult.Members).IsNotEmpty();
-            await Assert.That(comparableResult.Members).IsNotEmpty();
-            await Assert.That(() => defaultResult.Members[0].Value.TypeName != comparableResult.Members[0].Value.TypeName).IsTrue();
-        }
-    }
-
-    [Test]
-    public async Task Decompose_IncludingUnresolvedData_ResolvedData()
-    {
-        //Arrange
-        var data = new ResolveObject();
-        var options = new DecomposeOptions
-        {
-            TypeResolver = (obj, _) =>
-            {
-                return obj switch
-                {
-                    ResolveObject => new ResolveDescriptor(),
-                    _ => new ObjectDescriptor(obj)
-                };
-            }
-        };
-
-        //Act
-        var defaultResult = LookupComposer.Decompose(data);
-        var comparableResult = LookupComposer.Decompose(data, options);
-
-        //Assert
-        using (Assert.Multiple())
-        {
-            await Assert.That(defaultResult.Members).IsEmpty();
-            await Assert.That(comparableResult.Members).IsNotEmpty();
-            await Assert.That(comparableResult.Members[1].Value.Description).IsNotNullOrEmpty();
-        }
+        await Assert.That(comparableResult.Members.Count).IsGreaterThan(defaultResult.Members.Count);
     }
 }

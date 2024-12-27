@@ -1,6 +1,9 @@
-﻿namespace LookupEngine.Tests.Unit.Data;
+﻿using JetBrains.Annotations;
 
-public sealed class ResolveObject
+namespace LookupEngine.Tests.Unit.Objects;
+
+[PublicAPI]
+public sealed class ResolvableObject
 {
     public string UnsupportedMethod(int parameter)
     {

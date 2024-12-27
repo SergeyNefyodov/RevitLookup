@@ -1,12 +1,14 @@
 ﻿using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Tests.Unit.Contexts;
+using LookupEngine.Tests.Unit.Objects;
 
-namespace LookupEngine.Tests.Unit.Data.ComponentModel;
+namespace LookupEngine.Tests.Unit.Descriptors;
 
-public sealed class ResolveDescriptor : Descriptor, IDescriptorResolver
+public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescriptorResolver<EngineContext>
 {
-    public ResolveDescriptor()
+    public ResolverDescriptor()
     {
         Name = "Redirection";
     }
@@ -15,9 +17,8 @@ public sealed class ResolveDescriptor : Descriptor, IDescriptorResolver
     {
         return target switch
         {
-            nameof(ResolveObject.UnsupportedMethod) => ResolveUnsupportedMethod,
-            nameof(ResolveObject.UnsupportedDescribedMethod) => ResolveUnsupportedDescribedMethod,
-            nameof(ResolveObject.UnsupportedMultiMethod) => ResolveUnsupportedMultiMethod,
+            nameof(ResolvableObject.UnsupportedMethod) => ResolveUnsupportedMethod,
+            nameof(ResolvableObject.UnsupportedDescribedMethod) => ResolveUnsupportedDescribedMethod,
             _ => null
         };
 
@@ -30,6 +31,15 @@ public sealed class ResolveDescriptor : Descriptor, IDescriptorResolver
         {
             return Variants.Value("Resolved", "Value description");
         }
+    }
+
+    public Func<IVariant>? Resolve(string target, ParameterInfo[]? parameters, EngineContext context)
+    {
+        return target switch
+        {
+            nameof(ResolvableObject.UnsupportedMultiMethod) => ResolveUnsupportedMultiMethod,
+            _ => null
+        };
 
         IVariant ResolveUnsupportedMultiMethod()
         {
