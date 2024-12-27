@@ -7,15 +7,9 @@ using LookupEngine.Descriptors;
 namespace LookupEngine;
 
 [PublicAPI]
-public sealed class DecomposeOptions
+public class DecomposeOptions
 {
     private Func<object?, Type?, Descriptor>? _typeResolver;
-
-    public Func<object?, Type?, Descriptor> TypeResolver
-    {
-        get { return _typeResolver ??= DefaultResolveMap; }
-        set => _typeResolver = value;
-    }
 
     public bool IncludeRoot { get; set; }
     public bool IncludeFields { get; set; }
@@ -24,6 +18,12 @@ public sealed class DecomposeOptions
     public bool IncludePrivateMembers { get; set; }
     public bool IncludeStaticMembers { get; set; }
     public bool EnableExtensions { get; set; }
+
+    public Func<object?, Type?, Descriptor> TypeResolver
+    {
+        get { return _typeResolver ??= DefaultResolveMap; }
+        set => _typeResolver = value;
+    }
 
     public static DecomposeOptions Default => new();
 

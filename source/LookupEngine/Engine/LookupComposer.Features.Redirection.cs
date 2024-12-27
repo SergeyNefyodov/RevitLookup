@@ -18,30 +18,42 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Collections;
+using LookupEngine.Abstractions.Configuration;
+using LookupEngine.Abstractions.Decomposition;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
-public sealed partial class LookupComposer
+public partial class LookupComposer
 {
-    private void AddEnumerableItems()
+    private Descriptor RedirectValue(string targetMember, ref object value)
     {
-        if (_input is not IEnumerable enumerable) return;
-
-        var enumerator = enumerable.GetEnumerator();
-
-        var index = 0;
-        while (enumerator.MoveNext())
+        var variant = value as IVariant;
+        if (variant is not null)
         {
-            WriteEnumerableMember(enumerator.Current, index);
-            index++;
-            _depth--;
+            value = variant.Value;
         }
 
-        if (enumerator is IDisposable disposable)
+        var valueDescriptor = _options.TypeResolver.Invoke(value, null);
+
+        var description = valueDescriptor.Description;
+        if (variant is not null && description is null)
         {
-            disposable.Dispose();
+            description = variant.Description;
         }
+
+        while (valueDescriptor is IDescriptorRedirector redirector)
+        {
+            if (!redirector.TryRedirect(targetMember, out value)) break;
+            valueDescriptor = _options.TypeResolver.Invoke(value, null);
+
+            if (valueDescriptor.Description is not null)
+            {
+                description = valueDescriptor.Description;
+            }
+        }
+
+        valueDescriptor.Description = description;
+        return valueDescriptor;
     }
 }

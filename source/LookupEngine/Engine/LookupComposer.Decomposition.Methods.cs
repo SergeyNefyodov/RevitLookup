@@ -24,7 +24,7 @@ using LookupEngine.Abstractions.Configuration;
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
-public sealed partial class LookupComposer
+public partial class LookupComposer
 {
     private void DecomposeMethods(BindingFlags bindingFlags)
     {
@@ -59,7 +59,7 @@ public sealed partial class LookupComposer
         }
     }
 
-    private bool TryResolve(MethodInfo member, ParameterInfo[] parameters, out object? value)
+    private protected virtual bool TryResolve(MethodInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
         if (DeclaringDescriptor is not IDescriptorResolver resolver) return false;

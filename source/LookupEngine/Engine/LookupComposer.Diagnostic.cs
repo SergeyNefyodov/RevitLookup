@@ -25,20 +25,20 @@ using LookupEngine.Diagnostic;
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
-public sealed partial class LookupComposer
+public partial class LookupComposer
 {
-    private readonly TimeDiagnoser _timeDiagnoser = new();
-    private readonly MemoryDiagnoser _memoryDiagnoser = new();
+    private protected readonly TimeDiagnoser TimeDiagnoser = new();
+    private protected readonly MemoryDiagnoser MemoryDiagnoser = new();
 
     private object? EvaluateValue(FieldInfo member)
     {
-        _timeDiagnoser.StartMonitoring();
-        _memoryDiagnoser.StartMonitoring();
+        TimeDiagnoser.StartMonitoring();
+        MemoryDiagnoser.StartMonitoring();
 
         var value = member.GetValue(_input);
 
-        _memoryDiagnoser.StopMonitoring();
-        _timeDiagnoser.StopMonitoring();
+        MemoryDiagnoser.StopMonitoring();
+        TimeDiagnoser.StopMonitoring();
 
         return value;
     }
@@ -47,15 +47,15 @@ public sealed partial class LookupComposer
     {
         try
         {
-            _timeDiagnoser.StartMonitoring();
-            _memoryDiagnoser.StartMonitoring();
+            TimeDiagnoser.StartMonitoring();
+            MemoryDiagnoser.StartMonitoring();
 
             return member.GetValue(_input);
         }
         finally
         {
-            _memoryDiagnoser.StopMonitoring();
-            _timeDiagnoser.StopMonitoring();
+            MemoryDiagnoser.StopMonitoring();
+            TimeDiagnoser.StopMonitoring();
         }
     }
 
@@ -63,31 +63,31 @@ public sealed partial class LookupComposer
     {
         try
         {
-            _timeDiagnoser.StartMonitoring();
-            _memoryDiagnoser.StartMonitoring();
+            TimeDiagnoser.StartMonitoring();
+            MemoryDiagnoser.StartMonitoring();
 
             return member.Invoke(_input, null);
         }
         finally
         {
-            _memoryDiagnoser.StopMonitoring();
-            _timeDiagnoser.StopMonitoring();
+            MemoryDiagnoser.StopMonitoring();
+            TimeDiagnoser.StopMonitoring();
         }
     }
 
-    private IVariant EvaluateValue(Func<IVariant> handler)
+    private protected IVariant EvaluateValue(Func<IVariant> handler)
     {
         try
         {
-            _timeDiagnoser.StartMonitoring();
-            _memoryDiagnoser.StartMonitoring();
+            TimeDiagnoser.StartMonitoring();
+            MemoryDiagnoser.StartMonitoring();
 
             return handler.Invoke();
         }
         finally
         {
-            _memoryDiagnoser.StopMonitoring();
-            _timeDiagnoser.StopMonitoring();
+            MemoryDiagnoser.StopMonitoring();
+            TimeDiagnoser.StopMonitoring();
         }
     }
 }

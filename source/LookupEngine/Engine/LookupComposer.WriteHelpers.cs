@@ -28,9 +28,9 @@ using LookupEngine.Formaters;
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
-public sealed partial class LookupComposer
+public partial class LookupComposer
 {
-    private static DecomposedObject CreateNullableDecomposition()
+    private protected static DecomposedObject CreateNullableDecomposition()
     {
         return new DecomposedObject
         {
@@ -92,7 +92,7 @@ public sealed partial class LookupComposer
         DecomposedMembers.Add(member);
     }
 
-    private void WriteExtensionMember(object? value, string name)
+    private protected void WriteExtensionMember(object? value, string name)
     {
         var formatTypeName = ReflexionFormater.FormatTypeName(DeclaringType);
 
@@ -104,8 +104,8 @@ public sealed partial class LookupComposer
             DeclaringTypeName = formatTypeName,
             DeclaringTypeFullName = $"{DeclaringType.Namespace}.{formatTypeName}",
             MemberAttributes = MemberAttributes.Extension,
-            ComputationTime = _timeDiagnoser.GetElapsed().TotalMilliseconds,
-            AllocatedBytes = _memoryDiagnoser.GetAllocatedBytes()
+            ComputationTime = TimeDiagnoser.GetElapsed().TotalMilliseconds,
+            AllocatedBytes = MemoryDiagnoser.GetAllocatedBytes()
         };
 
         DecomposedMembers.Add(member);
@@ -123,8 +123,8 @@ public sealed partial class LookupComposer
             DeclaringTypeName = formatTypeName,
             DeclaringTypeFullName = $"{DeclaringType.Namespace}.{formatTypeName}",
             MemberAttributes = ModifiersFormater.FormatAttributes(memberInfo),
-            ComputationTime = _timeDiagnoser.GetElapsed().TotalMilliseconds,
-            AllocatedBytes = _memoryDiagnoser.GetAllocatedBytes()
+            ComputationTime = TimeDiagnoser.GetElapsed().TotalMilliseconds,
+            AllocatedBytes = MemoryDiagnoser.GetAllocatedBytes()
         };
 
         DecomposedMembers.Add(member);

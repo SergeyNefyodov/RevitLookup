@@ -21,71 +21,13 @@
 using JetBrains.Annotations;
 using LookupEngine.Abstractions;
 using LookupEngine.Abstractions.Decomposition;
-using LookupEngine.Exceptions;
+using LookupEngine.Options;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
-[PublicAPI]
-public sealed partial class LookupComposer
+public partial class LookupComposer
 {
-    private readonly object _input;
-    private readonly DecomposeOptions _options;
-
-    private int _depth;
-    private Type? _declaringType;
-    private Descriptor? _declaringDescriptor;
-    private DecomposedObject? _decomposedObject;
-    private List<DecomposedMember>? _decomposedMembers;
-
-    private LookupComposer(object value, DecomposeOptions options)
-    {
-        _input = value;
-        _options = options;
-    }
-
-    internal List<DecomposedMember> DecomposedMembers
-    {
-        get
-        {
-            if (_decomposedMembers is null)
-            {
-                EngineException.ThrowIfEngineNotInitialized(nameof(DecomposedMembers));
-            }
-
-            return _decomposedMembers;
-        }
-        set => _decomposedMembers = value;
-    }
-
-    internal Type DeclaringType
-    {
-        get
-        {
-            if (_declaringType is null)
-            {
-                EngineException.ThrowIfEngineNotInitialized(nameof(DeclaringType));
-            }
-
-            return _declaringType;
-        }
-        set => _declaringType = value;
-    }
-
-    internal Descriptor DeclaringDescriptor
-    {
-        get
-        {
-            if (_declaringDescriptor is null)
-            {
-                EngineException.ThrowIfEngineNotInitialized(nameof(DeclaringDescriptor));
-            }
-
-            return _declaringDescriptor;
-        }
-        set => _declaringDescriptor = value;
-    }
-
     [Pure]
     public static DecomposedObject Decompose(object? value, DecomposeOptions? options = null)
     {
@@ -136,6 +78,56 @@ public sealed partial class LookupComposer
         {
             Type type => new LookupComposer(value, options).DecomposeTypeMembers(type),
             _ => new LookupComposer(value, options).DecomposeInstanceMembers(value.GetType())
+        };
+    }
+
+    [Pure]
+    public static DecomposedObject Decompose<TContext>(object? value, DecomposeOptions<TContext> options)
+    {
+        if (value is null) return CreateNullableDecomposition();
+
+        return value switch
+        {
+            Type type => new LookupComposer<TContext>(value, options)
+                .DecomposeType(type, true),
+
+            IVariant variant => new LookupComposer<TContext>(variant.Value, options)
+                .DecomposeInstance(true)
+                .WithDescription(variant.Description),
+
+            _ => new LookupComposer<TContext>(value, options)
+                .DecomposeInstance(true)
+        };
+    }
+
+    [Pure]
+    public static DecomposedObject DecomposeObject<TContext>(object? value, DecomposeOptions<TContext> options)
+    {
+        if (value is null) return CreateNullableDecomposition();
+
+        return value switch
+        {
+            Type type => new LookupComposer<TContext>(value, options)
+                .DecomposeType(type, false),
+
+            IVariant variant => new LookupComposer<TContext>(variant.Value, options)
+                .DecomposeInstance(false)
+                .WithDescription(variant.Description),
+
+            _ => new LookupComposer<TContext>(value, options)
+                .DecomposeInstance(false)
+        };
+    }
+
+    [Pure]
+    public static List<DecomposedMember> DecomposeMembers<TContext>(object? value, DecomposeOptions<TContext> options)
+    {
+        if (value is null) return [];
+
+        return value switch
+        {
+            Type type => new LookupComposer<TContext>(value, options).DecomposeTypeMembers(type),
+            _ => new LookupComposer<TContext>(value, options).DecomposeInstanceMembers(value.GetType())
         };
     }
 }

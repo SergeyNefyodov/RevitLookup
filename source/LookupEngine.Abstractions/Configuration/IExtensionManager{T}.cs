@@ -18,32 +18,11 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
-//ReSharper disable once CheckNamespace
-namespace LookupEngine;
+namespace LookupEngine.Abstractions.Configuration;
 
-public sealed partial class LookupComposer : IExtensionManager
+public interface IExtensionManager<out TContext>
 {
-    private void ExecuteExtensions()
-    {
-        if (!_options.EnableExtensions) return;
-        if (DeclaringDescriptor is not IDescriptorExtension extension) return;
-
-        extension.RegisterExtensions(this);
-    }
-
-    public void Register(string methodName, Func<IVariant> handler)
-    {
-        try
-        {
-            var result = EvaluateValue(handler);
-            WriteExtensionMember(result, methodName);
-        }
-        catch (Exception exception)
-        {
-            WriteExtensionMember(exception, methodName);
-        }
-    }
+    void Register(string name, Func<TContext, IVariant> extension);
 }

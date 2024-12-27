@@ -25,10 +25,10 @@ using LookupEngine.Abstractions;
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
-public sealed partial class LookupComposer
+public partial class LookupComposer
 {
     [Pure]
-    private DecomposedObject DecomposeInstance(bool decomposeMembers)
+    private protected DecomposedObject DecomposeInstance(bool decomposeMembers)
     {
         var objectType = _input.GetType();
         var instanceDescriptor = _options.TypeResolver.Invoke(_input, null);
@@ -44,7 +44,7 @@ public sealed partial class LookupComposer
     }
 
     [Pure]
-    private DecomposedObject DecomposeType(Type type, bool decomposeMembers)
+    private protected DecomposedObject DecomposeType(Type type, bool decomposeMembers)
     {
         var staticDescriptor = _options.TypeResolver.Invoke(null, type);
         _decomposedObject = CreateStaticDecomposition(type, staticDescriptor);
@@ -59,7 +59,7 @@ public sealed partial class LookupComposer
     }
 
     [Pure]
-    private List<DecomposedMember> DecomposeInstanceMembers(Type objectType)
+    private protected List<DecomposedMember> DecomposeInstanceMembers(Type objectType)
     {
         _decomposedMembers = new List<DecomposedMember>(32);
 
@@ -89,7 +89,7 @@ public sealed partial class LookupComposer
     }
 
     [Pure]
-    private List<DecomposedMember> DecomposeTypeMembers(Type type)
+    private protected List<DecomposedMember> DecomposeTypeMembers(Type type)
     {
         _decomposedMembers = new List<DecomposedMember>(32);
 

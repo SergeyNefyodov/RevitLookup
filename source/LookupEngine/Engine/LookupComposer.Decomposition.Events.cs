@@ -4,7 +4,7 @@ using LookupEngine.Formaters;
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
-public sealed partial class LookupComposer
+public partial class LookupComposer
 {
     private void DecomposeEvents(BindingFlags bindingFlags)
     {

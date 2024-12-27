@@ -26,7 +26,7 @@ using LookupEngine.Abstractions.Configuration;
 namespace LookupEngine;
 
 [UsedImplicitly]
-public sealed partial class LookupComposer
+public partial class LookupComposer
 {
     private void DecomposeProperties(BindingFlags bindingFlags)
     {
@@ -60,7 +60,7 @@ public sealed partial class LookupComposer
         }
     }
 
-    private bool TryResolve(PropertyInfo member, ParameterInfo[]? parameters, out object? value)
+    private protected virtual bool TryResolve(PropertyInfo member, ParameterInfo[]? parameters, out object? value)
     {
         value = null;
         if (DeclaringDescriptor is not IDescriptorResolver resolver) return false;
