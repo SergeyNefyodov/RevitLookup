@@ -45,7 +45,7 @@ public sealed class ResolverTests
     {
         //Arrange
         var data = new ResolvableObject();
-        var context = new EngineContext();
+        var context = new EngineTestContext();
         var options = new DecomposeOptions
         {
             TypeResolver = (obj, _) =>
@@ -58,7 +58,7 @@ public sealed class ResolverTests
             }
         };
 
-        var contextOptions = new DecomposeOptions<EngineContext>
+        var contextOptions = new DecomposeOptions<EngineTestContext>
         {
             Context = context,
             TypeResolver = (obj, _) =>

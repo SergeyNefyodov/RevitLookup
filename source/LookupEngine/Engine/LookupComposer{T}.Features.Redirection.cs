@@ -24,9 +24,9 @@ using LookupEngine.Abstractions.Decomposition;
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
 
-public partial class LookupComposer
+public partial class LookupComposer<TContext>
 {
-    private protected virtual Descriptor RedirectValue(string targetMember, ref object value)
+    private protected override Descriptor RedirectValue(string targetMember, ref object value)
     {
         var variant = value as IVariant;
         if (variant is not null)
@@ -42,9 +42,28 @@ public partial class LookupComposer
             description = variant.Description;
         }
 
-        while (valueDescriptor is IDescriptorRedirector redirector)
+        while (true)
         {
-            if (!redirector.TryRedirect(targetMember, out value)) break;
+            var redirected = false;
+
+            // Generic interface is prioritised
+            if (valueDescriptor is IDescriptorRedirector<TContext> genericRedirector)
+            {
+                if (genericRedirector.TryRedirect(targetMember, _options.Context, out value))
+                {
+                    redirected = true;
+                }
+            }
+            else if (valueDescriptor is IDescriptorRedirector redirector)
+            {
+                if (redirector.TryRedirect(targetMember, out value))
+                {
+                    redirected = true;
+                }
+            }
+
+            if (!redirected) break;
+
             valueDescriptor = _options.TypeResolver.Invoke(value, null);
 
             if (valueDescriptor.Description is not null)

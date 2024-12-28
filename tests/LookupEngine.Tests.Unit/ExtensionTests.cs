@@ -45,7 +45,7 @@ public sealed class ExtensionTests
     {
         //Arrange
         var data = new ExtensibleObject();
-        var context = new EngineContext();
+        var context = new EngineTestContext();
         var options = new DecomposeOptions
         {
             EnableExtensions = true,
@@ -59,7 +59,7 @@ public sealed class ExtensionTests
             }
         };
 
-        var contextOptions = new DecomposeOptions<EngineContext>
+        var contextOptions = new DecomposeOptions<EngineTestContext>
         {
             Context = context,
             EnableExtensions = true,

@@ -6,7 +6,7 @@ using LookupEngine.Tests.Unit.Objects;
 
 namespace LookupEngine.Tests.Unit.Descriptors;
 
-public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescriptorResolver<EngineContext>
+public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescriptorResolver<EngineTestContext>
 {
     public ResolverDescriptor()
     {
@@ -33,7 +33,7 @@ public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
     }
 
-    Func<EngineContext, IVariant>? IDescriptorResolver<EngineContext>.Resolve(string target, ParameterInfo[]? parameters)
+    Func<EngineTestContext, IVariant>? IDescriptorResolver<EngineTestContext>.Resolve(string target, ParameterInfo[]? parameters)
     {
         return target switch
         {
@@ -41,7 +41,7 @@ public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescr
             _ => null
         };
 
-        IVariant ResolveUnsupportedMultiMethod(EngineContext context)
+        IVariant ResolveUnsupportedMultiMethod(EngineTestContext context)
         {
             return Variants.Values<string>(2)
                 .Add("Resolved 1")

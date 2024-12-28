@@ -4,7 +4,7 @@ using LookupEngine.Tests.Unit.Contexts;
 
 namespace LookupEngine.Tests.Unit.Descriptors;
 
-public sealed class ExtensionDescriptor : Descriptor, IDescriptorExtension, IDescriptorExtension<EngineContext>
+public sealed class ExtensionDescriptor : Descriptor, IDescriptorExtension, IDescriptorExtension<EngineTestContext>
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
@@ -17,18 +17,18 @@ public sealed class ExtensionDescriptor : Descriptor, IDescriptorExtension, IDes
         }
     }
 
-    public void RegisterExtensions(IExtensionManager<EngineContext> manager)
+    public void RegisterExtensions(IExtensionManager<EngineTestContext> manager)
     {
         manager.Register("VersionExtension", VersionExtension);
         manager.Register("MetadataExtension", MetadataExtension);
         return;
 
-        IVariant VersionExtension(EngineContext context)
+        IVariant VersionExtension(EngineTestContext context)
         {
             return Variants.Value(context.Version);
         }
 
-        IVariant MetadataExtension(EngineContext context)
+        IVariant MetadataExtension(EngineTestContext context)
         {
             return Variants.Value(context.Metadata);
         }
