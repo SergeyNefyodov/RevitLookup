@@ -42,7 +42,7 @@ public partial class LookupComposer<TContext>
 
         if (DeclaringDescriptor is IDescriptorResolver<TContext> contextResolver)
         {
-            var handler = contextResolver.Resolve(member.Name, parameters, _options.Context);
+            var handler = contextResolver.Resolve(member.Name, parameters);
             if (handler is not null)
             {
                 value = EvaluateValue(handler);

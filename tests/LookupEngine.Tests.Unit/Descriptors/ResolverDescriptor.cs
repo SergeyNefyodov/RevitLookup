@@ -33,7 +33,7 @@ public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[]? parameters, EngineContext context)
+    Func<EngineContext, IVariant>? IDescriptorResolver<EngineContext>.Resolve(string target, ParameterInfo[]? parameters)
     {
         return target switch
         {
@@ -41,7 +41,7 @@ public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescr
             _ => null
         };
 
-        IVariant ResolveUnsupportedMultiMethod()
+        IVariant ResolveUnsupportedMultiMethod(EngineContext context)
         {
             return Variants.Values<string>(2)
                 .Add("Resolved 1")
