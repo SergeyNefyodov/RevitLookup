@@ -61,8 +61,4 @@
         <ApplicationDefinition Remove="App.xaml"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Core\Summary\Descriptors\"/>
-    </ItemGroup>
-
 </Project>
