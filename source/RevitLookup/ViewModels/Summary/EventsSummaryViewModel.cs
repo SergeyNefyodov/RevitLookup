@@ -1,15 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using LookupEngine;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Abstractions.Services.Settings;
+using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Summary;
-using RevitLookup.Core;
-using RevitLookup.Core.Summary;
-using RevitLookup.Mappers;
 using RevitLookup.Services.Summary;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Summary;
@@ -18,9 +13,9 @@ namespace RevitLookup.ViewModels.Summary;
 
 [UsedImplicitly]
 public sealed partial class EventsSummaryViewModel(
-    ISettingsService settingsService,
     IWindowIntercomService intercomService,
     INotificationService notificationService,
+    IVisualDecompositionService decompositionService,
     EventsMonitoringService monitoringService,
     ILogger<DecompositionSummaryViewModel> logger)
     : ObservableObject, IEventsSummaryViewModel
@@ -151,18 +146,13 @@ public sealed partial class EventsSummaryViewModel(
     {
         try
         {
-            var options = CreateDecomposeOptions();
-            var decomposedObject = await RevitShell.AsyncObjectHandler.RaiseAsync(_ =>
-            {
-                var result = LookupComposer.Decompose(value, options);
-                var convertedResult = DecompositionResultMapper.Convert(result);
-                convertedResult.Name = $"{eventName} {DateTime.Now:HH:mm:ss}";
-                return convertedResult;
-            });
+            var decomposedObject = await decompositionService.DecomposeAsync(value);
 
             _synchronizationContext.Post(state =>
             {
                 var viewModel = (EventsSummaryViewModel) state!;
+
+                decomposedObject.Name = $"{eventName} {DateTime.Now:HH:mm:ss}";
                 viewModel.DecomposedObjects.Insert(0, decomposedObject);
 
                 if (viewModel.IsSearchValueMatching(decomposedObject, viewModel.SearchText))
@@ -187,39 +177,6 @@ public sealed partial class EventsSummaryViewModel(
         if (decomposedObject is null) return;
         if (decomposedObject.Members.Count > 0) return;
 
-        decomposedObject.Members = await DecomposeMembersAsync(decomposedObject);
-    }
-
-    [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
-    private async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
-    {
-        var options = CreateDecomposeOptions();
-        return await RevitShell.AsyncMembersHandler.RaiseAsync(_ =>
-        {
-            var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
-            var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
-
-            foreach (var decomposedMember in decomposedMembers)
-            {
-                members.Add(DecompositionResultMapper.Convert(decomposedMember));
-            }
-
-            return members;
-        });
-    }
-
-    private DecomposeOptions CreateDecomposeOptions()
-    {
-        return new DecomposeOptions
-        {
-            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
-            IncludeFields = settingsService.GeneralSettings.IncludeFields,
-            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
-            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
-            IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
-            IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
-            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
-            TypeResolver = DescriptorsMap.FindDescriptor
-        };
+        decomposedObject.Members = await decompositionService.DecomposeMembersAsync(decomposedObject);
     }
 }

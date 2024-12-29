@@ -6,6 +6,7 @@ using LookupEngine.Abstractions.Configuration;
 using RevitLookup.Abstractions.Models.Summary;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
+using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.UI.Playground.Mockups.Core.Summary;
@@ -13,9 +14,12 @@ using RevitLookup.UI.Playground.Mockups.Mappers;
 
 namespace RevitLookup.UI.Playground.Mockups.Services.Summary;
 
+[SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
+[SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
 public sealed class MockVisualDecompositionService(
     IWindowIntercomService intercomService,
     INotificationService notificationService,
+    ISettingsService settingsService,
     IDecompositionSummaryViewModel summaryViewModel)
     : IVisualDecompositionService
 {
@@ -80,15 +84,19 @@ public sealed class MockVisualDecompositionService(
         await Task.CompletedTask;
     }
 
-    [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
-    private async Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects)
+    public async Task<ObservableDecomposedObject> DecomposeAsync(object obj)
     {
-        var options = new DecomposeOptions
+        var options = CreateDecomposeMembersOptions();
+        return await Task.Run(() =>
         {
-            EnableRedirection = true,
-            TypeResolver = DescriptorsMap.FindDescriptor
-        };
+            var result = LookupComposer.Decompose(obj, options);
+            return DecompositionResultMapper.Convert(result);
+        });
+    }
 
+    public async Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects)
+    {
+        var options = CreateDecomposeOptions();
         return await Task.Run(() =>
         {
             var capacity = objects is ICollection collection ? collection.Count : 4;
@@ -100,6 +108,23 @@ public sealed class MockVisualDecompositionService(
             }
 
             return decomposedObjects;
+        });
+    }
+
+    public async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
+    {
+        var options = CreateDecomposeMembersOptions();
+        return await Task.Run(() =>
+        {
+            var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
+            var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
+
+            foreach (var decomposedMember in decomposedMembers)
+            {
+                members.Add(DecompositionResultMapper.Convert(decomposedMember));
+            }
+
+            return members;
         });
     }
 
@@ -117,5 +142,31 @@ public sealed class MockVisualDecompositionService(
         if (!host.IsLoaded) return;
 
         host.Visibility = Visibility.Hidden;
+    }
+
+
+    private static DecomposeOptions CreateDecomposeOptions()
+    {
+        return new DecomposeOptions
+        {
+            EnableRedirection = true,
+            TypeResolver = DescriptorsMap.FindDescriptor
+        };
+    }
+
+    private DecomposeOptions CreateDecomposeMembersOptions()
+    {
+        return new DecomposeOptions
+        {
+            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
+            IncludeFields = settingsService.GeneralSettings.IncludeFields,
+            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
+            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
+            IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
+            IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
+            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
+            EnableRedirection = true,
+            TypeResolver = DescriptorsMap.FindDescriptor
+        };
     }
 }

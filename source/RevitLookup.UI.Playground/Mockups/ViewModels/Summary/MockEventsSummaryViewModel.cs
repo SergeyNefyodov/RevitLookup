@@ -1,20 +1,16 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
-using LookupEngine;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Abstractions.Services.Settings;
+using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Summary;
-using RevitLookup.UI.Playground.Mockups.Core.Summary;
-using RevitLookup.UI.Playground.Mockups.Mappers;
 #if NETFRAMEWORK
 using RevitLookup.UI.Framework.Extensions;
 #endif
@@ -23,9 +19,9 @@ namespace RevitLookup.UI.Playground.Mockups.ViewModels.Summary;
 
 [UsedImplicitly]
 public sealed partial class MockEventsSummaryViewModel(
-    ISettingsService settingsService,
     IWindowIntercomService intercomService,
     INotificationService notificationService,
+    IVisualDecompositionService decompositionService,
     ILogger<MockDecompositionSummaryViewModel> logger)
     : ObservableObject, IEventsSummaryViewModel
 {
@@ -86,7 +82,7 @@ public sealed partial class MockEventsSummaryViewModel(
         var cancellationToken = _cancellationTokenSource.Token;
         while (!cancellationToken.IsCancellationRequested)
         {
-            var decomposedObject = GenerateRandomObject(faker);
+            var decomposedObject = await GenerateRandomObjectAsync(faker);
             DecomposedObjects.Insert(0, decomposedObject);
 
             if (SearchText == string.Empty) FilteredDecomposedObjects.Insert(0, decomposedObject);
@@ -167,30 +163,11 @@ public sealed partial class MockEventsSummaryViewModel(
         if (decomposedObject is null) return;
         if (decomposedObject.Members.Count > 0) return;
 
-        decomposedObject.Members = await DecomposeMembersAsync(decomposedObject);
+        decomposedObject.Members = await decompositionService.DecomposeMembersAsync(decomposedObject);
     }
 
-    [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
-    private async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
+    private async Task<ObservableDecomposedObject> GenerateRandomObjectAsync(Faker faker)
     {
-        var options = CreateDecomposingOptions();
-        return await Task.Run(() =>
-        {
-            var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
-            var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
-
-            foreach (var decomposedMember in decomposedMembers)
-            {
-                members.Add(DecompositionResultMapper.Convert(decomposedMember));
-            }
-
-            return members;
-        });
-    }
-
-    private ObservableDecomposedObject GenerateRandomObject(Faker faker)
-    {
-        var options = CreateDecomposingOptions();
         object item = faker.Random.Int(0, 100) switch
         {
             < 10 => faker.Random.Int(0, 100),
@@ -205,22 +182,6 @@ public sealed partial class MockEventsSummaryViewModel(
             _ => faker.Lorem.Word()
         };
 
-        return DecompositionResultMapper.Convert(LookupComposer.DecomposeObject(item, options));
-    }
-
-    private DecomposeOptions CreateDecomposingOptions()
-    {
-        return new DecomposeOptions
-        {
-            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
-            IncludeFields = settingsService.GeneralSettings.IncludeFields,
-            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
-            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
-            IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
-            IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
-            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
-            EnableRedirection = true,
-            TypeResolver = DescriptorsMap.FindDescriptor
-        };
+        return await decompositionService.DecomposeAsync(item);
     }
 }

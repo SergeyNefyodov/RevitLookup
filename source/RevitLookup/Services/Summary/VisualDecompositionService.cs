@@ -2,21 +2,27 @@
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
 using LookupEngine.Abstractions.Configuration;
+using LookupEngine.Options;
 using RevitLookup.Abstractions.Models.Summary;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
+using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.Core;
 using RevitLookup.Core.Summary;
 using RevitLookup.Mappers;
+using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 using Visibility = System.Windows.Visibility;
 
 namespace RevitLookup.Services.Summary;
 
+[SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
+[SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
 public sealed class VisualDecompositionService(
     IWindowIntercomService intercomService,
     INotificationService notificationService,
+    ISettingsService settingsService,
     IDecompositionSummaryViewModel summaryViewModel)
     : IVisualDecompositionService
 {
@@ -53,6 +59,22 @@ public sealed class VisualDecompositionService(
         }
     }
 
+    private void ShowHost()
+    {
+        var host = intercomService.GetHost();
+        if (!host.IsLoaded) return;
+
+        host.Visibility = Visibility.Visible;
+    }
+
+    private void HideHost()
+    {
+        var host = intercomService.GetHost();
+        if (!host.IsLoaded) return;
+
+        host.Visibility = Visibility.Hidden;
+    }
+
     public async Task VisualizeDecompositionAsync(object? obj)
     {
         var values = obj switch
@@ -82,14 +104,19 @@ public sealed class VisualDecompositionService(
         await Task.CompletedTask;
     }
 
-    [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
-    private static async Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects)
+    public async Task<ObservableDecomposedObject> DecomposeAsync(object obj)
     {
-        var options = new DecomposeOptions
+        var options = CreateDecomposeMembersOptions();
+        return await RevitShell.AsyncObjectHandler.RaiseAsync(_ =>
         {
-            TypeResolver = DescriptorsMap.FindDescriptor
-        };
+            var result = LookupComposer.Decompose(obj, options);
+            return DecompositionResultMapper.Convert(result);
+        });
+    }
 
+    public async Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects)
+    {
+        var options = CreateDecomposeOptions();
         return await RevitShell.AsyncObjectsHandler.RaiseAsync(_ =>
         {
             var capacity = objects is ICollection collection ? collection.Count : 4;
@@ -104,19 +131,47 @@ public sealed class VisualDecompositionService(
         });
     }
 
-    private void ShowHost()
+    public async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
     {
-        var host = intercomService.GetHost();
-        if (!host.IsLoaded) return;
+        var options = CreateDecomposeMembersOptions();
+        return await RevitShell.AsyncMembersHandler.RaiseAsync(_ =>
+        {
+            var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
+            var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
 
-        host.Visibility = Visibility.Visible;
+            foreach (var decomposedMember in decomposedMembers)
+            {
+                members.Add(DecompositionResultMapper.Convert(decomposedMember));
+            }
+
+            return members;
+        });
     }
 
-    private void HideHost()
+    private static DecomposeOptions<Document> CreateDecomposeOptions()
     {
-        var host = intercomService.GetHost();
-        if (!host.IsLoaded) return;
+        return new DecomposeOptions<Document>
+        {
+            Context = Context.ActiveDocument!, //TODO: replace
+            EnableRedirection = true,
+            TypeResolver = DescriptorsMap.FindDescriptor
+        };
+    }
 
-        host.Visibility = Visibility.Hidden;
+    private DecomposeOptions<Document> CreateDecomposeMembersOptions()
+    {
+        return new DecomposeOptions<Document>
+        {
+            Context = Context.ActiveDocument!, //TODO: replace
+            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
+            IncludeFields = settingsService.GeneralSettings.IncludeFields,
+            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
+            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
+            IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
+            IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
+            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
+            EnableRedirection = true,
+            TypeResolver = DescriptorsMap.FindDescriptor
+        };
     }
 }

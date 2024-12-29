@@ -11,4 +11,8 @@ public interface IVisualDecompositionService
     Task VisualizeDecompositionAsync(IEnumerable objects);
     Task VisualizeDecompositionAsync(ObservableDecomposedObject decomposedObject);
     Task VisualizeDecompositionAsync(List<ObservableDecomposedObject> decomposedObjects);
+
+    Task<ObservableDecomposedObject> DecomposeAsync(object obj);
+    Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects);
+    Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject);
 }
