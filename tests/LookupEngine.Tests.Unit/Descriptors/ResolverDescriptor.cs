@@ -13,7 +13,7 @@ public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescr
         Name = "Redirection";
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[]? parameters)
+    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
     {
         return target switch
         {
@@ -33,7 +33,7 @@ public sealed class ResolverDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
     }
 
-    Func<EngineTestContext, IVariant>? IDescriptorResolver<EngineTestContext>.Resolve(string target, ParameterInfo[]? parameters)
+    Func<EngineTestContext, IVariant>? IDescriptorResolver<EngineTestContext>.Resolve(string target, ParameterInfo[] parameters)
     {
         return target switch
         {

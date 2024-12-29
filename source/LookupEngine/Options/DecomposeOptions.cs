@@ -18,6 +18,7 @@ public class DecomposeOptions
     public bool IncludePrivateMembers { get; set; }
     public bool IncludeStaticMembers { get; set; }
     public bool EnableExtensions { get; set; }
+    public bool EnableRedirection { get; set; }
 
     public Func<object?, Type?, Descriptor> TypeResolver
     {

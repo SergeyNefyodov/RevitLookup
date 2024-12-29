@@ -219,6 +219,7 @@ public sealed partial class MockEventsSummaryViewModel(
             IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
             IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
             EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
+            EnableRedirection = true,
             TypeResolver = DescriptorsMap.FindDescriptor
         };
     }

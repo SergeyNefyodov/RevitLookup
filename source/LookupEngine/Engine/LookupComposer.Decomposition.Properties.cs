@@ -30,13 +30,13 @@ public partial class LookupComposer
 {
     private void DecomposeProperties(BindingFlags bindingFlags)
     {
-        var members = DeclaringType.GetProperties(bindingFlags);
+        var members = MemberDeclaringType.GetProperties(bindingFlags);
         foreach (var member in members)
         {
             if (member.IsSpecialName) continue;
 
             object? value;
-            var parameters = member.CanRead ? member.GetMethod!.GetParameters() : null;
+            var parameters = member.CanRead ? member.GetMethod!.GetParameters() : [];
 
             try
             {
@@ -60,10 +60,10 @@ public partial class LookupComposer
         }
     }
 
-    private protected virtual bool TryResolve(PropertyInfo member, ParameterInfo[]? parameters, out object? value)
+    private protected virtual bool TryResolve(PropertyInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
-        if (DeclaringDescriptor is not IDescriptorResolver resolver) return false;
+        if (MemberDeclaringDescriptor is not IDescriptorResolver resolver) return false;
 
         var handler = resolver.Resolve(member.Name, parameters);
         if (handler is null) return false;
@@ -73,7 +73,7 @@ public partial class LookupComposer
         return true;
     }
 
-    private bool TrySuppress(PropertyInfo member, ParameterInfo[]? parameters, out object? value)
+    private bool TrySuppress(PropertyInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
 
@@ -83,7 +83,7 @@ public partial class LookupComposer
             return true;
         }
 
-        if (parameters is not null && parameters.Length > 0)
+        if (parameters.Length > 0)
         {
             if (!_options.IncludeUnsupported) return false;
 

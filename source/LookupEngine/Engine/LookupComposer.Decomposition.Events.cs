@@ -10,7 +10,7 @@ public partial class LookupComposer
     {
         if (!_options.IncludeEvents) return;
 
-        var members = DeclaringType.GetEvents(bindingFlags);
+        var members = MemberDeclaringType.GetEvents(bindingFlags);
         foreach (var member in members)
         {
             WriteDecompositionMember(ReflexionFormater.FormatTypeName(member.EventHandlerType ?? typeof(object)), member);

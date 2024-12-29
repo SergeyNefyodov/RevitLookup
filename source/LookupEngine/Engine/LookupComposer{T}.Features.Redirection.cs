@@ -26,22 +26,11 @@ namespace LookupEngine;
 
 public partial class LookupComposer<TContext>
 {
-    private protected override Descriptor RedirectValue(string targetMember, ref object value)
+    private protected override object RedirectValue(object value)
     {
-        var variant = value as IVariant;
-        if (variant is not null)
-        {
-            value = variant.Value;
-        }
+        if (!_options.EnableRedirection) return value;
 
         var valueDescriptor = _options.TypeResolver.Invoke(value, null);
-
-        var description = valueDescriptor.Description;
-        if (variant is not null && description is null)
-        {
-            description = variant.Description;
-        }
-
         while (true)
         {
             var redirected = false;
@@ -49,14 +38,14 @@ public partial class LookupComposer<TContext>
             // Generic interface is prioritised
             if (valueDescriptor is IDescriptorRedirector<TContext> genericRedirector)
             {
-                if (genericRedirector.TryRedirect(targetMember, _options.Context, out value))
+                if (genericRedirector.TryRedirect(string.Empty, _options.Context, out value))
                 {
                     redirected = true;
                 }
             }
             else if (valueDescriptor is IDescriptorRedirector redirector)
             {
-                if (redirector.TryRedirect(targetMember, out value))
+                if (redirector.TryRedirect(string.Empty, out value))
                 {
                     redirected = true;
                 }
@@ -65,14 +54,61 @@ public partial class LookupComposer<TContext>
             if (!redirected) break;
 
             valueDescriptor = _options.TypeResolver.Invoke(value, null);
+        }
 
-            if (valueDescriptor.Description is not null)
+        return value;
+    }
+
+    private protected override object RedirectValue(object value, string target, out Descriptor valueDescriptor)
+    {
+        var variant = value as IVariant;
+        if (variant is not null)
+        {
+            value = variant.Value;
+        }
+
+        valueDescriptor = _options.TypeResolver.Invoke(value, null);
+
+        var description = valueDescriptor.Description;
+        if (variant is not null && description is null)
+        {
+            description = variant.Description;
+        }
+
+        if (_options.EnableRedirection)
+        {
+            while (true)
             {
-                description = valueDescriptor.Description;
+                var redirected = false;
+
+                // Generic interface is prioritised
+                if (valueDescriptor is IDescriptorRedirector<TContext> genericRedirector)
+                {
+                    if (genericRedirector.TryRedirect(target, _options.Context, out value))
+                    {
+                        redirected = true;
+                    }
+                }
+                else if (valueDescriptor is IDescriptorRedirector redirector)
+                {
+                    if (redirector.TryRedirect(target, out value))
+                    {
+                        redirected = true;
+                    }
+                }
+
+                if (!redirected) break;
+
+                valueDescriptor = _options.TypeResolver.Invoke(value, null);
+
+                if (valueDescriptor.Description is not null)
+                {
+                    description = valueDescriptor.Description;
+                }
             }
         }
 
         valueDescriptor.Description = description;
-        return valueDescriptor;
+        return value;
     }
 }

@@ -26,7 +26,26 @@ namespace LookupEngine;
 
 public partial class LookupComposer
 {
-    private protected virtual Descriptor RedirectValue(string targetMember, ref object value)
+    private protected virtual object RedirectValue(object value)
+    {
+        if (!_options.EnableRedirection) return value;
+
+        var valueDescriptor = _options.TypeResolver.Invoke(value, null);
+        while (valueDescriptor is IDescriptorRedirector redirector)
+        {
+            if (!redirector.TryRedirect(string.Empty, out value)) break;
+            valueDescriptor = _options.TypeResolver.Invoke(value, null);
+        }
+
+        return value;
+    }
+
+    private object RedirectValue(object value, out Descriptor valueDescriptor)
+    {
+        return RedirectValue(value, string.Empty, out valueDescriptor);
+    }
+
+    private protected virtual object RedirectValue(object value, string target, out Descriptor valueDescriptor)
     {
         var variant = value as IVariant;
         if (variant is not null)
@@ -34,7 +53,7 @@ public partial class LookupComposer
             value = variant.Value;
         }
 
-        var valueDescriptor = _options.TypeResolver.Invoke(value, null);
+        valueDescriptor = _options.TypeResolver.Invoke(value, null);
 
         var description = valueDescriptor.Description;
         if (variant is not null && description is null)
@@ -42,18 +61,21 @@ public partial class LookupComposer
             description = variant.Description;
         }
 
-        while (valueDescriptor is IDescriptorRedirector redirector)
+        if (_options.EnableRedirection)
         {
-            if (!redirector.TryRedirect(targetMember, out value)) break;
-            valueDescriptor = _options.TypeResolver.Invoke(value, null);
-
-            if (valueDescriptor.Description is not null)
+            while (valueDescriptor is IDescriptorRedirector redirector)
             {
-                description = valueDescriptor.Description;
+                if (!redirector.TryRedirect(target, out value)) break;
+                valueDescriptor = _options.TypeResolver.Invoke(value, null);
+
+                if (valueDescriptor.Description is not null)
+                {
+                    description = valueDescriptor.Description;
+                }
             }
         }
 
         valueDescriptor.Description = description;
-        return valueDescriptor;
+        return value;
     }
 }

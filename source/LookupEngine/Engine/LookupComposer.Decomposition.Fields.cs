@@ -29,7 +29,7 @@ public partial class LookupComposer
     {
         if (!_options.IncludeFields) return;
 
-        var members = DeclaringType.GetFields(bindingFlags);
+        var members = MemberDeclaringType.GetFields(bindingFlags);
         foreach (var member in members)
         {
             if (member.IsSpecialName) continue;

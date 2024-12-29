@@ -28,46 +28,58 @@ namespace LookupEngine;
 public partial class LookupComposer
 {
     [Pure]
-    private protected DecomposedObject DecomposeInstance(bool decomposeMembers)
+    private DecomposedObject DecomposeInstance()
     {
+        _decomposedObject = DecomposeInstanceObject();
         var objectType = _input.GetType();
-        var instanceDescriptor = _options.TypeResolver.Invoke(_input, null);
-        _decomposedObject = CreateInstanceDecomposition(_input, objectType, instanceDescriptor);
-
-        if (decomposeMembers)
-        {
-            var members = DecomposeInstanceMembers(objectType);
-            _decomposedObject.Members.AddRange(members);
-        }
+        var members = DecomposeInstanceMembers(objectType);
+        _decomposedObject.Members.AddRange(members);
 
         return _decomposedObject;
     }
 
     [Pure]
-    private protected DecomposedObject DecomposeType(Type type, bool decomposeMembers)
+    private DecomposedObject DecomposeInstanceObject()
+    {
+        _input = RedirectValue(_input, out var instanceDescriptor);
+
+        var objectType = _input.GetType();
+        return CreateInstanceDecomposition(_input, objectType, instanceDescriptor);
+    }
+
+    [Pure]
+    private DecomposedObject DecomposeStatic(Type type)
+    {
+        _decomposedObject = DecomposeStaticObject(type);
+        var members = DecomposeStaticMembers(type);
+        _decomposedObject.Members.AddRange(members);
+
+        return _decomposedObject;
+    }
+
+    [Pure]
+    private DecomposedObject DecomposeStaticObject(Type type)
     {
         var staticDescriptor = _options.TypeResolver.Invoke(null, type);
-        _decomposedObject = CreateStaticDecomposition(type, staticDescriptor);
-
-        if (decomposeMembers)
-        {
-            var members = DecomposeTypeMembers(type);
-            _decomposedObject.Members.AddRange(members);
-        }
-
-        return _decomposedObject;
+        return CreateStaticDecomposition(type, staticDescriptor);
     }
 
     [Pure]
-    private protected List<DecomposedMember> DecomposeInstanceMembers(Type objectType)
+    private List<DecomposedMember> DecomposeInstanceMembers()
+    {
+        return DecomposeInstanceMembers(_input.GetType());
+    }
+
+    [Pure]
+    private List<DecomposedMember> DecomposeInstanceMembers(Type objectType)
     {
         _decomposedMembers = new List<DecomposedMember>(32);
 
         var objectTypeHierarchy = GetTypeHierarchy(objectType);
         for (var i = objectTypeHierarchy.Count - 1; i >= 0; i--)
         {
-            DeclaringType = objectTypeHierarchy[i];
-            DeclaringDescriptor = _options.TypeResolver.Invoke(_input, DeclaringType);
+            MemberDeclaringType = objectTypeHierarchy[i];
+            MemberDeclaringDescriptor = _options.TypeResolver.Invoke(_input, MemberDeclaringType);
 
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
             if (_options.IncludeStaticMembers) flags |= BindingFlags.Static;
@@ -82,25 +94,25 @@ public partial class LookupComposer
             _depth--;
         }
 
-        DeclaringType = objectType;
+        MemberDeclaringType = objectType;
         AddEnumerableItems();
 
         return _decomposedMembers;
     }
 
     [Pure]
-    private protected List<DecomposedMember> DecomposeTypeMembers(Type type)
+    private List<DecomposedMember> DecomposeStaticMembers(Type objectType)
     {
         _decomposedMembers = new List<DecomposedMember>(32);
 
         var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly;
         if (_options.IncludePrivateMembers) flags |= BindingFlags.NonPublic;
 
-        var objectTypeHierarchy = GetTypeHierarchy(type);
+        var objectTypeHierarchy = GetTypeHierarchy(objectType);
         for (var i = objectTypeHierarchy.Count - 1; i >= 0; i--)
         {
-            DeclaringType = objectTypeHierarchy[i];
-            DeclaringDescriptor = _options.TypeResolver.Invoke(null, DeclaringType);
+            MemberDeclaringType = objectTypeHierarchy[i];
+            MemberDeclaringDescriptor = _options.TypeResolver.Invoke(null, MemberDeclaringType);
 
             DecomposeFields(flags);
             DecomposeProperties(flags);

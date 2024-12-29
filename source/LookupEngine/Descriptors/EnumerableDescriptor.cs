@@ -27,7 +27,7 @@ public sealed class EnumerableDescriptor : Descriptor, IDescriptorEnumerator, ID
     public IEnumerator Enumerator { get; }
     public bool IsEmpty { get; }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[]? parameters)
+    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
     {
         return target switch
         {

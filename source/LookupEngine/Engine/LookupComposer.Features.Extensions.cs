@@ -30,7 +30,7 @@ public partial class LookupComposer : IExtensionManager
     {
         if (!_options.EnableExtensions) return;
 
-        if (DeclaringDescriptor is IDescriptorExtension extension)
+        if (MemberDeclaringDescriptor is IDescriptorExtension extension)
         {
             extension.RegisterExtensions(this);
         }

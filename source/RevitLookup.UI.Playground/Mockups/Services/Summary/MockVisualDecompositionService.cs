@@ -85,6 +85,7 @@ public sealed class MockVisualDecompositionService(
     {
         var options = new DecomposeOptions
         {
+            EnableRedirection = true,
             TypeResolver = DescriptorsMap.FindDescriptor
         };
 

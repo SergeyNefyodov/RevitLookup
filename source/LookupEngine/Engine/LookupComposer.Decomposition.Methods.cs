@@ -28,7 +28,7 @@ public partial class LookupComposer
 {
     private void DecomposeMethods(BindingFlags bindingFlags)
     {
-        var members = DeclaringType.GetMethods(bindingFlags);
+        var members = MemberDeclaringType.GetMethods(bindingFlags);
         foreach (var member in members)
         {
             if (member.IsSpecialName) continue;
@@ -62,7 +62,7 @@ public partial class LookupComposer
     private protected virtual bool TryResolve(MethodInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
-        if (DeclaringDescriptor is not IDescriptorResolver resolver) return false;
+        if (MemberDeclaringDescriptor is not IDescriptorResolver resolver) return false;
 
         var handler = resolver.Resolve(member.Name, parameters);
         if (handler is null) return false;

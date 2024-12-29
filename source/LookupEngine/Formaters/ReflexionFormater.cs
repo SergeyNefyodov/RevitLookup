@@ -23,9 +23,8 @@ internal static class ReflexionFormater
         return typeName;
     }
 
-    public static string FormatMemberName(MemberInfo member, ParameterInfo[]? parameters)
+    public static string FormatMemberName(MemberInfo member, ParameterInfo[] parameters)
     {
-        if (parameters is null) return member.Name;
         if (parameters.Length == 0) return member.Name;
 
         var formatedParameters = parameters.Select(info =>

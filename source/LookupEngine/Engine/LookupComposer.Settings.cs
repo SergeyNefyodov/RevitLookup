@@ -29,12 +29,12 @@ namespace LookupEngine;
 [PublicAPI]
 public partial class LookupComposer
 {
-    private readonly object _input;
     private readonly DecomposeOptions _options;
 
     private int _depth;
-    private Type? _declaringType;
-    private Descriptor? _declaringDescriptor;
+    private object _input;
+    private Type? _memberDeclaringType;
+    private Descriptor? _memberDeclaringDescriptor;
     private DecomposedObject? _decomposedObject;
     private List<DecomposedMember>? _decomposedMembers;
 
@@ -58,31 +58,31 @@ public partial class LookupComposer
         set => _decomposedMembers = value;
     }
 
-    internal Type DeclaringType
+    internal Type MemberDeclaringType
     {
         get
         {
-            if (_declaringType is null)
+            if (_memberDeclaringType is null)
             {
-                EngineException.ThrowIfEngineNotInitialized(nameof(DeclaringType));
+                EngineException.ThrowIfEngineNotInitialized(nameof(MemberDeclaringType));
             }
 
-            return _declaringType;
+            return _memberDeclaringType;
         }
-        set => _declaringType = value;
+        set => _memberDeclaringType = value;
     }
 
-    internal Descriptor DeclaringDescriptor
+    internal Descriptor MemberDeclaringDescriptor
     {
         get
         {
-            if (_declaringDescriptor is null)
+            if (_memberDeclaringDescriptor is null)
             {
-                EngineException.ThrowIfEngineNotInitialized(nameof(DeclaringDescriptor));
+                EngineException.ThrowIfEngineNotInitialized(nameof(MemberDeclaringDescriptor));
             }
 
-            return _declaringDescriptor;
+            return _memberDeclaringDescriptor;
         }
-        set => _declaringDescriptor = value;
+        set => _memberDeclaringDescriptor = value;
     }
 }

@@ -28,5 +28,5 @@ namespace LookupEngine.Abstractions.Configuration;
 /// </summary>
 public interface IDescriptorResolver : IDescriptorCollector
 {
-    Func<IVariant>? Resolve(string target, ParameterInfo[]? parameters);
+    Func<IVariant>? Resolve(string target, ParameterInfo[] parameters);
 }

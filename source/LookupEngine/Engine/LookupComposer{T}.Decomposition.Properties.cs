@@ -28,11 +28,11 @@ namespace LookupEngine;
 [UsedImplicitly]
 public partial class LookupComposer<TContext>
 {
-    private protected override bool TryResolve(PropertyInfo member, ParameterInfo[]? parameters, out object? value)
+    private protected override bool TryResolve(PropertyInfo member, ParameterInfo[] parameters, out object? value)
     {
         value = null;
 
-        if (DeclaringDescriptor is IDescriptorResolver resolver)
+        if (MemberDeclaringDescriptor is IDescriptorResolver resolver)
         {
             var handler = resolver.Resolve(member.Name, parameters);
             if (handler is not null)
@@ -42,7 +42,7 @@ public partial class LookupComposer<TContext>
             }
         }
 
-        if (DeclaringDescriptor is IDescriptorResolver<TContext> contextResolver)
+        if (MemberDeclaringDescriptor is IDescriptorResolver<TContext> contextResolver)
         {
             var handler = contextResolver.Resolve(member.Name, parameters);
             if (handler is not null)

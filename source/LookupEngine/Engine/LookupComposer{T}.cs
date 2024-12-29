@@ -20,6 +20,7 @@
 
 using JetBrains.Annotations;
 using LookupEngine.Abstractions;
+using LookupEngine.Options;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
@@ -27,41 +28,38 @@ namespace LookupEngine;
 public partial class LookupComposer
 {
     [Pure]
-    public static DecomposedObject Decompose(object? value, DecomposeOptions? options = null)
+    public static DecomposedObject Decompose<TContext>(object? value, DecomposeOptions<TContext> options)
     {
         if (value is null) return CreateNullableDecomposition();
 
-        options ??= DecomposeOptions.Default;
         return value switch
         {
-            Type type => new LookupComposer(value, options).DecomposeStatic(type),
-            _ => new LookupComposer(value, options).DecomposeInstance()
+            Type type => new LookupComposer<TContext>(value, options).DecomposeStatic(type),
+            _ => new LookupComposer<TContext>(value, options).DecomposeInstance()
         };
     }
 
     [Pure]
-    public static DecomposedObject DecomposeObject(object? value, DecomposeOptions? options = null)
+    public static DecomposedObject DecomposeObject<TContext>(object? value, DecomposeOptions<TContext> options)
     {
         if (value is null) return CreateNullableDecomposition();
 
-        options ??= DecomposeOptions.Default;
         return value switch
         {
-            Type type => new LookupComposer(value, options).DecomposeStaticObject(type),
-            _ => new LookupComposer(value, options).DecomposeInstanceObject()
+            Type type => new LookupComposer<TContext>(value, options).DecomposeStaticObject(type),
+            _ => new LookupComposer<TContext>(value, options).DecomposeInstanceObject()
         };
     }
 
     [Pure]
-    public static List<DecomposedMember> DecomposeMembers(object? value, DecomposeOptions? options = null)
+    public static List<DecomposedMember> DecomposeMembers<TContext>(object? value, DecomposeOptions<TContext> options)
     {
         if (value is null) return [];
 
-        options ??= DecomposeOptions.Default;
         return value switch
         {
-            Type type => new LookupComposer(value, options).DecomposeStaticMembers(type),
-            _ => new LookupComposer(value, options).DecomposeInstanceMembers()
+            Type type => new LookupComposer<TContext>(value, options).DecomposeStaticMembers(type),
+            _ => new LookupComposer<TContext>(value, options).DecomposeInstanceMembers()
         };
     }
 }
