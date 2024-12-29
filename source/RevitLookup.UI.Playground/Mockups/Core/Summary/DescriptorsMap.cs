@@ -20,6 +20,7 @@
 
 using System.Collections;
 using System.Numerics;
+using System.Windows.Media;
 using LookupEngine.Abstractions.Decomposition;
 using LookupEngine.Descriptors;
 using RevitLookup.UI.Playground.Mockups.Core.Summary.Descriptors;
@@ -41,9 +42,10 @@ public static class DescriptorsMap
         {
             bool value when type is null || type == typeof(bool) => new BooleanDescriptor(value),
             string value when type is null || type == typeof(string) => new StringDescriptor(value),
-            IEnumerable value => new EnumerableDescriptor(value),
-            Vector3 value => new Vector3Descriptor(value),
             Exception value when type is null || type == typeof(Exception) => new ExceptionDescriptor(value),
+            Color color when type is null || type == typeof(Color) => new ColorMediaDescriptor(color),
+            Vector3 value when type is null || type == typeof(Vector3) => new Vector3Descriptor(value),
+            IEnumerable value => new EnumerableDescriptor(value),
             _ => new ObjectDescriptor(obj)
         };
     }

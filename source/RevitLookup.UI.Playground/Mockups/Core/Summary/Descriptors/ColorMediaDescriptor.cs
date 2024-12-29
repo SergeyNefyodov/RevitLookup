@@ -23,7 +23,7 @@ using LookupEngine.Abstractions.Decomposition;
 using RevitLookup.Common.Utils;
 using Color = System.Windows.Media.Color;
 
-namespace RevitLookup.Core.Summary.Descriptors;
+namespace RevitLookup.UI.Playground.Mockups.Core.Summary.Descriptors;
 
 public sealed class ColorMediaDescriptor : Descriptor, IDescriptorExtension
 {
