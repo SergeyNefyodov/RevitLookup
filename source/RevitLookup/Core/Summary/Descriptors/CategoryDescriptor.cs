@@ -96,7 +96,7 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
 #if REVIT2023_OR_GREATER
                 .GetInstances(_category.BuiltInCategory));
 #else
-                .GetInstances((BuiltInCategory) _category.Id.IntegerValue);
+                .GetInstances((BuiltInCategory) _category.Id.IntegerValue));
 #endif
         });
     }

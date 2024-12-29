@@ -2,7 +2,6 @@
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.UI.Framework.Views.Summary;
@@ -11,7 +10,6 @@ namespace RevitLookup.ViewModels.Summary;
 
 [UsedImplicitly]
 public sealed partial class DecompositionSummaryViewModel(
-    ISettingsService settingsService,
     IWindowIntercomService intercomService,
     INotificationService notificationService,
     IVisualDecompositionService decompositionService,

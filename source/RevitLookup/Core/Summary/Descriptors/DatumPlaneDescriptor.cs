@@ -47,31 +47,31 @@ public sealed class DatumPlaneDescriptor(DatumPlane datumPlane) : ElementDescrip
 #if !REVIT2025_OR_GREATER
         IVariant ResolveCanBeVisibleInView()
         {
-            var views = context.EnumerateInstances<View>().ToArray();
+            var views = datumPlane.Document.EnumerateInstances<View>().ToArray();
             var variants = Variants.Values<bool>(views.Length);
-            
+
             foreach (var view in views)
             {
                 var result = datumPlane.CanBeVisibleInView(view);
                 variants.Add(result, $"{view.Name}: {result}");
             }
-            
+
             return variants.Consume();
         }
-        
+
         IVariant ResolvePropagationViews()
         {
-            var views = context.EnumerateInstances<View>().ToArray();
+            var views = datumPlane.Document.EnumerateInstances<View>().ToArray();
             var variants = Variants.Values<ISet<ElementId>>(views.Length);
-            
+
             foreach (var view in views)
             {
                 if (!datumPlane.CanBeVisibleInView(view)) continue;
-                
+
                 var result = datumPlane.GetPropagationViews(view);
                 variants.Add(result, view.Name);
             }
-            
+
             return variants.Consume();
         }
 #endif

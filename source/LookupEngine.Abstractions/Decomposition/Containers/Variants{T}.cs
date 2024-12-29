@@ -43,7 +43,7 @@ internal sealed class Variants<T>(int capacity) : IVariant, IVariantsCollection<
     ///     Adds a new variant
     /// </summary>
     /// <returns>The variant collection with a new value</returns>
-    public IVariantsCollection<T> Add(T result)
+    public IVariantsCollection<T> Add(T? result)
     {
         if (result is null) return this;
         if (result is ICollection {Count: 0}) return this;
@@ -57,7 +57,7 @@ internal sealed class Variants<T>(int capacity) : IVariant, IVariantsCollection<
     ///     Adds a new variant with description
     /// </summary>
     /// <returns>The variant collection with a new value</returns>
-    public IVariantsCollection<T> Add(T result, string description)
+    public IVariantsCollection<T> Add(T? result, string description)
     {
         if (result is null) return this;
         if (result is ICollection {Count: 0}) return this;
