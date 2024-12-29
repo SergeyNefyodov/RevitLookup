@@ -24,7 +24,7 @@ namespace LookupEngine.Tests.Performance;
 
 [MediumRunJob]
 [MemoryDiagnoser]
-public sealed class ResolveTypeBench
+public sealed class ResolveTypeBenchmark
 {
     private static object Obj => "Text";
 

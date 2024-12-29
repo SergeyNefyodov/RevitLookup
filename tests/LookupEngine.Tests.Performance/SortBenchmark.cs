@@ -25,7 +25,7 @@ namespace LookupEngine.Tests.Performance;
 
 [MediumRunJob]
 [MemoryDiagnoser(false)]
-public sealed class SortBench
+public sealed class SortBenchmark
 {
     private MethodInfo[] _methodInfos = null!;
 

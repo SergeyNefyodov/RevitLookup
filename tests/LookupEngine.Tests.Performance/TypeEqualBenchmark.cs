@@ -24,7 +24,7 @@ namespace LookupEngine.Tests.Performance;
 
 [MediumRunJob]
 [MemoryDiagnoser]
-public sealed class TypeEqualBench
+public sealed class TypeEqualBenchmark
 {
     private object Object { get; set; } = new RoundButton();
 

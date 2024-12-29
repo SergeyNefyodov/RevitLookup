@@ -16,11 +16,11 @@ public sealed class Vector3Descriptor : Descriptor, IDescriptorResolver
         Name = $"{vector3.X} {vector3.Y} {vector3.Z}";
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[]? parameters)
+    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
     {
         return target switch
         {
-            nameof(Vector3.Equals) when parameters![0].ParameterType == typeof(Vector3) => ResolveVectorEquals,
+            nameof(Vector3.Equals) when parameters[0].ParameterType == typeof(Vector3) => ResolveVectorEquals,
             nameof(Vector3.Equals) when parameters.Length == 1 => ResolveObjectEquals,
             _ => null
         };

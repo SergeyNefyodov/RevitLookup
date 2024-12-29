@@ -34,9 +34,9 @@ public sealed class ResolverTests
         {
             await Assert.That(defaultResult.Members).IsEmpty();
             await Assert.That(comparableResult.Members).IsNotEmpty();
-            await Assert.That(comparableResult.Members[1].Value.Description).IsNotNullOrEmpty();
             await Assert.That(comparableResult.Members[1].AllocatedBytes).IsPositive();
             await Assert.That(comparableResult.Members[1].ComputationTime).IsPositive();
+            await Assert.That(comparableResult.Members[1].Value.Description).IsNotNullOrEmpty();
         }
     }
 
@@ -83,7 +83,6 @@ public sealed class ResolverTests
             await Assert.That(comparableResult.Members).IsNotEmpty();
             await Assert.That(comparableContextResult.Members).IsNotEmpty();
             await Assert.That(comparableContextResult.Members[0].AllocatedBytes).IsPositive();
-            await Assert.That(comparableContextResult.Members[0].ComputationTime).IsPositive();
             await Assert.That(comparableContextResult.Members[0].ComputationTime).IsPositive();
             await Assert.That(comparableContextResult.Members.Count).IsGreaterThan(comparableResult.Members.Count);
         }
