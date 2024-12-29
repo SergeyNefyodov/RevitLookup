@@ -25,7 +25,7 @@ namespace RevitLookup.UI.Framework.Engine.Configuration;
 /// <summary>
 ///     Indicates that additional members can be added to the descriptor
 /// </summary>
-public interface IDescriptorConnector
+public interface IContextMenuConnector
 {
     void RegisterMenu(ContextMenu contextMenu);
 }

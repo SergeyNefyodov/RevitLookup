@@ -52,7 +52,7 @@ public partial class SummaryViewBase
             .SetCommand(decomposedObject, parameter => HelpUtils.ShowHelp(parameter.TypeFullName))
             .SetShortcut(Key.F1);
 
-        if (decomposedObject.Descriptor is not IDescriptorConnector connector) return;
+        if (decomposedObject.Descriptor is not IContextMenuConnector connector) return;
 
         try
         {
@@ -201,7 +201,7 @@ public partial class SummaryViewBase
             .SetCommand(member, parameter => HelpUtils.ShowHelp(parameter.DeclaringTypeFullName, parameter.Name))
             .SetShortcut(Key.F1);
 
-        if (member.Value.Descriptor is not IDescriptorConnector connector) return;
+        if (member.Value.Descriptor is not IContextMenuConnector connector) return;
 
         try
         {
