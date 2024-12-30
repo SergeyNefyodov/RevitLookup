@@ -24,41 +24,16 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Summary.Descriptors;
 
-public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descriptor, IDescriptorResolver
+public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descriptor, IDescriptorResolver, IDescriptorResolver<Document>
 {
     public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
     {
         return target switch
         {
-            nameof(FamilyManager.GetAssociatedFamilyParameter) => ResolveGetAssociatedFamilyParameter,
             nameof(FamilyManager.IsParameterLockable) => ResolveIsParameterLockable,
             nameof(FamilyManager.IsParameterLocked) => ResolveIsParameterLocked,
             _ => null
         };
-
-        IVariant ResolveGetAssociatedFamilyParameter()
-        {
-            var elementTypes = Context.ActiveDocument.GetElements().WhereElementIsElementType();
-            var elementInstances = Context.ActiveDocument.GetElements().WhereElementIsNotElementType();
-            var elements = elementTypes
-                .UnionWith(elementInstances)
-                .ToElements();
-
-            var variants = Variants.Values<KeyValuePair<Parameter, FamilyParameter>>(elements.Count);
-            foreach (var element in elements)
-            {
-                foreach (Parameter parameter in element.Parameters)
-                {
-                    var familyParameter = familyManager.GetAssociatedFamilyParameter(parameter);
-                    if (familyParameter is not null)
-                    {
-                        variants.Add(new KeyValuePair<Parameter, FamilyParameter>(parameter, familyParameter));
-                    }
-                }
-            }
-
-            return variants.Consume();
-        }
 
         IVariant ResolveIsParameterLockable()
         {
@@ -81,6 +56,39 @@ public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descr
             {
                 var result = familyManager.IsParameterLocked(parameter);
                 variants.Add(result, $"{parameter.Definition.Name}: {result}");
+            }
+
+            return variants.Consume();
+        }
+    }
+
+    Func<Document, IVariant>? IDescriptorResolver<Document>.Resolve(string target, ParameterInfo[] parameters)
+    {
+        return target switch
+        {
+            nameof(FamilyManager.GetAssociatedFamilyParameter) => ResolveGetAssociatedFamilyParameter,
+            _ => null
+        };
+
+        IVariant ResolveGetAssociatedFamilyParameter(Document context)
+        {
+            var elementTypes = context.GetElements().WhereElementIsElementType();
+            var elementInstances = context.GetElements().WhereElementIsNotElementType();
+            var elements = elementTypes
+                .UnionWith(elementInstances)
+                .ToElements();
+
+            var variants = Variants.Values<KeyValuePair<Parameter, FamilyParameter>>(elements.Count);
+            foreach (var element in elements)
+            {
+                foreach (Parameter parameter in element.Parameters)
+                {
+                    var familyParameter = familyManager.GetAssociatedFamilyParameter(parameter);
+                    if (familyParameter is not null)
+                    {
+                        variants.Add(new KeyValuePair<Parameter, FamilyParameter>(parameter, familyParameter));
+                    }
+                }
             }
 
             return variants.Consume();
