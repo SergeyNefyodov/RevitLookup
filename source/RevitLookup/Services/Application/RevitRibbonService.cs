@@ -23,7 +23,6 @@ using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Commands;
 using RevitLookup.Core;
 using UIFramework;
-using RibbonExtensions = RevitLookup.Utils.Ribbon.RibbonExtensions;
 
 namespace RevitLookup.Services.Application;
 
@@ -50,7 +49,7 @@ public sealed class RevitRibbonService(ISettingsService settingsService)
     private void CreatePanels()
     {
         var application = Context.UiControlledApplication;
-        var addinsPanel = RibbonExtensions.CreatePanel(application, "Revit Lookup");
+        var addinsPanel = application.CreatePanel("Revit Lookup");
         var pullButton = addinsPanel.AddPullDownButton("RevitLookupButton", "RevitLookup");
         pullButton.SetImage("/RevitLookup;component/Resources/Images/RibbonIcon16.png");
         pullButton.SetLargeImage("/RevitLookup;component/Resources/Images/RibbonIcon32.png");
@@ -74,7 +73,7 @@ public sealed class RevitRibbonService(ISettingsService settingsService)
         _createdPanels.Add(addinsPanel);
         if (!settingsService.GeneralSettings.UseModifyTab) return;
 
-        var modifyPanel = RibbonExtensions.CreatePanel(application, "Revit Lookup", "Modify");
+        var modifyPanel = application.CreatePanel("Revit Lookup", "Modify");
         modifyPanel.AddPushButton<SnoopSelectionCommand>(" Snoop \nSelection")
             .SetImage("/RevitLookup;component/Resources/Images/RibbonIcon16.png")
             .SetLargeImage("/RevitLookup;component/Resources/Images/RibbonIcon32.png");
@@ -86,7 +85,7 @@ public sealed class RevitRibbonService(ISettingsService settingsService)
     {
         foreach (var ribbonPanel in _createdPanels)
         {
-            RibbonExtensions.RemovePanel(ribbonPanel);
+            ribbonPanel.RemovePanel();
         }
 
         _createdPanels.Clear();
