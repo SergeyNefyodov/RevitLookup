@@ -1,17 +1,13 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using LookupEngine;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Options;
 using RevitLookup.Abstractions.Models.Summary;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Summary;
 using RevitLookup.Core;
 using RevitLookup.Core.Summary;
-using RevitLookup.Mappers;
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 using Visibility = System.Windows.Visibility;
 
@@ -22,7 +18,7 @@ namespace RevitLookup.Services.Summary;
 public sealed class VisualDecompositionService(
     IWindowIntercomService intercomService,
     INotificationService notificationService,
-    ISettingsService settingsService,
+    IDecompositionService decompositionService,
     IDecompositionSummaryViewModel summaryViewModel)
     : IVisualDecompositionService
 {
@@ -43,7 +39,7 @@ public sealed class VisualDecompositionService(
 
             var objects = await RevitShell.AsyncCollectionHandler.RaiseAsync(_ => RevitObjectsCollector.GetObjects(decompositionObject));
             summaryViewModel.SelectedDecomposedObject = null;
-            summaryViewModel.DecomposedObjects = await DecomposeAsync(objects);
+            summaryViewModel.DecomposedObjects = await decompositionService.DecomposeAsync(objects);
         }
         catch (OperationCanceledException)
         {
@@ -84,12 +80,12 @@ public sealed class VisualDecompositionService(
             _ => new[] {obj}
         };
 
-        summaryViewModel.DecomposedObjects = await DecomposeAsync(values);
+        summaryViewModel.DecomposedObjects = await decompositionService.DecomposeAsync(values);
     }
 
     public async Task VisualizeDecompositionAsync(IEnumerable objects)
     {
-        summaryViewModel.DecomposedObjects = await DecomposeAsync(objects);
+        summaryViewModel.DecomposedObjects = await decompositionService.DecomposeAsync(objects);
     }
 
     public async Task VisualizeDecompositionAsync(ObservableDecomposedObject decomposedObject)
@@ -102,76 +98,5 @@ public sealed class VisualDecompositionService(
     {
         summaryViewModel.DecomposedObjects = decomposedObjects;
         await Task.CompletedTask;
-    }
-
-    public async Task<ObservableDecomposedObject> DecomposeAsync(object obj)
-    {
-        var options = CreateDecomposeMembersOptions();
-        return await RevitShell.AsyncObjectHandler.RaiseAsync(_ =>
-        {
-            var result = LookupComposer.Decompose(obj, options);
-            return DecompositionResultMapper.Convert(result);
-        });
-    }
-
-    public async Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects)
-    {
-        var options = CreateDecomposeOptions();
-        return await RevitShell.AsyncObjectsHandler.RaiseAsync(_ =>
-        {
-            var capacity = objects is ICollection collection ? collection.Count : 4;
-            var decomposedObjects = new List<ObservableDecomposedObject>(capacity);
-            foreach (var obj in objects)
-            {
-                var decomposedObject = LookupComposer.DecomposeObject(obj, options);
-                decomposedObjects.Add(DecompositionResultMapper.Convert(decomposedObject));
-            }
-
-            return decomposedObjects;
-        });
-    }
-
-    public async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
-    {
-        var options = CreateDecomposeMembersOptions();
-        return await RevitShell.AsyncMembersHandler.RaiseAsync(_ =>
-        {
-            var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
-            var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
-
-            foreach (var decomposedMember in decomposedMembers)
-            {
-                members.Add(DecompositionResultMapper.Convert(decomposedMember));
-            }
-
-            return members;
-        });
-    }
-
-    private static DecomposeOptions<Document> CreateDecomposeOptions()
-    {
-        return new DecomposeOptions<Document>
-        {
-            Context = Context.ActiveDocument!, //TODO: replace
-            EnableRedirection = true,
-            TypeResolver = DescriptorsMap.FindDescriptor
-        };
-    }
-
-    private DecomposeOptions<Document> CreateDecomposeMembersOptions()
-    {
-        return new DecomposeOptions<Document>
-        {
-            Context = Context.ActiveDocument!, //TODO: replace
-            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
-            IncludeFields = settingsService.GeneralSettings.IncludeFields,
-            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
-            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
-            IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
-            IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
-            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
-            EnableRedirection = true,
-            TypeResolver = DescriptorsMap.FindDescriptor
-        };
     }
 }

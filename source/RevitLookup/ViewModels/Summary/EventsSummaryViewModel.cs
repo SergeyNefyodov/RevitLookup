@@ -15,7 +15,7 @@ namespace RevitLookup.ViewModels.Summary;
 public sealed partial class EventsSummaryViewModel(
     IWindowIntercomService intercomService,
     INotificationService notificationService,
-    IVisualDecompositionService decompositionService,
+    IDecompositionService decompositionService,
     EventsMonitoringService monitoringService,
     ILogger<DecompositionSummaryViewModel> logger)
     : ObservableObject, IEventsSummaryViewModel

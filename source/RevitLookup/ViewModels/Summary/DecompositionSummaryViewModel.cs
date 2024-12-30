@@ -11,8 +11,8 @@ namespace RevitLookup.ViewModels.Summary;
 [UsedImplicitly]
 public sealed partial class DecompositionSummaryViewModel(
     IWindowIntercomService intercomService,
+    IDecompositionService decompositionService,
     INotificationService notificationService,
-    IVisualDecompositionService decompositionService,
     ILogger<DecompositionSummaryViewModel> logger)
     : ObservableObject, IDecompositionSummaryViewModel
 {

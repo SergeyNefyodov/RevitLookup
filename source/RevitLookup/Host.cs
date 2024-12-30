@@ -77,6 +77,7 @@ public static class Host
         //Services
         builder.Services.AddSingleton<ISoftwareUpdateService, SoftwareUpdateService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
+        builder.Services.AddSingleton<IDecompositionService, DecompositionService>();
         builder.Services.AddScoped<IVisualDecompositionService, VisualDecompositionService>();
         builder.Services.AddTransient<IRevitLookupUiService, RevitLookupUiService>();
         builder.Services.AddTransient<EventsMonitoringService>();

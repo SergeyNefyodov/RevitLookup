@@ -18,7 +18,6 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 
-using System.Reflection;
 using Autodesk.Revit.UI;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Commands;
@@ -50,7 +49,7 @@ public sealed class RevitRibbonService(ISettingsService settingsService)
 
     private void CreatePanels()
     {
-        var application = CreateUiControlledApplication();
+        var application = Context.UiControlledApplication;
         var addinsPanel = RibbonExtensions.CreatePanel(application, "Revit Lookup");
         var pullButton = addinsPanel.AddPullDownButton("RevitLookupButton", "RevitLookup");
         pullButton.SetImage("/RevitLookup;component/Resources/Images/RibbonIcon16.png");
@@ -91,16 +90,5 @@ public sealed class RevitRibbonService(ISettingsService settingsService)
         }
 
         _createdPanels.Clear();
-    }
-
-    //TODO: use extensions package
-    private static UIControlledApplication CreateUiControlledApplication()
-    {
-        return (UIControlledApplication) Activator.CreateInstance(
-            typeof(UIControlledApplication),
-            BindingFlags.Instance | BindingFlags.NonPublic,
-            null,
-            [Context.UiApplication],
-            null)!;
     }
 }

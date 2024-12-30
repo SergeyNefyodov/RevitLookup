@@ -26,6 +26,6 @@ public sealed class ObjectDescriptor : Descriptor
 {
     public ObjectDescriptor(object? value)
     {
-        Name = value is null ? string.Empty : value.ToString();
+        Name = value?.ToString();
     }
 }

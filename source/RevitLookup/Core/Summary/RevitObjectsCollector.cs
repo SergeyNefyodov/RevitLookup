@@ -19,10 +19,8 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Collections;
-using System.Reflection;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using Autodesk.Revit.DB.ExternalService;
-using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Windows;
 using RevitLookup.Abstractions.Models.Summary;
@@ -79,16 +77,7 @@ public static class RevitObjectsCollector
 
     private static IEnumerable FindUiControlledApplication()
     {
-        //TODO use extension
-        return new object?[]
-        {
-            Activator.CreateInstance(
-                typeof(UIControlledApplication),
-                BindingFlags.Instance | BindingFlags.NonPublic,
-                null,
-                [Context.UiApplication],
-                null)
-        };
+        return new object[] {Context.UiControlledApplication};
     }
 
     private static IEnumerable FindEdge()
@@ -140,8 +129,9 @@ public static class RevitObjectsCollector
 
     private static IEnumerable FindDatabase()
     {
-        var elementTypes = Context.ActiveDocument.GetElements().WhereElementIsElementType();
-        var elementInstances = Context.ActiveDocument.GetElements().WhereElementIsNotElementType();
+        var activeDocument = Context.ActiveDocument!;
+        var elementTypes = activeDocument.GetElements().WhereElementIsElementType();
+        var elementInstances = activeDocument.GetElements().WhereElementIsNotElementType();
         return elementTypes
             .UnionWith(elementInstances)
             .ToArray();
@@ -153,7 +143,8 @@ public static class RevitObjectsCollector
         if (selectedIds.Count == 0) return Array.Empty<object>();
 
         var elements = new List<ElementId>();
-        var selectedElements = Context.ActiveDocument.GetElements(selectedIds).WhereElementIsNotElementType();
+        var activeDocument = Context.ActiveDocument!;
+        var selectedElements = activeDocument.GetElements(selectedIds).WhereElementIsNotElementType();
 
         foreach (var selectedElement in selectedElements)
         {
@@ -161,7 +152,7 @@ public static class RevitObjectsCollector
             foreach (var dependentElement in dependentElements) elements.Add(dependentElement);
         }
 
-        return Context.ActiveDocument.GetElements()
+        return activeDocument.GetElements()
             .WherePasses(new ElementIdSetFilter(elements))
             .ToArray();
     }
@@ -216,7 +207,7 @@ public static class RevitObjectsCollector
                 element = reference.GlobalPoint;
                 break;
             case ObjectType.LinkedElement:
-                var revitLinkInstance = reference.ElementId.ToElement<RevitLinkInstance>(activeUiDocument.Document);
+                var revitLinkInstance = reference.ElementId.ToElement<RevitLinkInstance>(activeUiDocument.Document)!;
                 element = revitLinkInstance.GetLinkDocument().GetElement(reference.LinkedElementId);
                 break;
             case ObjectType.Nothing:
