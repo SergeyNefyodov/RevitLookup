@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.Logging;
+using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Visualization;
 using RevitLookup.Core.Visualization;
 using RevitLookup.Core.Visualization.Events;
-using RevitLookup.UI.Framework.Services.Presentation;
 using Color = System.Windows.Media.Color;
 
 namespace RevitLookup.ViewModels.Visualization;
 
 [UsedImplicitly]
 public sealed partial class PolylineVisualizationViewModel(
-    NotificationService notificationService,
     ISettingsService settingsService,
+    INotificationService notificationService,
     ILogger<PolylineVisualizationViewModel> logger)
     : ObservableObject, IPolylineVisualizationViewModel
 {
