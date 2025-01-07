@@ -20,7 +20,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using RevitLookup.Abstractions.Models.Tools;
-using RevitLookup.Abstractions.Services.Summary;
+using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.Core;
 using RevitLookup.Core.Tools.Units;

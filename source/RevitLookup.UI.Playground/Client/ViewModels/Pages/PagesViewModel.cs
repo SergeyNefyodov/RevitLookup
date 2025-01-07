@@ -3,12 +3,12 @@ using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
-using RevitLookup.Abstractions.Services.Summary;
-using RevitLookup.Abstractions.ViewModels.Summary;
+using RevitLookup.Abstractions.Services.Decomposition;
+using RevitLookup.Abstractions.ViewModels.Decomposition;
 using RevitLookup.UI.Framework.Views.AboutProgram;
 using RevitLookup.UI.Framework.Views.Dashboard;
+using RevitLookup.UI.Framework.Views.Decomposition;
 using RevitLookup.UI.Framework.Views.Settings;
-using RevitLookup.UI.Framework.Views.Summary;
 using RevitLookup.UI.Framework.Views.Tools;
 using RevitLookup.UI.Playground.Client.Controls;
 

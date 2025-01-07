@@ -3,10 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using RevitLookup.Abstractions.Models.Summary;
+using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
-using RevitLookup.Abstractions.Services.Summary;
+using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.UI.Framework.Views.Windows;
 using Wpf.Ui;
 

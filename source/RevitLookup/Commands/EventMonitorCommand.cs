@@ -21,7 +21,7 @@
 using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Services.Application;
-using RevitLookup.UI.Framework.Views.Summary;
+using RevitLookup.UI.Framework.Views.Decomposition;
 
 namespace RevitLookup.Commands;
 

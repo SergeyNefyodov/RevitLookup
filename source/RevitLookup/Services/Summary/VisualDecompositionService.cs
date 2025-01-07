@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine.Abstractions.Configuration;
-using RevitLookup.Abstractions.Models.Summary;
+using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
+using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Abstractions.Services.Summary;
-using RevitLookup.Abstractions.ViewModels.Summary;
+using RevitLookup.Abstractions.ViewModels.Decomposition;
 using RevitLookup.Core;
-using RevitLookup.Core.Summary;
+using RevitLookup.Core.Decomposition;
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 using Visibility = System.Windows.Visibility;
 

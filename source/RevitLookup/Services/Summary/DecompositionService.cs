@@ -3,10 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
 using LookupEngine.Options;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
+using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Settings;
-using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Core;
-using RevitLookup.Core.Summary;
+using RevitLookup.Core.Decomposition;
 using RevitLookup.Mappers;
 
 namespace RevitLookup.Services.Summary;

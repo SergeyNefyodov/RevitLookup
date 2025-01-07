@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RevitLookup.Abstractions.Models.Summary;
+using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.Models.UserInterface;
+using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Abstractions.Services.Summary;
 using RevitLookup.Abstractions.ViewModels.Dashboard;
-using RevitLookup.UI.Framework.Views.Summary;
+using RevitLookup.UI.Framework.Views.Decomposition;
 using RevitLookup.UI.Framework.Views.Tools;
 using Wpf.Ui;
 using Wpf.Ui.Controls;

@@ -27,6 +27,7 @@ namespace RevitLookup.Core;
 public static partial class RevitShell
 {
     private static ActionEventHandler? _actionEventHandler;
+    private static AsyncEventHandler? _asyncEventHandler;
     private static AsyncEventHandler<ObservableDecomposedObject>? _asyncObjectHandler;
     private static AsyncEventHandler<List<ObservableDecomposedObject>>? _asyncObjectsHandler;
     private static AsyncEventHandler<List<ObservableDecomposedMember>>? _asyncMembersHandler;
@@ -36,6 +37,12 @@ public static partial class RevitShell
     {
         get => _actionEventHandler ?? throw new InvalidOperationException("The Handler was never set.");
         private set => _actionEventHandler = value;
+    }
+
+    public static AsyncEventHandler AsyncEventHandler
+    {
+        get => _asyncEventHandler ?? throw new InvalidOperationException("The Handler was never set.");
+        private set => _asyncEventHandler = value;
     }
 
     public static AsyncEventHandler<ObservableDecomposedObject> AsyncObjectHandler
@@ -65,6 +72,7 @@ public static partial class RevitShell
     public static void RegisterHandlers()
     {
         ActionEventHandler = new ActionEventHandler();
+        AsyncEventHandler = new AsyncEventHandler();
         AsyncObjectHandler = new AsyncEventHandler<ObservableDecomposedObject>();
         AsyncObjectsHandler = new AsyncEventHandler<List<ObservableDecomposedObject>>();
         AsyncMembersHandler = new AsyncEventHandler<List<ObservableDecomposedMember>>();

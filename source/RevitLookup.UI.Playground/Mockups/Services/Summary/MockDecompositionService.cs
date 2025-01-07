@@ -2,9 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
+using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Settings;
-using RevitLookup.Abstractions.Services.Summary;
-using RevitLookup.UI.Playground.Mockups.Core.Summary;
+using RevitLookup.UI.Playground.Mockups.Core.Decomposition;
 using RevitLookup.UI.Playground.Mockups.Mappers;
 
 namespace RevitLookup.UI.Playground.Mockups.Services.Summary;

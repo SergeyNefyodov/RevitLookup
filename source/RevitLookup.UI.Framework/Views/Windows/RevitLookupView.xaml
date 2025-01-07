@@ -8,7 +8,7 @@
     xmlns:settings="clr-namespace:RevitLookup.UI.Framework.Views.Settings"
     xmlns:aboutProgram="clr-namespace:RevitLookup.UI.Framework.Views.AboutProgram"
     xmlns:dashboard="clr-namespace:RevitLookup.UI.Framework.Views.Dashboard"
-    xmlns:pages="clr-namespace:RevitLookup.UI.Framework.Views.Summary"
+    xmlns:pages="clr-namespace:RevitLookup.UI.Framework.Views.Decomposition"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="200"

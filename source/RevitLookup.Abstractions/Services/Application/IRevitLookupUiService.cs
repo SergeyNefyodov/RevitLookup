@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
-using RevitLookup.Abstractions.Models.Summary;
+using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 
 namespace RevitLookup.Abstractions.Services.Application;

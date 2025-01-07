@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using JetBrains.Annotations;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.UI.Framework.Views.Dashboard;
-using RevitLookup.UI.Framework.Views.Summary;
+using RevitLookup.UI.Framework.Views.Decomposition;
 
 namespace RevitLookup.UI.Playground.Client.ViewModels.Pages;
 
@@ -34,7 +34,7 @@ public sealed partial class WindowsViewModel : ObservableObject
         var faker = new Faker();
 
         var colors = new List<Color>();
-        for (var i = 0; i < 200; i++)
+        for (var i = 0; i < faker.Random.Int(1, 666); i++)
         {
             colors.Add(Color.FromArgb(
                 faker.Random.Byte(),
@@ -55,7 +55,7 @@ public sealed partial class WindowsViewModel : ObservableObject
         var faker = new Faker();
 
         var strings = new List<string>();
-        for (var i = 0; i < 1000; i++)
+        for (var i = 0; i < faker.Random.Int(1, 666); i++)
         {
             strings.Add(faker.Lorem.Sentence(666));
         }
@@ -80,7 +80,7 @@ public sealed partial class WindowsViewModel : ObservableObject
         var faker = new Faker();
 
         var vectors = new List<Vector3>();
-        for (var i = 0; i < 69; i++)
+        for (var i = 0; i < faker.Random.Int(1, 666); i++)
         {
             vectors.Add(new Vector3(
                 faker.Random.Float(),

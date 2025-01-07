@@ -22,7 +22,7 @@ using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Tools;
-using RevitLookup.UI.Framework.Views.Summary;
+using RevitLookup.UI.Framework.Views.Decomposition;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 

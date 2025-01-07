@@ -20,55 +20,11 @@
 
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Autodesk.Revit.UI;
 
 namespace RevitLookup.Core;
 
 public static partial class RevitShell
 {
-    public static UIControlledApplication CreateUiControlledApplication()
-    {
-        return (UIControlledApplication) Activator.CreateInstance(
-            typeof(UIControlledApplication),
-            BindingFlags.Instance | BindingFlags.NonPublic,
-            null,
-            [Context.UiApplication],
-            null)!;
-    }
-
-    private static string GetLabel(ForgeTypeId typeId, PropertyInfo property)
-    {
-        if (typeId.Empty()) return string.Empty;
-        if (property.Name == nameof(SpecTypeId.Custom)) return string.Empty;
-
-        var type = property.DeclaringType;
-        while (type!.IsNested)
-        {
-            type = type.DeclaringType;
-        }
-
-        try
-        {
-            return type.Name switch
-            {
-                nameof(UnitTypeId) => typeId.ToUnitLabel(),
-                nameof(SpecTypeId) => typeId.ToSpecLabel(),
-                nameof(SymbolTypeId) => typeId.ToSymbolLabel(),
-#if REVIT2022_OR_GREATER
-                nameof(ParameterTypeId) => typeId.ToParameterLabel(),
-                nameof(GroupTypeId) => typeId.ToGroupLabel(),
-                nameof(DisciplineTypeId) => typeId.ToDisciplineLabel(),
-#endif
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
-        catch
-        {
-            //Some parameter label thrown an exception
-            return string.Empty;
-        }
-    }
-
     public static Parameter GetBuiltinParameter(BuiltInParameter builtInParameter)
     {
         const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
@@ -119,5 +75,65 @@ public static partial class RevitShell
         handle.Free();
 
         return category;
+    }
+
+    public static string GetParameterValue(Parameter parameter)
+    {
+        return parameter.StorageType switch
+        {
+            StorageType.Integer => parameter.AsInteger().ToString(),
+            StorageType.Double => parameter.AsValueString(),
+            StorageType.String => parameter.AsString(),
+            StorageType.ElementId => parameter.AsElementId().ToString(),
+            StorageType.None => parameter.AsValueString(),
+            _ => parameter.AsValueString()
+        };
+    }
+
+    public static void UpdateParameterValue(Parameter parameter, string value)
+    {
+        var transaction = new Transaction(parameter.Element.Document);
+        transaction.Start("Set parameter value");
+
+        bool result;
+        switch (parameter.StorageType)
+        {
+            case StorageType.Integer:
+                result = int.TryParse(value, out var intValue);
+                if (!result) break;
+
+                result = parameter.Set(intValue);
+                break;
+            case StorageType.Double:
+                result = parameter.SetValueString(value);
+                break;
+            case StorageType.String:
+                result = parameter.Set(value);
+                break;
+            case StorageType.ElementId:
+#if REVIT2024_OR_GREATER
+                result = long.TryParse(value, out var idValue);
+#else
+                result = int.TryParse(value, out var idValue);
+#endif
+                if (!result) break;
+
+                result = parameter.Set(new ElementId(idValue));
+                break;
+            case StorageType.None:
+            default:
+                result = parameter.SetValueString(value);
+                break;
+        }
+
+        if (result)
+        {
+            transaction.Commit();
+        }
+        else
+        {
+            transaction.RollBack();
+            throw new ArgumentException("Invalid parameter value");
+        }
     }
 }

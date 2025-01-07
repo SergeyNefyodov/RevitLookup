@@ -10,8 +10,8 @@ namespace RevitLookup.ViewModels.Visualization;
 
 [UsedImplicitly]
 public sealed partial class BoundingBoxVisualizationViewModel(
-    INotificationService notificationService,
     ISettingsService settingsService,
+    INotificationService notificationService,
     ILogger<BoundingBoxVisualizationViewModel> logger)
     : ObservableObject, IBoundingBoxVisualizationViewModel
 {

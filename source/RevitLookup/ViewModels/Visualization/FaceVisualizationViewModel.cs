@@ -10,8 +10,8 @@ namespace RevitLookup.ViewModels.Visualization;
 
 [UsedImplicitly]
 public sealed partial class FaceVisualizationViewModel(
-    INotificationService notificationService,
     ISettingsService settingsService,
+    INotificationService notificationService,
     ILogger<FaceVisualizationViewModel> logger)
     : ObservableObject, IFaceVisualizationViewModel
 {
