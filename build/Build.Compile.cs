@@ -1,6 +1,4 @@
-﻿using System.IO.Enumeration;
-using Nuke.Common;
-using Nuke.Common.Tools.DotNet;
+﻿using Nuke.Common.Tools.DotNet;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 sealed partial class Build
@@ -11,24 +9,12 @@ sealed partial class Build
         {
             foreach (var configuration in GlobBuildConfigurations())
             {
-                if (!VersionMap.TryGetValue(configuration, out var value)) value = "1.0.0";
+                if (!AssemblyVersionsMap.TryGetValue(configuration, out var version)) version = "1.0.0";
 
                 DotNetBuild(settings => settings
                     .SetConfiguration(configuration)
-                    .SetVersion(value)
+                    .SetVersion(version)
                     .SetVerbosity(DotNetVerbosity.minimal));
             }
         });
-
-    IEnumerable<string> GlobBuildConfigurations()
-    {
-        var configurations = Solution.Configurations
-            .Select(pair => pair.Key)
-            .Select(config => config.Remove(config.LastIndexOf('|')))
-            .Where(config => Configurations.Any(wildcard => FileSystemName.MatchesSimpleExpression(wildcard, config)))
-            .ToList();
-
-        Assert.NotEmpty(configurations, $"No solution configurations have been found. Pattern: {string.Join(" | ", Configurations)}");
-        return configurations;
-    }
 }

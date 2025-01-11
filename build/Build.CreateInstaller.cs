@@ -1,9 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.Utilities;
-using Serilog;
 using Serilog.Events;
 
 sealed partial class Build
@@ -52,10 +50,10 @@ sealed partial class Build
     {
         while (!reader.EndOfStream)
         {
-            var value = reader.ReadLine();
-            if (value is null) continue;
+            var line = reader.ReadLine();
+            if (line is null) continue;
 
-            var matches = StreamRegex.Matches(value);
+            var matches = StreamRegex.Matches(line);
             if (matches.Count > 0)
             {
                 var parameters = matches
@@ -63,12 +61,12 @@ sealed partial class Build
                     .Cast<object>()
                     .ToArray();
 
-                var line = StreamRegex.Replace(value, match => $"{{Parameter{match.Index}}}");
-                Log.Write(eventLevel, line, parameters);
+                var messageTemplate = StreamRegex.Replace(line, match => $"{{Parameter{match.Index}}}");
+                Log.Write(eventLevel, messageTemplate, parameters);
             }
             else
             {
-                Log.Debug(value);
+                Log.Debug(line);
             }
         }
     }

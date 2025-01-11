@@ -1,7 +1,11 @@
-﻿sealed partial class Build
+﻿using Nuke.Common.CI.GitHubActions;
+
+sealed partial class Build
 {
+    [Parameter] string ReleaseVersion = GitHubActions.Instance?.RefName;
+
     readonly AbsolutePath ArtifactsDirectory = RootDirectory / "output";
-    readonly AbsolutePath ChangeLogPath = RootDirectory / "Changelog.md";
+    readonly AbsolutePath ChangelogPath = RootDirectory / "Changelog.md";
 
     protected override void OnBuildInitialized()
     {
@@ -16,8 +20,9 @@
             { Solution.Automation.Installer, Solution.Revit.RevitLookup }
         };
 
-        VersionMap = new()
+        AssemblyVersionsMap = new()
         {
+            { "Release Engine", "1.0.0" },
             { "Release R21", "2021.3.10" },
             { "Release R22", "2022.3.10" },
             { "Release R23", "2023.3.10" },
