@@ -19,14 +19,16 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Windows;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Events;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.Services.Settings;
-using RevitLookup.Core;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Color = System.Windows.Media.Color;
+#if REVIT2024_OR_GREATER
+using RevitLookup.Core;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Events;
+#endif
 
 namespace RevitLookup.Services.Appearance;
 
