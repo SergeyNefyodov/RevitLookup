@@ -9,7 +9,7 @@
 // ReSharper disable once CheckNamespace
 namespace Wpf.Ui.Controls;
 
-internal class NavigationViewBreadcrumbItem
+public class NavigationViewBreadcrumbItem
 {
     public NavigationViewBreadcrumbItem(INavigationViewItem item)
     {
@@ -18,5 +18,6 @@ internal class NavigationViewBreadcrumbItem
     }
 
     public object Content { get; }
+
     public string PageId { get; }
 }

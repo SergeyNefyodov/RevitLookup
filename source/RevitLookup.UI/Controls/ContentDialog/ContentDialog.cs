@@ -616,6 +616,24 @@ public class ContentDialog : ContentControl
         Hide(result);
     }
 
+    // protected override Size MeasureOverride(Size availableSize)
+    // {
+    //     var rootElement = (UIElement)GetVisualChild(0)!;
+    //
+    //     rootElement.Measure(availableSize);
+    //     Size desiredSize = rootElement.DesiredSize;
+    //
+    //     Size newSize = GetNewDialogSize(desiredSize);
+    //
+    //     SetCurrentValue(DialogHeightProperty, newSize.Height);
+    //     SetCurrentValue(DialogWidthProperty, newSize.Width);
+    //
+    //     ResizeWidth(rootElement);
+    //     ResizeHeight(rootElement);
+    //
+    //     return desiredSize;
+    // }
+
     /// <summary>
     /// Occurs after Loaded event
     /// </summary>
@@ -625,4 +643,57 @@ public class ContentDialog : ContentControl
 
         RaiseEvent(new RoutedEventArgs(OpenedEvent));
     }
+
+    // private Size GetNewDialogSize(Size desiredSize)
+    // {
+    //     // TODO: Handle negative values
+    //     var paddingWidth = Padding.Left + Padding.Right;
+    //     var paddingHeight = Padding.Top + Padding.Bottom;
+    //
+    //     var marginHeight = DialogMargin.Bottom + DialogMargin.Top;
+    //     var marginWidth = DialogMargin.Left + DialogMargin.Right;
+    //
+    //     var width = desiredSize.Width - marginWidth + paddingWidth;
+    //     var height = desiredSize.Height - marginHeight + paddingHeight;
+    //
+    //     return new Size(width, height);
+    // }
+
+    // private void ResizeWidth(UIElement element)
+    // {
+    //     if (DialogWidth <= DialogMaxWidth)
+    //     {
+    //         return;
+    //     }
+    //
+    //     SetCurrentValue(DialogWidthProperty, DialogMaxWidth);
+    //     element.UpdateLayout();
+    //
+    //     SetCurrentValue(DialogHeightProperty, element.DesiredSize.Height);
+    //
+    //     if (DialogHeight > DialogMaxHeight)
+    //     {
+    //         SetCurrentValue(DialogMaxHeightProperty, DialogHeight);
+    //         /*Debug.WriteLine($"DEBUG | {GetType()} | WARNING | DialogHeight > DialogMaxHeight after resizing width!");*/
+    //     }
+    // }
+
+    // private void ResizeHeight(UIElement element)
+    // {
+    //     if (DialogHeight <= DialogMaxHeight)
+    //     {
+    //         return;
+    //     }
+    //
+    //     SetCurrentValue(DialogHeightProperty, DialogMaxHeight);
+    //     element.UpdateLayout();
+    //
+    //     SetCurrentValue(DialogWidthProperty, element.DesiredSize.Width);
+    //
+    //     if (DialogWidth > DialogMaxWidth)
+    //     {
+    //         SetCurrentValue(DialogMaxWidthProperty, DialogWidth);
+    //         /*Debug.WriteLine($"DEBUG | {GetType()} | WARNING | DialogWidth > DialogMaxWidth after resizing height!");*/
+    //     }
+    // }
 }

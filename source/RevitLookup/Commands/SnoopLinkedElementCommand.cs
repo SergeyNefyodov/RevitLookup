@@ -20,9 +20,9 @@
 
 using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
-using RevitLookup.Services.Contracts;
-using RevitLookup.Services.Enums;
-using RevitLookup.Views.Pages;
+using RevitLookup.Abstractions.Models.Decomposition;
+using RevitLookup.Abstractions.Services.Application;
+using RevitLookup.UI.Framework.Views.Decomposition;
 
 namespace RevitLookup.Commands;
 
@@ -32,8 +32,8 @@ public class SnoopLinkedElementCommand : ExternalCommand
 {
     public override void Execute()
     {
-        Host.GetService<ILookupService>()
-            .Snoop(SnoopableType.LinkedElement)
-            .Show<SnoopPage>();
+        Host.GetService<IRevitLookupUiService>()
+            .Decompose(KnownDecompositionObject.LinkedElement)
+            .Show<DecompositionSummaryPage>();
     }
 }

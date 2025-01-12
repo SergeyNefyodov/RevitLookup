@@ -1,0 +1,176 @@
+﻿<Page
+    x:Class="RevitLookup.UI.Framework.Views.Settings.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:rl="http://revitlookup.com/xaml"
+    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
+    xmlns:settings="clr-namespace:RevitLookup.UI.Framework.Views.Settings"
+    mc:Ignorable="d"
+    d:DesignHeight="1100"
+    d:DesignWidth="500"
+    d:DataContext="{d:DesignInstance settings:SettingsPage}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <StackPanel
+        Margin="12">
+        <rl:TextBlock
+            FontTypography="BodyStrong"
+            Text="User interface" />
+        <StackPanel>
+            <rl:CardControl
+                Icon="{rl:SymbolIcon Color24}"
+                Margin="0,8,0,0">
+                <rl:CardControl.Header>
+                    <StackPanel>
+                        <rl:TextBlock
+                            Text="Theme" />
+                        <rl:TextBlock
+                            Appearance="Secondary"
+                            FontTypography="Caption"
+                            TextTrimming="CharacterEllipsis"
+                            Text="Customise the application theme" />
+                    </StackPanel>
+                </rl:CardControl.Header>
+                <ComboBox
+                    MinWidth="150"
+                    IsEnabled="True"
+                    SelectedItem="{Binding ViewModel.Theme}"
+                    ItemsSource="{Binding ViewModel.Themes}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Text="{Binding Converter={valueConverters:ApplicationThemeConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </rl:CardControl>
+            <rl:CardControl
+                Icon="{rl:SymbolIcon ColorBackground24}"
+                Margin="0,8,0,0">
+                <rl:CardControl.Header>
+                    <StackPanel>
+                        <rl:TextBlock
+                            Text="Background effect" />
+                        <rl:TextBlock
+                            Appearance="Secondary"
+                            FontTypography="Caption"
+                            TextTrimming="CharacterEllipsis"
+                            Text="Visual effect applied to UI background" />
+                    </StackPanel>
+                </rl:CardControl.Header>
+                <ComboBox
+                    MinWidth="150"
+                    IsEnabled="True"
+                    SelectedItem="{Binding ViewModel.Background}"
+                    ItemsSource="{Binding ViewModel.BackgroundEffects}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Text="{Binding ., 
+                                    Converter={valueConverters:BackgroundTypeConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </rl:CardControl>
+            <rl:CardControl
+                Icon="{rl:SymbolIcon VideoClipMultiple24}"
+                Margin="0,8,0,0">
+                <rl:CardControl.Header>
+                    <StackPanel>
+                        <rl:TextBlock
+                            Text="Smooth navigation" />
+                        <rl:TextBlock
+                            Appearance="Secondary"
+                            FontTypography="Caption"
+                            TextTrimming="CharacterEllipsis"
+                            Text="Apply an animation effect while navigating between pages" />
+                    </StackPanel>
+                </rl:CardControl.Header>
+                <rl:ToggleSwitch
+                    IsChecked="{Binding ViewModel.UseTransition}" />
+            </rl:CardControl>
+            <rl:CardControl
+                Icon="{rl:SymbolIcon TopSpeed24}"
+                Margin="0,8,0,0">
+                <rl:CardControl.Header>
+                    <StackPanel>
+                        <rl:TextBlock
+                            Text="Hardware graphics acceleration" />
+                        <rl:TextBlock
+                            Appearance="Secondary"
+                            FontTypography="Caption"
+                            TextTrimming="CharacterEllipsis"
+                            Text="Offloads graphic rendering from the CPU to the GPU" />
+                    </StackPanel>
+                </rl:CardControl.Header>
+                <rl:ToggleSwitch
+                    IsChecked="{Binding ViewModel.UseHardwareRendering}" />
+            </rl:CardControl>
+            <rl:CardControl
+                Icon="{rl:SymbolIcon SlideSize24}"
+                Margin="0,8,0,0">
+                <rl:CardControl.Header>
+                    <StackPanel>
+                        <rl:TextBlock
+                            Text="Restore window size" />
+                        <rl:TextBlock
+                            Appearance="Secondary"
+                            FontTypography="Caption"
+                            TextTrimming="CharacterEllipsis"
+                            Text="Remembers size of the window and restores it in the same way" />
+                    </StackPanel>
+                </rl:CardControl.Header>
+                <rl:ToggleSwitch
+                    IsChecked="{Binding ViewModel.UseSizeRestoring}" />
+            </rl:CardControl>
+        </StackPanel>
+        <rl:TextBlock
+            FontTypography="BodyStrong"
+            Text="Ribbon"
+            Margin="0,12,0,0" />
+        <StackPanel>
+            <rl:CardControl
+                Icon="{rl:SymbolIcon PanelRightCursor24}"
+                Margin="0,8,0,0">
+                <rl:CardControl.Header>
+                    <StackPanel>
+                        <rl:TextBlock
+                            Text="Interaction panel in a Modify tab" />
+                        <rl:TextBlock
+                            Appearance="Secondary"
+                            FontTypography="Caption"
+                            TextTrimming="CharacterEllipsis"
+                            Text="Integrate the RevitLookup panel into the Modify tab" />
+                    </StackPanel>
+                </rl:CardControl.Header>
+                <rl:ToggleSwitch
+                    IsChecked="{Binding ViewModel.UseModifyTab}" />
+            </rl:CardControl>
+        </StackPanel>
+        <rl:TextBlock
+            FontTypography="BodyStrong"
+            Text="Other"
+            Margin="0,12,0,0" />
+        <StackPanel>
+            <rl:CardAction
+                Icon="{rl:SymbolIcon ArrowReset24}"
+                Margin="0,8,0,0"
+                Command="{Binding ViewModel.ResetSettingsCommand}">
+                <rl:CardAction.Content>
+                    <StackPanel>
+                        <rl:TextBlock
+                            Text="Reset setting" />
+                        <rl:TextBlock
+                            Appearance="Secondary"
+                            FontTypography="Caption"
+                            TextTrimming="CharacterEllipsis"
+                            Text="Reset application settings to default" />
+                    </StackPanel>
+                </rl:CardAction.Content>
+            </rl:CardAction>
+        </StackPanel>
+    </StackPanel>
+
+</Page>

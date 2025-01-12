@@ -1,30 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <UseWPF>true</UseWPF>
-        <LangVersion>latest</LangVersion>
-        <PlatformTarget>x64</PlatformTarget>
-        <ImplicitUsings>true</ImplicitUsings>
-        <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <Nullable>enable</Nullable>
-        <NoWarn>CS8603;CS8618;CS8629;CS8600;CS0414;CS4014;CS8604;CS8765;CS8602;CS0168</NoWarn>
-    </PropertyGroup>
-
-    <PropertyGroup>
+        <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
+        <NoWarn>CS0108;CS8601;CS4014;CS8602</NoWarn>
         <RootNamespace>Wpf.Ui</RootNamespace>
-        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="$(Configuration.Contains('Release'))">
-        <Optimize>true</Optimize>
-        <DebugType>none</DebugType>
-        <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,10 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="PolySharp" Version="1.*">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <ProjectReference Include="..\RevitLookup.UI.Abstractions\RevitLookup.UI.Abstractions.csproj"/>
     </ItemGroup>
 
 </Project>

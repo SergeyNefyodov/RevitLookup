@@ -53,7 +53,7 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Border Margin="0,2,14,0" VerticalAlignment="Top">
+                                <Border Margin="0,2,20,0" VerticalAlignment="Top">
                                     <controls:SymbolIcon
                                         x:Name="SymbolIcon"
                                         VerticalAlignment="Top"
@@ -63,6 +63,7 @@
 
                                 <WrapPanel Grid.Column="1" VerticalAlignment="Top">
                                     <TextBlock
+                                        x:Name="InfoTitle"
                                         Margin="0,0,14,0"
                                         ScrollViewer.CanContentScroll="False"
                                         Text="{TemplateBinding Title}"
@@ -98,15 +99,19 @@
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger SourceName="InfoTitle" Property="Text" Value="">
+                            <Setter TargetName="InfoTitle" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        
                         <Trigger Property="IsClosable" Value="False">
                             <Setter TargetName="CloseButton" Property="Visibility" Value="Collapsed" />
                         </Trigger>
 
                         <Trigger Property="IsOpen" Value="True">
-                            <Setter TargetName="InfoBarRoot" Property="Visibility" Value="Visible" />
+                            <Setter Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="IsOpen" Value="False">
-                            <Setter TargetName="InfoBarRoot" Property="Visibility" Value="Collapsed" />
+                            <Setter Property="Visibility" Value="Collapsed" />
                         </Trigger>
 
                         <Trigger Property="Severity" Value="Informational">

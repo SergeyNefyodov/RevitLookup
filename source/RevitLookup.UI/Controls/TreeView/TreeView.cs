@@ -19,17 +19,19 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 // ReSharper disable once CheckNamespace
 namespace Wpf.Ui.Controls;
 
 public class TreeView : System.Windows.Controls.TreeView
 {
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
     {
         base.OnItemsSourceChanged(oldValue, newValue);
         ItemsSourceChanged?.Invoke(this, newValue);
     }
 
-    public event EventHandler<IEnumerable> ItemsSourceChanged;
+    public event EventHandler<IEnumerable>? ItemsSourceChanged;
 }

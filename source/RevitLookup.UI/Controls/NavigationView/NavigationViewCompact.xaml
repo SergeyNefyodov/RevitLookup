@@ -17,6 +17,7 @@
             <Border
                 x:Name="MainBorder"
                 Grid.Row="0"
+                MinWidth="40"
                 MinHeight="40"
                 Margin="0"
                 Padding="0"
@@ -323,7 +324,7 @@
                                 Visibility="{TemplateBinding IsPaneToggleVisible,
                                                              Converter={StaticResource BoolToVisibilityConverter}}">
                                 <controls:Button.Icon>
-                                    <controls:SymbolIcon Symbol="LineHorizontal320" FontSize="18" />
+                                    <controls:SymbolIcon Symbol="LineHorizontal320" />
                                 </controls:Button.Icon>
                                 <controls:Button.Content>
                                     <TextBlock FontWeight="Medium" Text="{TemplateBinding PaneTitle}" />

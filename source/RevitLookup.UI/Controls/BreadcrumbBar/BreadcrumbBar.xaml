@@ -36,7 +36,7 @@
     </Style>
 
     <Style x:Key="DefaultUiBreadcrumbBarItemStyle" TargetType="{x:Type controls:BreadcrumbBarItem}">
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="DemiBold" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />

@@ -13,7 +13,7 @@
     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
     <system:Double x:Key="TreeViewItemChevronSize">10</system:Double>
-    <system:Double x:Key="TreeViewItemFontSize">12</system:Double>
+    <system:Double x:Key="TreeViewItemFontSize">14</system:Double>
 
     <Style x:Key="ExpandCollapseToggleButtonStyle" TargetType="{x:Type ToggleButton}">
         <!--  Universal WPF UI focus  -->
@@ -180,7 +180,7 @@
                 <Setter Property="ItemsPanel">
                     <Setter.Value>
                         <ItemsPanelTemplate>
-                            <VirtualizingStackPanel VirtualizationMode="Recycling" />
+                            <VirtualizingStackPanel VirtualizationMode="Recycling"/>
                         </ItemsPanelTemplate>
                     </Setter.Value>
                 </Setter>
@@ -192,7 +192,7 @@
         <Setter Property="Foreground" Value="{DynamicResource TreeViewItemForeground}" />
         <Setter Property="Background" Value="{DynamicResource TreeViewItemBackground}" />
         <Setter Property="Padding" Value="4" />
-        <Setter Property="FocusVisualStyle" Value="{DynamicResource TreeViewItemFocusVisual}" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -335,7 +335,7 @@
                 <Setter Property="ItemsPanel">
                     <Setter.Value>
                         <ItemsPanelTemplate>
-                            <VirtualizingStackPanel VirtualizationMode="Recycling" />
+                            <VirtualizingStackPanel VirtualizationMode="Recycling"/>
                         </ItemsPanelTemplate>
                     </Setter.Value>
                 </Setter>

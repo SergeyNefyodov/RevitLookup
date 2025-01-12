@@ -1,4 +1,4 @@
-﻿<!--
+<!--
     This Source Code Form is subject to the terms of the MIT License.
     If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
     Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -37,12 +37,14 @@
                         -->
                         <Grid
                             Grid.Row="0"
+                            Grid.RowSpan="2"
                             Grid.Column="0"
+                            Grid.ColumnSpan="2"
                             Margin="{TemplateBinding Padding}">
                             <ScrollContentPresenter CanContentScroll="{TemplateBinding CanContentScroll}" />
                         </Grid>
 
-                        <controls:DynamicScrollBar
+                        <ScrollBar
                             x:Name="PART_VerticalScrollBar"
                             Grid.Row="0"
                             Grid.Column="1"
@@ -51,7 +53,7 @@
                             Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
                             Value="{TemplateBinding VerticalOffset}" />
 
-                        <controls:DynamicScrollBar
+                        <ScrollBar
                             x:Name="PART_HorizontalScrollBar"
                             Grid.Row="1"
                             Grid.Column="0"

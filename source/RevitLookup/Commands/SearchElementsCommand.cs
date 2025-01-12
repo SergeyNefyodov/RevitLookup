@@ -20,9 +20,9 @@
 
 using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
-using RevitLookup.Services.Contracts;
-using RevitLookup.ViewModels.Contracts;
-using RevitLookup.Views.Pages;
+using RevitLookup.Abstractions.Services.Application;
+using RevitLookup.Abstractions.ViewModels.Dashboard;
+using RevitLookup.UI.Framework.Views.Dashboard;
 
 namespace RevitLookup.Commands;
 
@@ -32,8 +32,8 @@ public class SearchElementsCommand : ExternalCommand
 {
     public override void Execute()
     {
-        Host.GetService<ILookupService>()
+        Host.GetService<IRevitLookupUiService>()
             .Show<DashboardPage>()
-            .Execute<IDashboardViewModel>(dashboard => dashboard.OpenDialogCommand.Execute("search"));
+            .RunService<IDashboardViewModel>(dashboard => dashboard.OpenDialogCommand.Execute("search"));
     }
 }

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <UseWpf>true</UseWpf>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\LookupEngine\LookupEngine.csproj"/>
+        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
+        <ProjectReference Include="..\RevitLookup.UI.Framework\RevitLookup.UI.Framework.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Data Generation -->
+        <PackageReference Include="Bogus"/>
+
+        <!-- MVVM -->
+        <PackageReference Include="Riok.Mapperly"/>
+
+        <!--IOC-->
+        <PackageReference Include="Scrutor"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
+
+        <!--Logging-->
+        <PackageReference Include="Serilog.Sinks.Debug"/>
+        <PackageReference Include="Serilog.Sinks.Console"/>
+        <PackageReference Include="Serilog.Extensions.Hosting"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Client\Resources\Images\ProductIcon.png"/>
+        <Resource Include="Client\Resources\Images\ProductLogo.png"/>
+        <EmbeddedResource Include="Client\Models\FontIcons.json"/>
+    </ItemGroup>
+
+</Project>
