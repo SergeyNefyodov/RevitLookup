@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Nuke.Common.Git;
 using Nuke.Common.Utilities;
 using Serilog.Events;
 
@@ -8,7 +7,6 @@ sealed partial class Build
 {
     Target CreateInstaller => _ => _
         .DependsOn(Compile)
-        .OnlyWhenStatic(() => IsLocalBuild || GitRepository.IsOnMasterBranch())
         .Executes(() =>
         {
             foreach (var (installer, project) in InstallersMap)
