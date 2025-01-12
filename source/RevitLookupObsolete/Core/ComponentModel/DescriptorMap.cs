@@ -21,7 +21,6 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Threading;
 using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.DB.ExtensibleStorage;
