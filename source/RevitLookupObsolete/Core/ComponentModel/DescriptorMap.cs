@@ -21,18 +21,8 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
-using Autodesk.Revit.DB.Electrical;
-using Autodesk.Revit.DB.ExtensibleStorage;
-using Autodesk.Revit.DB.ExternalService;
-using Autodesk.Revit.DB.Lighting;
-using Autodesk.Revit.DB.Macros;
-using Autodesk.Revit.DB.Mechanical;
-using Autodesk.Revit.DB.Plumbing;
-using Autodesk.Revit.DB.Structure;
-using Autodesk.Revit.DB.Visual;
-using Autodesk.Revit.UI;
-using Autodesk.Windows;
 using RevitLookup.Core.ComponentModel.Descriptors;
 using RevitApplication = Autodesk.Revit.ApplicationServices.Application;
 using RibbonItem = Autodesk.Revit.UI.RibbonItem;
@@ -155,14 +145,13 @@ public static class DescriptorMap
             FamilySizeTableManager value when type is null || type == typeof(FamilySizeTableManager) => new FamilySizeTableManagerDescriptor(value),
             FamilySizeTable value when type is null || type == typeof(FamilySizeTable) => new FamilySizeTableDescriptor(value),
             FamilySizeTableColumn value when type is null || type == typeof(FamilySizeTableColumn) => new FamilySizeTableColumnDescriptor(value),
-            CompoundStructure value when type is null || type == typeof(CompoundStructure) => new CompoundStructureDescriptor(value),
 #if REVIT2024_OR_GREATER
             EvaluatedParameter value when type is null || type == typeof(EvaluatedParameter) => new EvaluatedParameterDescriptor(value),
 #endif
             IDisposable when type is null || type == typeof(IDisposable) => new DisposableDescriptor(), //Faster then obj.GetType().Namespace == "Autodesk.Revit.DB"
             
             //Media
-            System.Windows.Media.Color value when type is null || type == typeof(System.Windows.Media.Color) => new ColorMediaDescriptor(value),
+            Color value when type is null || type == typeof(Color) => new ColorMediaDescriptor(value),
             
             //ComponentManager
             UIElement => new UiElementDescriptor(),
