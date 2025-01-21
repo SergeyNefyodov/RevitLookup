@@ -68,7 +68,7 @@ public partial class SummaryViewBase
                 ViewModel.Navigate(item);
                 break;
             case ObservableDecomposedObjectsGroup group:
-                ViewModel.Navigate(group.GroupItems);
+                ViewModel.Navigate(group.GroupItems.ToList());
                 break;
         }
     }

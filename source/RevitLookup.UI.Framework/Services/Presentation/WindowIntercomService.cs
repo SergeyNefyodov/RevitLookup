@@ -25,7 +25,7 @@ public sealed class WindowIntercomService : IWindowIntercomService
     private static void OnHostDisconnected(object? sender, EventArgs args)
     {
         var self = (Window) sender!;
-        self.Closed += OnHostDisconnected;
+        self.Closed -= OnHostDisconnected;
 
         SharedWindows.Remove(self);
     }
