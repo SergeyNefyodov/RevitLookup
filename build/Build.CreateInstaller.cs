@@ -1,7 +1,6 @@
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
-using Serilog.Events;
 
 sealed partial class Build
 {
@@ -23,49 +22,37 @@ sealed partial class Build
 
                 foreach (var directory in directories)
                 {
-                    var startInfo = new ProcessStartInfo
-                    {
-                        FileName = exeFile,
-                        Arguments = directory.DoubleQuoteIfNeeded(),
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true
-                    };
-
-                    var process = Process.Start(startInfo)!;
-
-                    RedirectStream(process.StandardOutput, LogEventLevel.Information);
-                    RedirectStream(process.StandardError, LogEventLevel.Error);
-
-                    process.WaitForExit();
-                    if (process.ExitCode != 0) throw new InvalidOperationException($"The installer creation failed with ExitCode {process.ExitCode}");
+                    var process = ProcessTasks.StartProcess(exeFile, directory.DoubleQuoteIfNeeded(), logInvocation: false, logger: InstallerLogger);
+                    process.AssertZeroExitCode();
                 }
             }
         });
 
+    /// <summary>
+    ///     Logs the output of the installer process.
+    /// </summary>
     [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
-    void RedirectStream(StreamReader reader, LogEventLevel eventLevel)
+    void InstallerLogger(OutputType outputType, string output)
     {
-        while (!reader.EndOfStream)
+        if (outputType == OutputType.Err)
         {
-            var line = reader.ReadLine();
-            if (line is null) continue;
-
-            var matches = StreamRegex.Matches(line);
-            if (matches.Count > 0)
-            {
-                var parameters = matches
-                    .Select(match => match.Value.Substring(1, match.Value.Length - 2))
-                    .Cast<object>()
-                    .ToArray();
-
-                var messageTemplate = StreamRegex.Replace(line, match => $"{{Parameter{match.Index}}}");
-                Log.Write(eventLevel, messageTemplate, parameters);
-            }
-            else
-            {
-                Log.Debug(line);
-            }
+            Log.Error(output);
+            return;
         }
+
+        var arguments = ArgumentsRegex.Matches(output);
+        if (arguments.Count == 0)
+        {
+            Log.Debug(output);
+            return;
+        }
+
+        var properties = arguments
+            .Select(match => match.Value.Substring(1, match.Value.Length - 2))
+            .Cast<object>()
+            .ToArray();
+
+        var messageTemplate = ArgumentsRegex.Replace(output, match => $"{{Property{match.Index}}}");
+        Log.Information(messageTemplate, properties);
     }
 }

@@ -1,18 +1,9 @@
 using System.IO.Enumeration;
 using JetBrains.Annotations;
-using Nuke.Common.Git;
-using Nuke.Common.ProjectModel;
 
 [PublicAPI]
 sealed partial class Build : NukeBuild
 {
-    string[] Configurations;
-    Dictionary<Project, Project> InstallersMap;
-    Dictionary<string, string> AssemblyVersionsMap;
-
-    [GitRepository] readonly GitRepository GitRepository;
-    [Solution(GenerateProjects = true)] Solution Solution;
-
     public static int Main() => Execute<Build>(build => build.Compile);
 
     List<string> GlobBuildConfigurations()

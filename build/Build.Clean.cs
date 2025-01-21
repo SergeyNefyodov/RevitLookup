@@ -23,6 +23,9 @@ sealed partial class Build
             }
         });
 
+    /// <summary>
+    ///     Cleans and logs the specified directory.
+    /// </summary>
     static void CleanDirectory(AbsolutePath path)
     {
         Log.Information("Cleaning directory: {Directory}", path);

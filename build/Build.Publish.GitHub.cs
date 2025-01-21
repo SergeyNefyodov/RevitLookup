@@ -4,30 +4,35 @@ using Octokit;
 sealed partial class Build
 {
     Target PublishGitHub => _ => _
-        .DependsOn(CreateInstaller)
+        .DependsOn(Test, CreateInstaller)
         .Requires(() => ReleaseVersion)
-        .OnlyWhenStatic(() => IsServerBuild)
+        // .OnlyWhenStatic(() => IsServerBuild)
         .Executes(async () =>
         {
             var gitHubName = GitRepository.GetGitHubName();
             var gitHubOwner = GitRepository.GetGitHubOwner();
 
-            var changelog = CreateGithubChangelog();
             var artifacts = Directory.GetFiles(ArtifactsDirectory, "*");
             Assert.NotEmpty(artifacts, "No artifacts were found to create the Release");
+
+            var changelogBuilder = CreateChangelogBuilder();
+            WriteGitHubCompareUrl(changelogBuilder);
 
             var newRelease = new NewRelease(ReleaseVersion)
             {
                 Name = ReleaseVersion,
-                Body = changelog,
+                Body = changelogBuilder.ToString(),
                 TargetCommitish = GitRepository.Commit,
-                Prerelease = ReleaseVersion.Contains('-')
+                Prerelease = IsPrerelease
             };
 
             var release = await GitHubTasks.GitHubClient.Repository.Release.Create(gitHubOwner, gitHubName, newRelease);
             await UploadArtifactsAsync(release, artifacts);
         });
 
+    /// <summary>
+    ///     Uploads the artifacts to the GitHub release.
+    /// </summary>
     static async Task UploadArtifactsAsync(Release createdRelease, IEnumerable<string> artifacts)
     {
         foreach (var file in artifacts)
