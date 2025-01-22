@@ -100,6 +100,7 @@ public sealed partial class DecompositionSummaryViewModel(
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)
     {
+        SearchText = string.Empty;
         OnSearchTextChanged(SearchText);
     }
 

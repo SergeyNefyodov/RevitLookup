@@ -109,6 +109,7 @@ public sealed partial class MockDecompositionSummaryViewModel(
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)
     {
+        SearchText = string.Empty;
         OnSearchTextChanged(SearchText);
     }
 
