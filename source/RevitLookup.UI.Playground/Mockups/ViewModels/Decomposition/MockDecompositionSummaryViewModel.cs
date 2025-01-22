@@ -1,18 +1,14 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using JetBrains.Annotations;
-using LookupEngine;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
+using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Decomposition;
-using RevitLookup.UI.Playground.Mockups.Core.Decomposition;
-using RevitLookup.UI.Playground.Mockups.Mappers;
 #if NETFRAMEWORK
 using RevitLookup.UI.Framework.Extensions;
 #endif
@@ -21,8 +17,8 @@ namespace RevitLookup.UI.Playground.Mockups.ViewModels.Decomposition;
 
 [UsedImplicitly]
 public sealed partial class MockDecompositionSummaryViewModel(
-    ISettingsService settingsService,
-    IWindowIntercomService intercomService,
+    IServiceProvider serviceProvider,
+    IDecompositionService decompositionService,
     INotificationService notificationService,
     ILogger<MockDecompositionSummaryViewModel> logger)
     : ObservableObject, IDecompositionSummaryViewModel
@@ -35,24 +31,25 @@ public sealed partial class MockDecompositionSummaryViewModel(
     public void Navigate(object? value)
     {
         Host.GetService<IRevitLookupUiService>()
+            .AddParent(serviceProvider)
+            .AddStackHistory(SelectedDecomposedObject!)
             .Decompose(value)
-            .DependsOn(intercomService.GetHost())
             .Show<DecompositionSummaryPage>();
     }
 
     public void Navigate(ObservableDecomposedObject value)
     {
         Host.GetService<IRevitLookupUiService>()
+            .AddParent(serviceProvider)
             .Decompose(value)
-            .DependsOn(intercomService.GetHost())
             .Show<DecompositionSummaryPage>();
     }
 
     public void Navigate(List<ObservableDecomposedObject> values)
     {
         Host.GetService<IRevitLookupUiService>()
+            .AddParent(serviceProvider)
             .Decompose(values)
-            .DependsOn(intercomService.GetHost())
             .Show<DecompositionSummaryPage>();
     }
 
@@ -168,37 +165,7 @@ public sealed partial class MockDecompositionSummaryViewModel(
         if (value is null) return;
         if (value.Members.Count > 0) return;
 
-        value.Members = await DecomposeMembersAsync(value);
-    }
-
-    [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
-    private async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
-    {
-        var options = new DecomposeOptions
-        {
-            IncludeRoot = settingsService.GeneralSettings.IncludeRootHierarchy,
-            IncludeFields = settingsService.GeneralSettings.IncludeFields,
-            IncludeEvents = settingsService.GeneralSettings.IncludeEvents,
-            IncludeUnsupported = settingsService.GeneralSettings.IncludeUnsupported,
-            IncludePrivateMembers = settingsService.GeneralSettings.IncludePrivate,
-            IncludeStaticMembers = settingsService.GeneralSettings.IncludeStatic,
-            EnableExtensions = settingsService.GeneralSettings.IncludeExtensions,
-            EnableRedirection = true,
-            TypeResolver = DescriptorsMap.FindDescriptor
-        };
-
-        return await Task.Run(() =>
-        {
-            var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
-            var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
-
-            foreach (var decomposedMember in decomposedMembers)
-            {
-                members.Add(DecompositionResultMapper.Convert(decomposedMember));
-            }
-
-            return members;
-        });
+        value.Members = await decompositionService.DecomposeMembersAsync(value);
     }
 
     private ObservableCollection<ObservableDecomposedObjectsGroup> ApplyGrouping(List<ObservableDecomposedObject> objects)

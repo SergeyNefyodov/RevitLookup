@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
@@ -10,7 +11,7 @@ public sealed class SingleDescriptorLabelConverter : DescriptorLabelConverter
     public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var member = (ObservableDecomposedObject) value!;
-        if (!TryConvertInvalidNames(member.Name, out var name))
+        if (!TryConvertInvalidNames(member.RawValue, out var name))
         {
             name = CreateSingleName(member.Name, member.Description);
         }
@@ -29,7 +30,7 @@ public sealed class CombinedDescriptorLabelConverter : DescriptorLabelConverter
     public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var member = (ObservableDecomposedMember) value!;
-        if (!TryConvertInvalidNames(member.Value.Name, out var name))
+        if (!TryConvertInvalidNames(member.Value.RawValue, out var name))
         {
             name = CreateCombinedName(member.Value.Name, member.Value.Description);
         }
@@ -48,16 +49,16 @@ public sealed class CombinedDescriptorLabelConverter : DescriptorLabelConverter
 
 public abstract class DescriptorLabelConverter : MarkupExtension, IValueConverter
 {
-    protected bool TryConvertInvalidNames(string text, out string result)
+    protected bool TryConvertInvalidNames(object? value, [MaybeNullWhen(false)] out string result)
     {
-        result = text switch
+        result = value switch
         {
             null => "<null>",
-            "" => "<empty>",
-            _ => text
+            string {Length: 0} => "<empty>",
+            _ => null
         };
 
-        return text != result;
+        return result is not null;
     }
 
     public abstract object Convert(object? value, Type targetType, object? parameter, CultureInfo culture);

@@ -1,23 +1,29 @@
 ﻿using System.Collections;
-using System.Windows;
 using System.Windows.Controls;
 using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 
 namespace RevitLookup.Abstractions.Services.Application;
 
-public interface IRevitLookupUiService : ILookupServiceDependsStage, ILookupServiceRunStage
+public interface IRevitLookupUiService : ILookupServiceHistoryStage, ILookupServiceDecomposeStage, ILookupServiceShowStage;
+
+public interface ILookupServiceHistoryStage
 {
-    ILookupServiceDependsStage Decompose(KnownDecompositionObject decompositionObject);
-    ILookupServiceDependsStage Decompose(object? obj);
-    ILookupServiceDependsStage Decompose(IEnumerable objects);
-    ILookupServiceDependsStage Decompose(ObservableDecomposedObject decomposedObject);
-    ILookupServiceDependsStage Decompose(List<ObservableDecomposedObject> decomposedObjects);
+    ILookupServiceParentStage AddParent(IServiceProvider serviceProvider);
 }
 
-public interface ILookupServiceDependsStage : ILookupServiceShowStage
+public interface ILookupServiceParentStage : ILookupServiceDecomposeStage
 {
-    ILookupServiceShowStage DependsOn(Window parent);
+    ILookupServiceDecomposeStage AddStackHistory(ObservableDecomposedObject item);
+}
+
+public interface ILookupServiceDecomposeStage
+{
+    ILookupServiceShowStage Decompose(KnownDecompositionObject knownObject);
+    ILookupServiceShowStage Decompose(object? input);
+    ILookupServiceShowStage Decompose(IEnumerable input);
+    ILookupServiceShowStage Decompose(ObservableDecomposedObject decomposedObject);
+    ILookupServiceShowStage Decompose(List<ObservableDecomposedObject> decomposedObjects);
 }
 
 public interface ILookupServiceShowStage

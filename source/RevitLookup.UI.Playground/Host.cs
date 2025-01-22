@@ -52,7 +52,7 @@ public static class Host
         services.AddSingleton<ISoftwareUpdateService, MockSoftwareUpdateService>();
         services.AddSingleton<ISettingsService, MockSettingsService>();
         services.AddSingleton<IThemeWatcherService, MockThemeWatcherService>();
-        services.AddSingleton<IDecompositionService, MockDecompositionService>();
+        services.AddScoped<IDecompositionService, MockDecompositionService>();
         services.AddScoped<IVisualDecompositionService, MockVisualDecompositionService>();
         services.AddTransient<IRevitLookupUiService, MockRevitLookupUiService>();
 

@@ -13,7 +13,9 @@ namespace RevitLookup.UI.Playground.Mockups.Services.Summary;
 [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
 public sealed class MockDecompositionService(ISettingsService settingsService) : IDecompositionService
 {
-    public async Task<ObservableDecomposedObject> DecomposeAsync(object obj)
+    public List<ObservableDecomposedObject> DecompositionStackHistory { get; } = [];
+
+    public async Task<ObservableDecomposedObject> DecomposeAsync(object? obj)
     {
         var options = CreateDecomposeMembersOptions();
         return await Task.Run(() =>

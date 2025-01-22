@@ -12,7 +12,7 @@ namespace RevitLookup.ViewModels.Decomposition;
 
 [UsedImplicitly]
 public sealed partial class DecompositionSummaryViewModel(
-    IWindowIntercomService intercomService,
+    IServiceProvider serviceProvider,
     IDecompositionService decompositionService,
     INotificationService notificationService,
     ILogger<DecompositionSummaryViewModel> logger)
@@ -26,24 +26,25 @@ public sealed partial class DecompositionSummaryViewModel(
     public void Navigate(object? value)
     {
         Host.GetService<IRevitLookupUiService>()
+            .AddParent(serviceProvider)
+            .AddStackHistory(SelectedDecomposedObject!)
             .Decompose(value)
-            .DependsOn(intercomService.GetHost())
             .Show<DecompositionSummaryPage>();
     }
 
     public void Navigate(ObservableDecomposedObject value)
     {
         Host.GetService<IRevitLookupUiService>()
+            .AddParent(serviceProvider)
             .Decompose(value)
-            .DependsOn(intercomService.GetHost())
             .Show<DecompositionSummaryPage>();
     }
 
     public void Navigate(List<ObservableDecomposedObject> values)
     {
         Host.GetService<IRevitLookupUiService>()
+            .AddParent(serviceProvider)
             .Decompose(values)
-            .DependsOn(intercomService.GetHost())
             .Show<DecompositionSummaryPage>();
     }
 

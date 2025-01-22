@@ -7,15 +7,16 @@ using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Decomposition;
+using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.UI.Framework.Views.Windows;
 using Wpf.Ui;
 
 namespace RevitLookup.Services.Application;
 
-public sealed class RevitLookupUiService : IRevitLookupUiService
+public sealed class RevitLookupUiService : IRevitLookupUiService, ILookupServiceParentStage, ILookupServiceRunStage
 {
     private static readonly Dispatcher Dispatcher;
-    private UiServiceImpl _uiService = null!; //Late init in constructor
+    private UiServiceImpl _uiService = null!; //Late init in the constructor
 
     static RevitLookupUiService()
     {
@@ -38,7 +39,7 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
         }
     }
 
-    public ILookupServiceDependsStage Decompose(KnownDecompositionObject decompositionObject)
+    public ILookupServiceShowStage Decompose(KnownDecompositionObject decompositionObject)
     {
         if (Dispatcher.CheckAccess())
         {
@@ -52,7 +53,7 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
         return this;
     }
 
-    public ILookupServiceDependsStage Decompose(object? obj)
+    public ILookupServiceShowStage Decompose(object? obj)
     {
         if (Dispatcher.CheckAccess())
         {
@@ -66,7 +67,7 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
         return this;
     }
 
-    public ILookupServiceDependsStage Decompose(IEnumerable objects)
+    public ILookupServiceShowStage Decompose(IEnumerable objects)
     {
         if (Dispatcher.CheckAccess())
         {
@@ -80,7 +81,7 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
         return this;
     }
 
-    public ILookupServiceDependsStage Decompose(ObservableDecomposedObject decomposedObject)
+    public ILookupServiceShowStage Decompose(ObservableDecomposedObject decomposedObject)
     {
         if (Dispatcher.CheckAccess())
         {
@@ -94,7 +95,7 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
         return this;
     }
 
-    public ILookupServiceDependsStage Decompose(List<ObservableDecomposedObject> decomposedObjects)
+    public ILookupServiceShowStage Decompose(List<ObservableDecomposedObject> decomposedObjects)
     {
         if (Dispatcher.CheckAccess())
         {
@@ -108,15 +109,29 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
         return this;
     }
 
-    public ILookupServiceShowStage DependsOn(Window parent)
+    public ILookupServiceParentStage AddParent(IServiceProvider parentProvider)
     {
         if (Dispatcher.CheckAccess())
         {
-            _uiService.DependsOn(parent);
+            _uiService.AddParent(parentProvider);
         }
         else
         {
-            Dispatcher.Invoke(() => _uiService.DependsOn(parent));
+            Dispatcher.Invoke(() => _uiService.AddParent(parentProvider));
+        }
+
+        return this;
+    }
+
+    public ILookupServiceDecomposeStage AddStackHistory(ObservableDecomposedObject item)
+    {
+        if (Dispatcher.CheckAccess())
+        {
+            _uiService.AddStackHistory(item);
+        }
+        else
+        {
+            Dispatcher.Invoke(() => _uiService.AddStackHistory(item));
         }
 
         return this;
@@ -167,10 +182,11 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
 
     private sealed class UiServiceImpl
     {
-        private Window? _parent;
+        private IServiceProvider? _parentProvider;
         private readonly Task _activeTask = Task.CompletedTask;
         private readonly IServiceScope _scope;
-        private readonly IVisualDecompositionService _decompositionService;
+        private readonly IDecompositionService _decompositionService;
+        private readonly IVisualDecompositionService _visualDecompositionService;
         private readonly INavigationService _navigationService;
         private readonly Window _host;
 
@@ -179,7 +195,8 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
             _scope = scopeFactory.CreateScope();
 
             _host = _scope.ServiceProvider.GetRequiredService<RevitLookupView>();
-            _decompositionService = _scope.ServiceProvider.GetRequiredService<IVisualDecompositionService>();
+            _decompositionService = _scope.ServiceProvider.GetRequiredService<IDecompositionService>();
+            _visualDecompositionService = _scope.ServiceProvider.GetRequiredService<IVisualDecompositionService>();
             _navigationService = _scope.ServiceProvider.GetRequiredService<INavigationService>();
 
             _host.Closed += (_, _) => _scope.Dispose();
@@ -187,32 +204,40 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
 
         public void Decompose(KnownDecompositionObject decompositionObject)
         {
-            _activeTask.ContinueWith(_ => _decompositionService.VisualizeDecompositionAsync(decompositionObject), TaskScheduler.FromCurrentSynchronizationContext());
+            _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(decompositionObject), TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public void Decompose(object? obj)
         {
-            _activeTask.ContinueWith(_ => _decompositionService.VisualizeDecompositionAsync(obj), TaskScheduler.FromCurrentSynchronizationContext());
+            _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(obj), TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public void Decompose(IEnumerable objects)
         {
-            _activeTask.ContinueWith(_ => _decompositionService.VisualizeDecompositionAsync(objects), TaskScheduler.FromCurrentSynchronizationContext());
+            _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(objects), TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public void Decompose(ObservableDecomposedObject decomposedObject)
         {
-            _activeTask.ContinueWith(_ => _decompositionService.VisualizeDecompositionAsync(decomposedObject), TaskScheduler.FromCurrentSynchronizationContext());
+            _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(decomposedObject), TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public void Decompose(List<ObservableDecomposedObject> decomposedObjects)
         {
-            _activeTask.ContinueWith(_ => _decompositionService.VisualizeDecompositionAsync(decomposedObjects), TaskScheduler.FromCurrentSynchronizationContext());
+            _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(decomposedObjects), TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        public void DependsOn(Window parent)
+        public void AddParent(IServiceProvider parentProvider)
         {
-            _parent = parent;
+            _parentProvider = parentProvider;
+
+            var decompositionService = parentProvider.GetRequiredService<IDecompositionService>();
+            _decompositionService.DecompositionStackHistory.AddRange(decompositionService.DecompositionStackHistory);
+        }
+
+        public void AddStackHistory(ObservableDecomposedObject item)
+        {
+            _decompositionService.DecompositionStackHistory.Add(item);
         }
 
         public void Show<T>() where T : Page
@@ -237,15 +262,17 @@ public sealed class RevitLookupUiService : IRevitLookupUiService
 
         private void ShowHost(bool modal)
         {
-            if (_parent is null)
+            if (_parentProvider is null)
             {
                 _host.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             }
             else
             {
+                var parentHost = _parentProvider.GetRequiredService<IWindowIntercomService>().GetHost();
+
                 _host.WindowStartupLocation = WindowStartupLocation.Manual;
-                _host.Left = _parent.Left + 47;
-                _host.Top = _parent.Top + 49;
+                _host.Left = parentHost.Left + 47;
+                _host.Top = parentHost.Top + 49;
             }
 
             if (modal)

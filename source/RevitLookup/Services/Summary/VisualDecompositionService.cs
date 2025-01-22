@@ -73,14 +73,12 @@ public sealed class VisualDecompositionService(
 
     public async Task VisualizeDecompositionAsync(object? obj)
     {
-        var values = obj switch
+        summaryViewModel.DecomposedObjects = obj switch
         {
-            ObservableDecomposedValue {Descriptor: IDescriptorEnumerator} decomposedValue => (IEnumerable) decomposedValue.RawValue!,
-            ObservableDecomposedValue decomposedValue => new[] {decomposedValue.RawValue},
-            _ => new[] {obj}
+            ObservableDecomposedValue {Descriptor: IDescriptorEnumerator} decomposedValue => await decompositionService.DecomposeAsync((IEnumerable) decomposedValue.RawValue!),
+            ObservableDecomposedValue decomposedValue => [await decompositionService.DecomposeAsync(decomposedValue.RawValue)],
+            _ => [await decompositionService.DecomposeAsync(obj)]
         };
-
-        summaryViewModel.DecomposedObjects = await decompositionService.DecomposeAsync(values);
     }
 
     public async Task VisualizeDecompositionAsync(IEnumerable objects)
