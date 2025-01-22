@@ -190,8 +190,8 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "Schemata",
-                        Description = "Explore Extensible Storage framework schemata",
+                        Title = "Schemas",
+                        Description = "Explore Extensible Storage framework schemas",
                         Icon = SymbolRegular.Box24,
                         Command = NavigatePageCommand,
                         CommandParameter = "schemas"
@@ -213,7 +213,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                 [
                     new NavigationCardItem
                     {
-                        Title = "Built-Iin Parameters",
+                        Title = "Built-In Parameters",
                         Description = "Explore predefined parameters available in Revit",
                         Icon = SymbolRegular.LeafOne24,
                         Command = OpenDialogCommand,
