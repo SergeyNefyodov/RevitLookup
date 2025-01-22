@@ -41,7 +41,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                 [
                     new NavigationCardItem
                     {
-                        Title = "Active view",
+                        Title = "Active View",
                         Description = "Explore and analyze the model's visual representation",
                         Icon = SymbolRegular.Image24,
                         Command = NavigatePageCommand,
@@ -49,8 +49,8 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "Active document",
-                        Description = "Explore the open document, including its structure and data",
+                        Title = "Active Document",
+                        Description = "Explore the open document, its structure and data",
                         Icon = SymbolRegular.Document24,
                         Command = NavigatePageCommand,
                         CommandParameter = "document"
@@ -65,7 +65,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "UI application",
+                        Title = "UI Application",
                         Description = "Explore an active session of the Revit user interface",
                         Icon = SymbolRegular.WindowApps24,
                         Command = NavigatePageCommand,
@@ -73,7 +73,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "UI controlled application",
+                        Title = "UI Controlled Application",
                         Description = "Explore the Revit UI customization methods and events",
                         Icon = SymbolRegular.SquareHintApps24,
                         Command = NavigatePageCommand,
@@ -104,7 +104,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "Linked element",
+                        Title = "Linked Element",
                         Description = "Select and explore an element linked from another model",
                         Icon = SymbolRegular.LinkSquare24,
                         Command = NavigatePageCommand,
@@ -113,7 +113,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Face",
-                        Description = "Select and explore a face of the element's geometry",
+                        Description = "Select and explore an element geometry face",
                         Icon = SymbolRegular.LayerDiagonal20,
                         Command = NavigatePageCommand,
                         CommandParameter = "face"
@@ -121,7 +121,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Edge",
-                        Description = "Select and explore the edge of the element's geometry",
+                        Description = "Select and explore element geometry edges",
                         Icon = SymbolRegular.Line24,
                         Command = NavigatePageCommand,
                         CommandParameter = "edge"
@@ -136,15 +136,15 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "Sub-element",
-                        Description = "Select and explore a sub-element of the selected element",
+                        Title = "Sub-Element",
+                        Description = "Select and explore a selected element sub-element",
                         Icon = SymbolRegular.Subtitles24,
                         Command = NavigatePageCommand,
                         CommandParameter = "subElement"
                     },
                     new NavigationCardItem
                     {
-                        Title = "Dependent elements",
+                        Title = "Dependent Elements",
                         Description = "Explore child elements associated with the selection",
                         Icon = SymbolRegular.DataLine24,
                         Command = NavigatePageCommand,
@@ -159,7 +159,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                 [
                     new NavigationCardItem
                     {
-                        Title = "Component manager",
+                        Title = "Component Manager",
                         Description = "Explore low-level visual components in Revit",
                         Icon = SymbolRegular.SlideTextMultiple32,
                         Command = NavigatePageCommand,
@@ -167,7 +167,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "Performance adviser",
+                        Title = "Performance Advisor",
                         Description = "Explore performance issues in the open document",
                         Icon = SymbolRegular.HeartPulse24,
                         Command = NavigatePageCommand,
@@ -190,8 +190,8 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "Schemas",
-                        Description = "Explore Extensible Storage framework schemas",
+                        Title = "Schemata",
+                        Description = "Explore Extensible Storage framework schemata",
                         Icon = SymbolRegular.Box24,
                         Command = NavigatePageCommand,
                         CommandParameter = "schemas"
@@ -199,7 +199,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Services",
-                        Description = "Explore services that extend Revit's functionality",
+                        Description = "Explore services extending the base Revit functionality",
                         Icon = SymbolRegular.WeatherCloudy24,
                         Command = NavigatePageCommand,
                         CommandParameter = "services"
@@ -213,7 +213,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                 [
                     new NavigationCardItem
                     {
-                        Title = "BuiltIn parameters",
+                        Title = "Built-Iin Parameters",
                         Description = "Explore predefined parameters available in Revit",
                         Icon = SymbolRegular.LeafOne24,
                         Command = OpenDialogCommand,
@@ -221,7 +221,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "BuiltIn categories",
+                        Title = "Built-In Categories",
                         Description = "Explore predefined categories available in Revit",
                         Icon = SymbolRegular.LeafTwo24,
                         Command = OpenDialogCommand,
@@ -229,7 +229,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                     },
                     new NavigationCardItem
                     {
-                        Title = "Forge schema",
+                        Title = "Forge Schema",
                         Description = "Explore Forge schema definitions used in Revit",
                         Icon = SymbolRegular.LeafThree24,
                         Command = OpenDialogCommand,
