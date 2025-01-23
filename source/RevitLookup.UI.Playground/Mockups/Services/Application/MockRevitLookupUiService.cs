@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
@@ -15,11 +16,13 @@ namespace RevitLookup.UI.Playground.Mockups.Services.Application;
 public sealed class MockRevitLookupUiService : IRevitLookupUiService, ILookupServiceParentStage, ILookupServiceRunStage
 {
     private IServiceProvider? _parentProvider;
-    private readonly Task _activeTask = Task.CompletedTask;
+    private readonly List<Task> _activeTasks = [];
     private readonly IServiceScope _scope;
     private readonly IDecompositionService _decompositionService;
     private readonly IVisualDecompositionService _visualDecompositionService;
     private readonly INavigationService _navigationService;
+    private readonly INotificationService _notificationService;
+    private readonly ILogger<MockRevitLookupUiService> _logger;
     private readonly Window _host;
 
     public MockRevitLookupUiService(IServiceScopeFactory scopeFactory)
@@ -30,75 +33,213 @@ public sealed class MockRevitLookupUiService : IRevitLookupUiService, ILookupSer
         _decompositionService = _scope.ServiceProvider.GetRequiredService<IDecompositionService>();
         _visualDecompositionService = _scope.ServiceProvider.GetRequiredService<IVisualDecompositionService>();
         _navigationService = _scope.ServiceProvider.GetRequiredService<INavigationService>();
+        _notificationService = _scope.ServiceProvider.GetRequiredService<INotificationService>();
+        _logger = _scope.ServiceProvider.GetRequiredService<ILogger<MockRevitLookupUiService>>();
 
         _host.Closed += (_, _) => _scope.Dispose();
     }
 
     public ILookupServiceShowStage Decompose(KnownDecompositionObject decompositionObject)
     {
-        _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(decompositionObject), TaskScheduler.FromCurrentSynchronizationContext());
+        PushTask();
         return this;
+
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch
+            {
+                // ignored
+            }
+            finally
+            {
+                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(decompositionObject));
+            }
+        }
     }
 
     public ILookupServiceShowStage Decompose(object? obj)
     {
-        _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(obj), TaskScheduler.FromCurrentSynchronizationContext());
+        PushTask();
         return this;
+
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch
+            {
+                // ignored
+            }
+            finally
+            {
+                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(obj));
+            }
+        }
     }
 
     public ILookupServiceShowStage Decompose(IEnumerable objects)
     {
-        _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(objects), TaskScheduler.FromCurrentSynchronizationContext());
+        PushTask();
         return this;
+
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch
+            {
+                // ignored
+            }
+            finally
+            {
+                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(objects));
+            }
+        }
     }
 
     public ILookupServiceShowStage Decompose(ObservableDecomposedObject decomposedObject)
     {
-        _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(decomposedObject), TaskScheduler.FromCurrentSynchronizationContext());
+        PushTask();
         return this;
+
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch
+            {
+                // ignored
+            }
+            finally
+            {
+                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObject));
+            }
+        }
     }
 
     public ILookupServiceShowStage Decompose(List<ObservableDecomposedObject> decomposedObjects)
     {
-        _activeTask.ContinueWith(_ => _visualDecompositionService.VisualizeDecompositionAsync(decomposedObjects), TaskScheduler.FromCurrentSynchronizationContext());
+        PushTask();
         return this;
+
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch
+            {
+                // ignored
+            }
+            finally
+            {
+                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObjects));
+            }
+        }
     }
 
     public ILookupServiceParentStage AddParent(IServiceProvider parentProvider)
     {
-        _parentProvider = parentProvider;
-
-        var decompositionService = parentProvider.GetRequiredService<IDecompositionService>();
-        _decompositionService.DecompositionStackHistory.AddRange(decompositionService.DecompositionStackHistory);
+        PushTask();
         return this;
+
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch
+            {
+                // ignored
+            }
+            finally
+            {
+                var decompositionService = parentProvider.GetRequiredService<IDecompositionService>();
+                _decompositionService.DecompositionStackHistory.AddRange(decompositionService.DecompositionStackHistory);
+                _parentProvider = parentProvider;
+            }
+        }
     }
 
     public ILookupServiceDecomposeStage AddStackHistory(ObservableDecomposedObject item)
     {
-        _decompositionService.DecompositionStackHistory.Add(item);
+        PushTask();
         return this;
+
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch
+            {
+                // ignored
+            }
+            finally
+            {
+                _decompositionService.DecompositionStackHistory.Add(item);
+            }
+        }
     }
 
     public ILookupServiceRunStage Show<T>() where T : Page
     {
-        _activeTask.ContinueWith(_ =>
-        {
-            ShowHost(false);
-            _navigationService.Navigate(typeof(T));
-        }, TaskScheduler.FromCurrentSynchronizationContext());
-
+        PushTask();
         return this;
+
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "RevitLookup new instance startup error");
+                _notificationService.ShowError("Lookup engine error", exception);
+            }
+            finally
+            {
+                ShowHost(false);
+                _navigationService.Navigate(typeof(T));
+            }
+        }
     }
 
     public void RunService<T>(Action<T> handler) where T : class
     {
-        _activeTask.ContinueWith(_ => InvokeService(handler), TaskScheduler.FromCurrentSynchronizationContext());
-    }
+        PushTask();
+        return;
 
-    private void InvokeService<T>(Action<T> handler) where T : class
-    {
-        var service = _scope.ServiceProvider.GetRequiredService<T>();
-        handler.Invoke(service);
+        async void PushTask()
+        {
+            try
+            {
+                await Task.WhenAll(_activeTasks);
+            }
+            catch
+            {
+                // ignored
+            }
+            finally
+            {
+                var service = _scope.ServiceProvider.GetRequiredService<T>();
+                handler.Invoke(service);
+            }
+        }
     }
 
     private void ShowHost(bool modal)
