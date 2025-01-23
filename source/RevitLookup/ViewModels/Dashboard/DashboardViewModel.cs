@@ -260,7 +260,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                     new NavigationCardItem
                     {
                         Title = "Revit settings",
-                        Description = "Inspect configuration and Revit settings available in the application",
+                        Description = "Inspect configuration and settings available in Revit",
                         Icon = SymbolRegular.LauncherSettings24,
                         Command = NavigatePageCommand,
                         CommandParameter = "revitSettings"

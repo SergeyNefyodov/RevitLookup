@@ -12,10 +12,10 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="200"
-    MinWidth="644"
-    MinHeight="371"
-    Width="1016"
-    Height="555"
+    MinWidth="812"
+    MinHeight="456"
+    Width="950"
+    Height="534"
     ExtendsContentIntoTitleBar="True"
     Icon="pack://application:,,,/RevitLookup.UI.Framework;component/Resources/Images/ShellIcon.ico">
 
@@ -70,7 +70,7 @@
             <rl:NavigationView.Header>
                 <rl:BreadcrumbBar
                     x:Name="BreadcrumbBar"
-                    Margin="12 12 0 0">
+                    Margin="12 10 0 0">
                     <rl:BreadcrumbBar.ItemTemplate>
                         <DataTemplate
                             DataType="{x:Type rl:NavigationViewBreadcrumbItem}">
