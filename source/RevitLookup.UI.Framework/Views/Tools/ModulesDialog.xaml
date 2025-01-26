@@ -49,7 +49,8 @@
             ItemsSource="{Binding FilteredModules}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn
-                    Width="2*">
+                    Width="2*"
+                    SortMemberPath="Name">
                     <DataGridTemplateColumn.Header>
                         <rl:TextBlock
                             FontTypography="Caption"
@@ -66,7 +67,8 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
-                    Width="5*">
+                    Width="5*"
+                    SortMemberPath="Path">
                     <DataGridTemplateColumn.Header>
                         <rl:TextBlock
                             FontTypography="Caption"
@@ -83,7 +85,8 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
-                    Width="1*">
+                    Width="1*"
+                    SortMemberPath="Order">
                     <DataGridTemplateColumn.Header>
                         <rl:TextBlock
                             FontTypography="Caption"
@@ -100,7 +103,8 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
-                    Width="1*">
+                    Width="1*"
+                    SortMemberPath="Version">
                     <DataGridTemplateColumn.Header>
                         <rl:TextBlock
                             FontTypography="Caption"
@@ -118,7 +122,8 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     x:Name="ContainerColumn"
-                    Width="2*">
+                    Width="2*"
+                    SortMemberPath="Container">
                     <DataGridTemplateColumn.Header>
                         <rl:TextBlock
                             FontTypography="Caption"
@@ -135,6 +140,16 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+                <Style
+                    TargetType="DataGridRow"
+                    BasedOn="{StaticResource DefaultDataGridRowStyle}">
+                    <EventSetter
+                        Event="MouseEnter"
+                        Handler="OnMouseEnter" />
+                </Style>
+            </DataGrid.RowStyle>
         </DataGrid>
     </DockPanel>
 
