@@ -62,6 +62,24 @@ public static class ContextMenuExtensions
         return item;
     }
 
+    public static MenuItem AddMenuItem(this MenuItem menu)
+    {
+        var item = new Wpf.Ui.Controls.MenuItem();
+        menu.Items.Add(item);
+
+        return item;
+    }
+
+    public static MenuItem AddMenuItem(this MenuItem menu, string resource)
+    {
+        var item = (MenuItem?) menu.FindLogicalParent<ContextMenu>()!.Resources[resource];
+        if (item is null) throw new InvalidOperationException($"Resource \"{resource}\" not found");
+
+        menu.Items.Add(item);
+
+        return item;
+    }
+
     public static MenuItem SetCommand(this MenuItem item, Action command)
     {
         item.Command = new RelayCommand(command);
