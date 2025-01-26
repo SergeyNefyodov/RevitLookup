@@ -24,7 +24,7 @@ using Autodesk.Revit.UI;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Core;
 
-namespace RevitLookup.Services.Summary;
+namespace RevitLookup.Services.Decomposition;
 
 public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> logger)
 {

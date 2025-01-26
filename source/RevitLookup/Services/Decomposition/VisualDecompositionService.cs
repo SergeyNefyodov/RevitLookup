@@ -11,7 +11,7 @@ using RevitLookup.Core.Decomposition;
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 using Visibility = System.Windows.Visibility;
 
-namespace RevitLookup.Services.Summary;
+namespace RevitLookup.Services.Decomposition;
 
 [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
 [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]

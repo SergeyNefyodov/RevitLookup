@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
+using Autodesk.Revit.Exceptions;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
@@ -147,6 +149,22 @@ public sealed partial class DecompositionSummaryViewModel(
         try
         {
             await FetchMembersAsync(value);
+        }
+        catch (InvalidObjectException exception)
+        {
+            notificationService.ShowError("Invalid object", exception);
+        }
+        catch (InternalException)
+        {
+            notificationService.ShowError(
+                "Invalid object",
+                "A problem in the Revit code. Usually occurs when a managed API object is no longer valid and is unloaded from memory");
+        }
+        catch (SEHException)
+        {
+            notificationService.ShowError(
+                "Revit API internal error",
+                "A problem in the Revit code. Usually occurs when a managed API object is no longer valid and is unloaded from memory");
         }
         catch (Exception exception)
         {

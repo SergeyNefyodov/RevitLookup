@@ -5,7 +5,7 @@ using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
-using RevitLookup.Services.Summary;
+using RevitLookup.Services.Decomposition;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Decomposition;
 

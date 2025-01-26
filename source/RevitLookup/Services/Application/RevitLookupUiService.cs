@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Autodesk.Revit.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Models.Decomposition;
@@ -326,6 +328,22 @@ public sealed class RevitLookupUiService : IRevitLookupUiService, ILookupService
             try
             {
                 await Task.WhenAll(_activeTasks);
+            }
+            catch (InvalidObjectException exception)
+            {
+                _notificationService.ShowError("Invalid object", exception);
+            }
+            catch (InternalException)
+            {
+                _notificationService.ShowError(
+                    "Invalid object",
+                    "A problem in the Revit code. Usually occurs when a managed API object is no longer valid and is unloaded from memory");
+            }
+            catch (SEHException)
+            {
+                _notificationService.ShowError(
+                    "Revit API internal error",
+                    "A problem in the Revit code. Usually occurs when a managed API object is no longer valid and is unloaded from memory");
             }
             catch (Exception exception)
             {

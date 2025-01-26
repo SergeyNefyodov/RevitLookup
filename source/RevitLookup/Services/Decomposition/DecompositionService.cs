@@ -9,7 +9,7 @@ using RevitLookup.Core;
 using RevitLookup.Core.Decomposition;
 using RevitLookup.Mappers;
 
-namespace RevitLookup.Services.Summary;
+namespace RevitLookup.Services.Decomposition;
 
 [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
 [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
