@@ -24,7 +24,7 @@ using System.IO;
 using System.Text;
 using RevitLookup.Abstractions.ObservableModels.Entries;
 
-namespace RevitLookup.Core.Tools.RevitSettings;
+namespace RevitLookup.Core.RevitSettings;
 
 [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
 [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]

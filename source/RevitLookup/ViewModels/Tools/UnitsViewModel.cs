@@ -23,7 +23,7 @@ using RevitLookup.Abstractions.Models.Tools;
 using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.Core;
-using RevitLookup.Core.Tools.Units;
+using RevitLookup.Core.Units;
 
 namespace RevitLookup.ViewModels.Tools;
 

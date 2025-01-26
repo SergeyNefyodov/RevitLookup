@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Core.Tools.Search;
+﻿namespace RevitLookup.Core.Search;
 
 public static class ElementsFinder
 {

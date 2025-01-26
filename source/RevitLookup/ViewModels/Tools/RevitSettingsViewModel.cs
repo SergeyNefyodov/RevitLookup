@@ -7,7 +7,7 @@ using RevitLookup.Abstractions.ObservableModels.Entries;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.Common.Tools;
-using RevitLookup.Core.Tools.RevitSettings;
+using RevitLookup.Core.RevitSettings;
 using RevitLookup.UI.Framework.Views.EditDialogs;
 using Wpf.Ui.Controls;
 

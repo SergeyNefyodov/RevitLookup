@@ -2,7 +2,7 @@
 using System.Text;
 using RevitLookup.Abstractions.Models.Tools;
 
-namespace RevitLookup.Core.Tools.Units;
+namespace RevitLookup.Core.Units;
 
 public static class UnitsCollector
 {

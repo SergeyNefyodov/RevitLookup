@@ -92,7 +92,8 @@ public sealed class ParameterDescriptor : Descriptor, IDescriptorResolver, IDesc
                 var result = await dialog.ShowAsync(parameter.Definition.Name, RevitShell.GetParameterValue(parameter), "Update the parameter");
                 if (result == ContentDialogResult.Primary)
                 {
-                    await RevitShell.AsyncEventHandler.RaiseAsync(_ => RevitShell.UpdateParameterValue(parameter, dialog.Value));
+                    var parameterValue = dialog.Value; // Share between threads
+                    await RevitShell.AsyncEventHandler.RaiseAsync(_ => RevitShell.UpdateParameterValue(parameter, parameterValue));
 
                     var decompositionViewModel = serviceProvider.GetRequiredService<IDecompositionSummaryViewModel>();
                     await decompositionViewModel.RefreshMembersAsync();
