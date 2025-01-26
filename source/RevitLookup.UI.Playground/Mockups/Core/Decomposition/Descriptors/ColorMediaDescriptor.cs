@@ -41,7 +41,7 @@ public sealed class ColorMediaDescriptor : Descriptor, IDescriptorExtension, ICo
     public ColorMediaDescriptor(Color color)
     {
         _color = color;
-        Name = $"RGB: {color.R} {color.B} {color.B}";
+        Name = $"RGB: {color.R} {color.G} {color.B}";
     }
 
     public void RegisterExtensions(IExtensionManager manager)
