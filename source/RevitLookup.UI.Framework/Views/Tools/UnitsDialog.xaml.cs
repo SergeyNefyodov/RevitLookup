@@ -87,10 +87,10 @@ public sealed partial class UnitsDialog
     {
         var element = (FrameworkElement) sender;
         var unitInfo = (UnitInfo) element.DataContext;
-        CreateTreeContextMenu(unitInfo, element);
+        CreateRowContextMenu(unitInfo, element);
     }
 
-    private void CreateTreeContextMenu(UnitInfo info, FrameworkElement row)
+    private void CreateRowContextMenu(UnitInfo info, FrameworkElement row)
     {
         var contextMenu = new ContextMenu
         {
