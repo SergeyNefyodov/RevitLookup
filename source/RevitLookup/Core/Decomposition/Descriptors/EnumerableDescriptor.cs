@@ -31,7 +31,6 @@ public sealed class EnumerableDescriptor : Descriptor, IDescriptorEnumerator, ID
 {
     public EnumerableDescriptor(IEnumerable value)
     {
-        // SnoopUtils.ParseEnumerable dispose this Enumerator;
         // ReSharper disable once GenericEnumeratorNotDisposed
         Enumerator = value.GetEnumerator();
 
