@@ -72,7 +72,7 @@ public sealed partial class ModulesDialog
             .SetShortcut(ModifierKeys.Control, Key.C);
 
         copyMenu.AddMenuItem()
-            .SetHeader("Path to module")
+            .SetHeader("Module location")
             .SetCommand(module, moduleInfo => Clipboard.SetDataObject(moduleInfo.Path))
             .SetShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.C);
 
@@ -82,7 +82,7 @@ public sealed partial class ModulesDialog
 
 #if NETCOREAPP
         copyMenu.AddMenuItem()
-            .SetHeader("AssemblyLoadContext name")
+            .SetHeader("Assembly сontext")
             .SetCommand(module, moduleInfo => Clipboard.SetDataObject(moduleInfo.Container));
 #endif
 

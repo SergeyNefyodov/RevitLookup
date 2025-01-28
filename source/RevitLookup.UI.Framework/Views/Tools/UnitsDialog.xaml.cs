@@ -98,25 +98,28 @@ public sealed partial class UnitsDialog
             PlacementTarget = row
         };
 
-        contextMenu.AddMenuItem("CopyMenuItem")
-            .SetHeader("Copy unit")
+        var copyMenu = contextMenu.AddMenuItem("CopyMenuItem")
+            .SetHeader("Copy");
+
+        copyMenu.AddMenuItem()
+            .SetHeader("Unit identifier")
             .SetCommand(info, unitInfo => Clipboard.SetDataObject(unitInfo.Unit))
             .SetShortcut(ModifierKeys.Control, Key.C);
 
-        contextMenu.AddMenuItem("CopyMenuItem")
-            .SetHeader("Copy label")
+        copyMenu.AddMenuItem()
+            .SetHeader("Display label")
             .SetCommand(info, unitInfo => Clipboard.SetDataObject(unitInfo.Label));
 
         if (info.Class is not null)
         {
-            contextMenu.AddMenuItem("CopyMenuItem")
-                .SetHeader("Copy class")
+            copyMenu.AddMenuItem()
+                .SetHeader("Type class")
                 .SetCommand(info, unitInfo => Clipboard.SetDataObject(unitInfo.Class!))
                 .SetShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.C);
         }
 
         contextMenu.AddMenuItem("SnoopMenuItem")
-            .SetHeader("Snoop")
+            .SetHeader("Explore members")
             .SetCommand(info, async unitInfo =>
             {
                 Hide();
