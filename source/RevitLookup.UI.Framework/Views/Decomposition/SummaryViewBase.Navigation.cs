@@ -43,6 +43,7 @@ public partial class SummaryViewBase
                 ViewModel.SelectedDecomposedObject = decomposedObject;
                 break;
             case ObservableDecomposedObjectsGroup:
+            case null:
                 ViewModel.SelectedDecomposedObject = null;
                 break;
             default:

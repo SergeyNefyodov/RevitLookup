@@ -8,7 +8,7 @@ using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
 
-namespace RevitLookup.UI.Playground.Mockups.Services.Summary;
+namespace RevitLookup.UI.Playground.Mockups.Services.Decomposition;
 
 [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
 [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]

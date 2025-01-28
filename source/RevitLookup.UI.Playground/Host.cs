@@ -11,8 +11,8 @@ using RevitLookup.UI.Playground.Client.Services;
 using RevitLookup.UI.Playground.Mockups.Config;
 using RevitLookup.UI.Playground.Mockups.Services.Appearance;
 using RevitLookup.UI.Playground.Mockups.Services.Application;
+using RevitLookup.UI.Playground.Mockups.Services.Decomposition;
 using RevitLookup.UI.Playground.Mockups.Services.Settings;
-using RevitLookup.UI.Playground.Mockups.Services.Summary;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 
@@ -48,12 +48,15 @@ public static class Host
         services.RegisterViews();
         services.RegisterViewModels();
 
-        //Services
+        //Application Services
         services.AddSingleton<ISoftwareUpdateService, MockSoftwareUpdateService>();
         services.AddSingleton<ISettingsService, MockSettingsService>();
         services.AddSingleton<IThemeWatcherService, MockThemeWatcherService>();
+
+        //Composer services
         services.AddScoped<IDecompositionService, MockDecompositionService>();
         services.AddScoped<IVisualDecompositionService, MockVisualDecompositionService>();
+        services.AddScoped<IDecompositionSearchService, MockDecompositionSearchService>();
         services.AddTransient<IRevitLookupUiService, MockRevitLookupUiService>();
 
         return services.BuildServiceProvider();

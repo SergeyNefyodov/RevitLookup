@@ -7,7 +7,7 @@ using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.UI.Playground.Mockups.Core.Decomposition;
 using RevitLookup.UI.Playground.Mockups.Mappers;
 
-namespace RevitLookup.UI.Playground.Mockups.Services.Summary;
+namespace RevitLookup.UI.Playground.Mockups.Services.Decomposition;
 
 [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
 [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]

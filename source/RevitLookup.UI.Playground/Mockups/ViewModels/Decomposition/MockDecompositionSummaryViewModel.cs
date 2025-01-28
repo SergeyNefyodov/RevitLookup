@@ -19,6 +19,7 @@ namespace RevitLookup.UI.Playground.Mockups.ViewModels.Decomposition;
 public sealed partial class MockDecompositionSummaryViewModel(
     IServiceProvider serviceProvider,
     IDecompositionService decompositionService,
+    IDecompositionSearchService searchService,
     INotificationService notificationService,
     ILogger<MockDecompositionSummaryViewModel> logger)
     : ObservableObject, IDecompositionSummaryViewModel
@@ -62,7 +63,10 @@ public sealed partial class MockDecompositionSummaryViewModel(
 
         try
         {
+            if (SelectedDecomposedObject is null) return;
+
             await FetchMembersAsync(SelectedDecomposedObject);
+            SelectedDecomposedObject.FilteredMembers = searchService.SearchMembers(SearchText, SelectedDecomposedObject);
         }
         catch (Exception exception)
         {
@@ -81,18 +85,18 @@ public sealed partial class MockDecompositionSummaryViewModel(
                     var groupToRemove = FilteredDecomposedObjects[i];
                     if (!groupToRemove.GroupItems.Remove(decomposedObject)) continue;
 
+                    //Remove the empty group
                     if (groupToRemove.GroupItems.Count == 0)
                     {
-                        //Remove the empty group
                         FilteredDecomposedObjects.Remove(groupToRemove);
                     }
                 }
 
                 if (DecomposedObjects.Remove(decomposedObject))
                 {
+                    //Notify UI to update placeholders
                     if (DecomposedObjects.Count == 0)
                     {
-                        //Notify UI to update placeholders
                         OnPropertyChanged(nameof(DecomposedObjects));
                     }
                 }
@@ -110,48 +114,14 @@ public sealed partial class MockDecompositionSummaryViewModel(
         OnSearchTextChanged(SearchText);
     }
 
-    async partial void OnSearchTextChanged(string value)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(SearchText))
-            {
-                FilteredDecomposedObjects = ApplyGrouping(DecomposedObjects);
-                return;
-            }
-
-            FilteredDecomposedObjects = await Task.Run(() =>
-            {
-                var formattedText = value.Trim();
-                var searchResults = new List<ObservableDecomposedObject>();
-                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-                foreach (var item in DecomposedObjects)
-                {
-                    if (item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase) || item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
-                    {
-                        searchResults.Add(item);
-                    }
-                }
-
-                return ApplyGrouping(searchResults);
-            });
-
-            if (FilteredDecomposedObjects.Count == 0)
-            {
-                SelectedDecomposedObject = null;
-            }
-        }
-        catch
-        {
-            // ignored
-        }
-    }
-
     async partial void OnSelectedDecomposedObjectChanged(ObservableDecomposedObject? value)
     {
         try
         {
+            if (value is null) return;
+
             await FetchMembersAsync(value);
+            value.FilteredMembers = searchService.SearchMembers(SearchText, value);
         }
         catch (Exception exception)
         {
@@ -160,15 +130,41 @@ public sealed partial class MockDecompositionSummaryViewModel(
         }
     }
 
-    private async Task FetchMembersAsync(ObservableDecomposedObject? value)
+    async partial void OnSearchTextChanged(string value)
     {
-        if (value is null) return;
+        try
+        {
+            var (filteredObjects, filteredMembers) = await Task.Run(() =>
+                searchService.Search(value, SelectedDecomposedObject, DecomposedObjects));
+
+            if (FilteredDecomposedObjects.Sum(group => group.GroupItems.Count) != filteredObjects.Count)
+            {
+                FilteredDecomposedObjects = await Task.Run(() => ApplyGrouping(filteredObjects));
+            }
+
+            if (SelectedDecomposedObject is not null)
+            {
+                if (filteredObjects.Contains(SelectedDecomposedObject))
+                {
+                    SelectedDecomposedObject.FilteredMembers = filteredMembers;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Search error");
+            notificationService.ShowError("Search error", exception);
+        }
+    }
+
+    private async Task FetchMembersAsync(ObservableDecomposedObject value)
+    {
         if (value.Members.Count > 0) return;
 
         value.Members = await decompositionService.DecomposeMembersAsync(value);
     }
 
-    private ObservableCollection<ObservableDecomposedObjectsGroup> ApplyGrouping(List<ObservableDecomposedObject> objects)
+    private static ObservableCollection<ObservableDecomposedObjectsGroup> ApplyGrouping(List<ObservableDecomposedObject> objects)
     {
         return objects
             .OrderBy(data => data.TypeName)

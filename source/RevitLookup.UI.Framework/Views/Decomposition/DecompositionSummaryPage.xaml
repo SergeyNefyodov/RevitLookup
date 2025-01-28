@@ -58,7 +58,7 @@
                     ItemTemplate="{StaticResource DefaultSummaryTreeGroupTemplate}"
                     ItemsSource="{Binding Path=ViewModel.(viewModels:IDecompositionSummaryViewModel.FilteredDecomposedObjects)}"
                     VirtualizingPanel.IsVirtualizing="True"
-                    VirtualizingPanel.VirtualizationMode="Recycling">
+                    VirtualizingPanel.VirtualizationMode="Standard">
                 </rl:TreeView>
             </DockPanel>
             <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->

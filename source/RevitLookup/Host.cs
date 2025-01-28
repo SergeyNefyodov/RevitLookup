@@ -74,10 +74,13 @@ public static class Host
         builder.Services.AddSingleton<RevitRibbonService>();
         builder.Services.AddHostedService<HostBackgroundService>();
 
-        //Services
+        //Composer services
         builder.Services.AddScoped<IDecompositionService, DecompositionService>();
         builder.Services.AddScoped<IVisualDecompositionService, VisualDecompositionService>();
+        builder.Services.AddScoped<IDecompositionSearchService, DecompositionSearchService>();
         builder.Services.AddTransient<IRevitLookupUiService, RevitLookupUiService>();
+
+        //Revit tools services
         builder.Services.AddTransient<EventsMonitoringService>();
 
         _host = builder.Build();
