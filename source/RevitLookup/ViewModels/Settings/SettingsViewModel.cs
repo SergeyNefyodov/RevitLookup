@@ -78,7 +78,9 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
 
     public List<ApplicationTheme> Themes { get; } =
     [
+#if REVIT2024_OR_GREATER
         ApplicationTheme.Auto,
+#endif
         ApplicationTheme.Light,
         ApplicationTheme.Dark
         // ApplicationTheme.HighContrast

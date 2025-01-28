@@ -99,7 +99,11 @@ public sealed class SettingsService(
     {
         _generalSettings = new GeneralSettings
         {
+#if REVIT2024_OR_GREATER
+            Theme = ApplicationTheme.Auto,
+#else
             Theme = ApplicationTheme.Light,
+#endif
             Background = WindowBackdropType.None,
             Transition = Transition.None,
             IncludeStatic = true,
