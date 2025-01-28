@@ -21,8 +21,10 @@
 using System.Windows.Interop;
 using System.Windows.Media;
 using Nice3point.Revit.Toolkit.External;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Core;
-using RevitLookup.Services.Contracts;
+using RevitLookup.Services.Application;
 
 namespace RevitLookup;
 
@@ -31,15 +33,24 @@ public class Application : ExternalApplication
 {
     public override void OnStartup()
     {
-        RevitShell.RegisterHandlers();
         Host.Start();
+        RevitShell.RegisterHandlers();
 
-        RibbonController.CreatePanel(Application);
+        EnableThemes();
+        EnableHardwareRendering();
+
+        Host.GetService<RevitRibbonService>().CreateRibbon();
     }
 
     public override void OnShutdown()
     {
         Host.Stop();
+    }
+
+    private static void EnableThemes()
+    {
+        var themeWatcherService = Host.GetService<IThemeWatcherService>();
+        themeWatcherService.Initialize();
     }
 
     public static void EnableHardwareRendering()

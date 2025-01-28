@@ -3,7 +3,8 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using System.Runtime.CompilerServices;
+using System.Collections;
+using System.Diagnostics;
 using Wpf.Ui.Controls;
 
 namespace Wpf.Ui.Appearance;
@@ -36,7 +37,7 @@ public static class ApplicationThemeManager
 {
     private static ApplicationTheme _cachedApplicationTheme = ApplicationTheme.Unknown;
 
-    internal const string LibraryNamespace = "ui;";
+    internal const string LibraryNamespace = "revitlookup.ui;";
 
     public const string ThemesDictionaryPath = "pack://application:,,,/RevitLookup.UI;component/Resources/Theme/";
 
@@ -63,15 +64,16 @@ public static class ApplicationThemeManager
     /// <param name="applicationTheme">Theme to set.</param>
     /// <param name="backgroundEffect">Whether the custom background effect should be applied.</param>
     /// <param name="updateAccent">Whether the color accents should be changed.</param>
-    /// <param name="forceBackground">If <see langword="true"/>, bypasses the app's theme compatibility check and tries to force the change of a background effect.</param>
-    public static void Apply(ApplicationTheme applicationTheme,
+    public static void Apply(
+        ApplicationTheme applicationTheme,
         WindowBackdropType backgroundEffect = WindowBackdropType.Mica,
-        bool updateAccent = true,
-        bool forceBackground = false)
+        bool updateAccent = true
+    )
     {
         if (updateAccent)
         {
-            ApplicationAccentColorManager.Apply(ApplicationAccentColorManager.GetColorizationColor(),
+            ApplicationAccentColorManager.Apply(
+                ApplicationAccentColorManager.GetColorizationColor(),
                 applicationTheme,
                 false
             );
@@ -82,9 +84,9 @@ public static class ApplicationThemeManager
             return;
         }
 
-        var appDictionaries = new ResourceDictionaryManager(LibraryNamespace);
+        ResourceDictionaryManager appDictionaries = new(LibraryNamespace);
 
-        var themeDictionaryName = "Light";
+        string themeDictionaryName = "Light";
 
         switch (applicationTheme)
         {
@@ -92,59 +94,27 @@ public static class ApplicationThemeManager
                 themeDictionaryName = "Dark";
                 break;
             case ApplicationTheme.HighContrast:
-                switch (ApplicationThemeManager.GetSystemTheme())
+                themeDictionaryName = GetSystemTheme() switch
                 {
-                    case SystemTheme.HC1:
-                        themeDictionaryName = "HC1";
-                        break;
-                    case SystemTheme.HC2:
-                        themeDictionaryName = "HC2";
-                        break;
-                    case SystemTheme.HCBlack:
-                        themeDictionaryName = "HCBlack";
-                        break;
-                    case SystemTheme.HCWhite:
-                    default:
-                        themeDictionaryName = "HCWhite";
-                        break;
-                }
-
+                    SystemTheme.HC1 => "HC1",
+                    SystemTheme.HC2 => "HC2",
+                    SystemTheme.HCBlack => "HCBlack",
+                    SystemTheme.HCWhite => "HCWhite",
+                    _ => "HCWhite",
+                };
                 break;
         }
 
-        var isUpdated = appDictionaries.UpdateDictionary("theme",
+        bool isUpdated = appDictionaries.UpdateDictionary(
+            "theme",
             new Uri(ThemesDictionaryPath + themeDictionaryName + ".xaml", UriKind.Absolute)
         );
 
-        //var wpfUiDictionary = appDictionaries.GetDictionary("wpf.ui");
+        Debug.WriteLine(
+            $"INFO | {typeof(ApplicationThemeManager)} tries to update theme to {themeDictionaryName} ({applicationTheme}): {isUpdated}",
+            nameof(ApplicationThemeManager)
+        );
 
-        // Force reloading ALL dictionaries
-        // Works but is terrible
-        //var isCoreUpdated = appDictionaries.UpdateDictionary(
-        //    "wpf.ui",
-        //    new Uri(
-        //        AppearanceData.LibraryDictionariesUri + "Wpf.Ui.xaml",
-        //        UriKind.Absolute
-        //    )
-        //);
-
-        //var isBrushesUpdated = appDictionaries.UpdateDictionary(
-        //        "assets/brushes",
-        //        new Uri(
-        //            AppearanceData.LibraryDictionariesUri + "Assets/Brushes.xaml",
-        //            UriKind.Absolute
-        //        )
-        //    );
-
-#if DEBUG
-        System
-            .Diagnostics
-            .Debug
-            .WriteLine(
-                $"INFO | {typeof(ApplicationThemeManager)} tries to update theme to {themeDictionaryName} ({applicationTheme}): {isUpdated}",
-                nameof(ApplicationThemeManager)
-            );
-#endif
         if (!isUpdated)
         {
             return;
@@ -156,14 +126,28 @@ public static class ApplicationThemeManager
 
         Changed?.Invoke(applicationTheme, ApplicationAccentColorManager.SystemAccent);
 
-        if (Application.MainWindow is not null)
+        if (UiApplication.Current.MainWindow is { } mainWindow)
         {
-            WindowBackgroundManager.UpdateBackground(
-                Application.MainWindow,
-                applicationTheme,
-                backgroundEffect,
-                forceBackground
-            );
+            WindowBackgroundManager.UpdateBackground(mainWindow, applicationTheme, backgroundEffect);
+        }
+    }
+
+    /// <summary>
+    /// Applies Resources in the <paramref name="frameworkElement"/>.
+    /// </summary>
+    public static void Apply(FrameworkElement frameworkElement)
+    {
+        if (frameworkElement.Resources.MergedDictionaries.Count < UiApplication.Current.Resources.MergedDictionaries.Count)
+        {
+            foreach (var dictionary in UiApplication.Current.Resources.MergedDictionaries)
+            {
+                frameworkElement.Resources.MergedDictionaries.Add(dictionary);
+            }
+        }
+
+        foreach (DictionaryEntry resource in UiApplication.Current.Resources)
+        {
+            frameworkElement.Resources[resource.Key] = resource.Value;
         }
     }
 
@@ -191,7 +175,7 @@ public static class ApplicationThemeManager
             themeToSet = ApplicationTheme.HighContrast;
         }
 
-        Apply(themeToSet);
+        Apply(themeToSet, updateAccent: updateAccent);
     }
 
     /// <summary>
@@ -281,19 +265,19 @@ public static class ApplicationThemeManager
             return;
         }
 
-        var themeUri = themeDictionary.Source.ToString().Trim().ToLower();
+        string themeUri = themeDictionary.Source.ToString();
 
-        if (themeUri.Contains("light"))
+        if (themeUri.Contains("light", StringComparison.OrdinalIgnoreCase))
         {
             _cachedApplicationTheme = ApplicationTheme.Light;
         }
 
-        if (themeUri.Contains("dark"))
+        if (themeUri.Contains("dark", StringComparison.OrdinalIgnoreCase))
         {
             _cachedApplicationTheme = ApplicationTheme.Dark;
         }
 
-        if (themeUri.Contains("highcontrast"))
+        if (themeUri.Contains("highcontrast", StringComparison.OrdinalIgnoreCase))
         {
             _cachedApplicationTheme = ApplicationTheme.HighContrast;
         }

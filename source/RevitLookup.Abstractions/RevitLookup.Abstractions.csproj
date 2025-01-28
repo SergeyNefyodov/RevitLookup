@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm"/>
+        <PackageReference Include="System.Text.Json" Condition="$(DefineConstants.Contains('NETFRAMEWORK'))"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\LookupEngine.Abstractions\LookupEngine.Abstractions.csproj"/>
+        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="PresentationCore" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
+        <Reference Include="PresentationFramework" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
+        <Reference Include="WindowsBase" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
+    </ItemGroup>
+
+</Project>

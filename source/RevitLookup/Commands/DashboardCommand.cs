@@ -20,8 +20,8 @@
 
 using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
-using RevitLookup.Services.Contracts;
-using RevitLookup.Views.Pages;
+using RevitLookup.Abstractions.Services.Application;
+using RevitLookup.UI.Framework.Views.Dashboard;
 
 namespace RevitLookup.Commands;
 
@@ -31,6 +31,7 @@ public class DashboardCommand : ExternalCommand
 {
     public override void Execute()
     {
-        Host.GetService<ILookupService>().Show<DashboardPage>();
+        Host.GetService<IRevitLookupUiService>()
+            .Show<DashboardPage>();
     }
 }

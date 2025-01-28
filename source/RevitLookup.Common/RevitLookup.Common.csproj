@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <UseWpf>true</UseWpf>
+        <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="System.Net.Http" Condition="!$(DefineConstants.Contains('NETCOREAPP'))"/>
+    </ItemGroup>
+
+</Project>

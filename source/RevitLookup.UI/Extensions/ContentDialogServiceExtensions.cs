@@ -27,8 +27,6 @@ public static class ContentDialogServiceExtensions
         dialog.SetCurrentValue(ContentDialog.TitleProperty, title);
         dialog.SetCurrentValue(ContentControl.ContentProperty, message);
         dialog.SetCurrentValue(ContentDialog.CloseButtonTextProperty, closeButtonText);
-        dialog.SetCurrentValue(Control.VerticalContentAlignmentProperty, VerticalAlignment.Center);
-        dialog.SetCurrentValue(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Center);
 
         return dialogService.ShowAsync(dialog, cancellationToken);
     }
