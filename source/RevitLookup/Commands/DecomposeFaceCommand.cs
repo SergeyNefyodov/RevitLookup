@@ -28,7 +28,7 @@ namespace RevitLookup.Commands;
 
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
-public class SnoopFaceCommand : ExternalCommand
+public class DecomposeFaceCommand : ExternalCommand
 {
     public override void Execute()
     {

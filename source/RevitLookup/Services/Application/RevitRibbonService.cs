@@ -54,27 +54,27 @@ public sealed class RevitRibbonService(ISettingsService settingsService)
         pullButton.SetImage("/RevitLookup;component/Resources/Images/RibbonIcon16.png");
         pullButton.SetLargeImage("/RevitLookup;component/Resources/Images/RibbonIcon32.png");
 
-        pullButton.AddPushButton<DashboardCommand>("Dashboard");
+        pullButton.AddPushButton<ShowDashboardCommand>("Dashboard");
         if (!settingsService.GeneralSettings.UseModifyTab)
         {
-            pullButton.AddPushButton<SnoopSelectionCommand>("Snoop Selection");
+            pullButton.AddPushButton<DecomposeSelectionCommand>("Snoop Selection");
         }
 
-        pullButton.AddPushButton<SnoopViewCommand>("Snoop Active view");
-        pullButton.AddPushButton<SnoopDocumentCommand>("Snoop Document");
-        pullButton.AddPushButton<SnoopDatabaseCommand>("Snoop Database");
-        pullButton.AddPushButton<SnoopFaceCommand>("Snoop Face");
-        pullButton.AddPushButton<SnoopEdgeCommand>("Snoop Edge");
-        pullButton.AddPushButton<SnoopPointCommand>("Snoop Point");
-        pullButton.AddPushButton<SnoopLinkedElementCommand>("Snoop Linked element");
+        pullButton.AddPushButton<DecomposeViewCommand>("Snoop Active view");
+        pullButton.AddPushButton<DecomposeDocumentCommand>("Snoop Document");
+        pullButton.AddPushButton<DecomposeDatabaseCommand>("Snoop Database");
+        pullButton.AddPushButton<DecomposeFaceCommand>("Snoop Face");
+        pullButton.AddPushButton<DecomposeEdgeCommand>("Snoop Edge");
+        pullButton.AddPushButton<DecomposePointCommand>("Snoop Point");
+        pullButton.AddPushButton<DecomposeLinkedElementCommand>("Snoop Linked element");
         pullButton.AddPushButton<SearchElementsCommand>("Search Elements");
-        pullButton.AddPushButton<EventMonitorCommand>("Event monitor");
+        pullButton.AddPushButton<ShowEventMonitorCommand>("Event monitor");
 
         _createdPanels.Add(addinsPanel);
         if (!settingsService.GeneralSettings.UseModifyTab) return;
 
         var modifyPanel = application.CreatePanel("Revit Lookup", "Modify");
-        modifyPanel.AddPushButton<SnoopSelectionCommand>(" Snoop \nSelection")
+        modifyPanel.AddPushButton<DecomposeSelectionCommand>("\u00a0Snoop\u00a0\nSelection")
             .SetImage("/RevitLookup;component/Resources/Images/RibbonIcon16.png")
             .SetLargeImage("/RevitLookup;component/Resources/Images/RibbonIcon32.png");
 

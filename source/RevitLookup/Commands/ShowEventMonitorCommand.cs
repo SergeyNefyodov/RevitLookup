@@ -20,7 +20,6 @@
 
 using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
-using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.UI.Framework.Views.Decomposition;
 
@@ -28,12 +27,11 @@ namespace RevitLookup.Commands;
 
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
-public class SnoopDatabaseCommand : ExternalCommand
+public class ShowEventMonitorCommand : ExternalCommand
 {
     public override void Execute()
     {
         Host.GetService<IRevitLookupUiService>()
-            .Decompose(KnownDecompositionObject.Database)
-            .Show<DecompositionSummaryPage>();
+            .Show<EventsSummaryPage>();
     }
 }

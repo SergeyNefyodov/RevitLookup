@@ -28,12 +28,12 @@ namespace RevitLookup.Commands;
 
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
-public class SnoopSubElementCommand : ExternalCommand
+public class DecomposePointCommand : ExternalCommand
 {
     public override void Execute()
     {
         Host.GetService<IRevitLookupUiService>()
-            .Decompose(KnownDecompositionObject.SubElement)
+            .Decompose(KnownDecompositionObject.Point)
             .Show<DecompositionSummaryPage>();
     }
 }

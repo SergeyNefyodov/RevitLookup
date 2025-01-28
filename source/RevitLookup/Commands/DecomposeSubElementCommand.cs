@@ -20,6 +20,7 @@
 
 using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
+using RevitLookup.Abstractions.Models.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.UI.Framework.Views.Decomposition;
 
@@ -27,11 +28,12 @@ namespace RevitLookup.Commands;
 
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
-public class EventMonitorCommand : ExternalCommand
+public class DecomposeSubElementCommand : ExternalCommand
 {
     public override void Execute()
     {
         Host.GetService<IRevitLookupUiService>()
-            .Show<EventsSummaryPage>();
+            .Decompose(KnownDecompositionObject.SubElement)
+            .Show<DecompositionSummaryPage>();
     }
 }
