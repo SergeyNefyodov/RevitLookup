@@ -22,17 +22,17 @@ namespace LookupEngine.Abstractions.Decomposition.Containers;
 
 internal sealed class Variant : IVariant
 {
-    public Variant(object value)
+    public Variant(object? value)
     {
         Value = value;
     }
 
-    public Variant(object value, string description)
+    public Variant(object? value, string description)
     {
         Value = value;
         Description = description;
     }
 
-    public object Value { get; }
+    public object? Value { get; }
     public string? Description { get; }
 }

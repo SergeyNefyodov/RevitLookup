@@ -11,12 +11,12 @@ public static class Variants
     ///     Creates a variant collection with a single value
     /// </summary>
     /// <returns>A variant collection containing the specified value</returns>
-    public static IVariant Value(object value)
+    public static IVariant Value(object? value)
     {
         return new Variant(value);
     }
 
-    public static IVariant Value(object value, string description)
+    public static IVariant Value(object? value, string description)
     {
         return new Variant(value, description);
     }

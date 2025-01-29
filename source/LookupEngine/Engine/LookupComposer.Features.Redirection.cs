@@ -20,6 +20,7 @@
 
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Exceptions;
 
 // ReSharper disable once CheckNamespace
 namespace LookupEngine;
@@ -50,7 +51,7 @@ public partial class LookupComposer
         var variant = value as IVariant;
         if (variant is not null)
         {
-            value = variant.Value;
+            value = variant.Value ?? throw new EngineException("Nullable variant must be handled before decomposition");
         }
 
         valueDescriptor = _options.TypeResolver.Invoke(value, null);

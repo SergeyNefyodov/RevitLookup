@@ -22,6 +22,6 @@ namespace LookupEngine.Abstractions.Decomposition;
 
 public interface IVariant
 {
-    object Value { get; }
+    object? Value { get; }
     string? Description { get; }
 }

@@ -163,6 +163,7 @@ public partial class LookupComposer
     private DecomposedValue CreateValue(string targetMember, object? value)
     {
         if (value is null) return CreateNullableValue();
+        if (value is IVariant {Value: null}) return CreateNullableValue();
 
         value = RedirectValue(value, targetMember, out var valueDescriptor);
 
