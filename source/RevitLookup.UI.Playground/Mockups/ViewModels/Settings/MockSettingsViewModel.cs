@@ -124,7 +124,7 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
         if (!_initialized) return;
 
         _settingsService.GeneralSettings.Theme = value;
-        _themeWatcherService.Watch();
+        _themeWatcherService.ApplyTheme();
     }
 
     partial void OnBackgroundChanged(WindowBackdropType value)

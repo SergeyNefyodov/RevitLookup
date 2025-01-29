@@ -51,6 +51,7 @@ public class Application : ExternalApplication
     {
         var themeWatcherService = Host.GetService<IThemeWatcherService>();
         themeWatcherService.Initialize();
+        themeWatcherService.ApplyTheme();
     }
 
     public static void EnableHardwareRendering()

@@ -128,7 +128,7 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
         if (!_initialized) return;
 
         _settingsService.GeneralSettings.Theme = value;
-        _themeWatcherService.Watch();
+        _themeWatcherService.ApplyTheme();
     }
 
     partial void OnThemeChanged(ApplicationTheme oldValue, ApplicationTheme newValue)

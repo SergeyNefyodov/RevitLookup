@@ -47,11 +47,10 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
             Source = new Uri("pack://application:,,,/RevitLookup;component/Styles/App.Resources.xaml", UriKind.Absolute)
         };
 
-        ApplicationThemeManager.Apply(settingsService.GeneralSettings.Theme, settingsService.GeneralSettings.Background);
-        ApplicationThemeManager.Changed += ApplicationThemeManagerOnChanged;
+        ApplicationThemeManager.Changed += OnApplicationThemeManagerChanged;
     }
 
-    public void Watch()
+    public void ApplyTheme()
     {
         var theme = settingsService.GeneralSettings.Theme;
 #if REVIT2024_OR_GREATER
@@ -61,11 +60,24 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
 
             if (!_isWatching)
             {
-                RevitShell.ActionEventHandler.Raise(_ => Context.UiApplication.ThemeChanged += OnRevitThemeChanged);
+                RevitShell.ActionEventHandler.Raise(application => application.ThemeChanged += OnRevitThemeChanged);
                 _isWatching = true;
             }
         }
 #endif
+        var mainWindow = _observedElements.FirstOrDefault();
+        if (mainWindow is not null)
+        {
+            mainWindow.Dispatcher.Invoke(() => ApplyResources(theme));
+        }
+        else
+        {
+            ApplyResources(theme);
+        }
+    }
+
+    private void ApplyResources(ApplicationTheme theme)
+    {
         ApplicationThemeManager.Apply(theme, settingsService.GeneralSettings.Background);
         UpdateBackground(theme);
     }
@@ -82,21 +94,12 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
 #if REVIT2024_OR_GREATER
         if (!_isWatching) return;
 
-        RevitShell.ActionEventHandler.Raise(_ => Context.UiApplication.ThemeChanged -= OnRevitThemeChanged);
+        RevitShell.ActionEventHandler.Raise(application => application.ThemeChanged -= OnRevitThemeChanged);
         _isWatching = false;
 #endif
     }
 
 #if REVIT2024_OR_GREATER
-    private void OnRevitThemeChanged(object? sender, ThemeChangedEventArgs args)
-    {
-        if (args.ThemeChangedType != ThemeType.UITheme) return;
-
-        var theme = GetRevitTheme();
-        ApplicationThemeManager.Apply(theme, settingsService.GeneralSettings.Background);
-        UpdateBackground(theme);
-    }
-
     private static ApplicationTheme GetRevitTheme()
     {
         return UIThemeManager.CurrentTheme switch
@@ -106,9 +109,17 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
             _ => throw new ArgumentOutOfRangeException()
         };
     }
+
+    private void OnRevitThemeChanged(object? sender, ThemeChangedEventArgs args)
+    {
+        if (args.ThemeChangedType != ThemeType.UITheme) return;
+
+        ApplyTheme();
+    }
+
 #endif
 
-    private void ApplicationThemeManagerOnChanged(ApplicationTheme applicationTheme, Color accent)
+    private void OnApplicationThemeManagerChanged(ApplicationTheme applicationTheme, Color accent)
     {
         foreach (var frameworkElement in _observedElements)
         {

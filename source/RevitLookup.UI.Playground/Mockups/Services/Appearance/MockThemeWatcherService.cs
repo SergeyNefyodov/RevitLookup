@@ -33,7 +33,7 @@ public sealed class MockThemeWatcherService(ISettingsService settingsService) : 
     {
     }
 
-    public void Watch()
+    public void ApplyTheme()
     {
         var theme = settingsService.GeneralSettings.Theme;
         ApplicationThemeManager.Apply(theme, settingsService.GeneralSettings.Background);
