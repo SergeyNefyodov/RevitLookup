@@ -63,9 +63,16 @@ public partial class LookupComposer<TContext>
     private protected override object RedirectValue(object value, string target, out Descriptor valueDescriptor)
     {
         var variant = value as IVariant;
-        if (variant is not null)
+        switch (variant)
         {
-            value = variant.Value ?? throw new EngineException("Nullable variant must be handled before decomposition");
+            case null:
+                break;
+            case IVariantsCollection:
+                value = variant;
+                break;
+            default:
+                value = variant.Value ?? throw new EngineException("Nullable variant must be handled before decomposition");
+                break;
         }
 
         valueDescriptor = _options.TypeResolver.Invoke(value, null);

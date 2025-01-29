@@ -81,14 +81,4 @@ internal sealed class Variants<T>(int capacity) : IVariant, IVariantsCollection<
     {
         return _items.GetEnumerator();
     }
-
-    public object GetResult()
-    {
-        return this;
-    }
-
-    public string? GetMetadata()
-    {
-        return null;
-    }
 }
