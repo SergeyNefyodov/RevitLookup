@@ -65,19 +65,6 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
             }
         }
 #endif
-        var mainWindow = _observedElements.FirstOrDefault();
-        if (mainWindow is not null)
-        {
-            mainWindow.Dispatcher.Invoke(() => ApplyResources(theme));
-        }
-        else
-        {
-            ApplyResources(theme);
-        }
-    }
-
-    private void ApplyResources(ApplicationTheme theme)
-    {
         ApplicationThemeManager.Apply(theme, settingsService.GeneralSettings.Background);
         UpdateBackground(theme);
     }
@@ -114,15 +101,16 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
     {
         if (args.ThemeChangedType != ThemeType.UITheme) return;
 
-        ApplyTheme();
+        var activeComponent = _observedElements.FirstOrDefault();
+        activeComponent?.Dispatcher.Invoke(ApplyTheme);
     }
-
 #endif
 
     private void OnApplicationThemeManagerChanged(ApplicationTheme applicationTheme, Color accent)
     {
         foreach (var frameworkElement in _observedElements)
         {
+            ApplicationThemeManager.Apply(frameworkElement);
             UpdateDictionary(frameworkElement);
         }
     }
