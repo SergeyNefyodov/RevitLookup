@@ -123,6 +123,12 @@ public sealed partial class MockDecompositionSummaryViewModel(
             if (value is null) return;
 
             await FetchMembersAsync(value);
+            if (FilteredDecomposedObjects.Count > 1)
+            {
+                value.FilteredMembers = value.Members;
+                return;
+            }
+
             value.FilteredMembers = searchService.SearchMembers(SearchText, value);
         }
         catch (Exception exception)

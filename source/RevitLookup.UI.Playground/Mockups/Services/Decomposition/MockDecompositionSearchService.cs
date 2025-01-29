@@ -36,7 +36,11 @@ public sealed class MockDecompositionSearchService : IDecompositionSearchService
         }
         finally
         {
-            if (selectedObject is not null)
+            if (query == string.Empty)
+            {
+                _previousSelection = null;
+            }
+            else if (selectedObject is not null)
             {
                 _previousSelection = selectedObject;
             }
@@ -113,10 +117,11 @@ public sealed class MockDecompositionSearchService : IDecompositionSearchService
 
     private ObservableDecomposedObject? FindPreviousSelectedType(List<ObservableDecomposedObject> decomposedObjects)
     {
+        if (_previousSelection is null) return null;
+
         ObservableDecomposedObject? fetchedObject = null;
         foreach (var decomposedObject in decomposedObjects)
         {
-            if (_previousSelection is null) break;
             if (decomposedObject.TypeFullName != _previousSelection.TypeFullName) continue;
             if (decomposedObject.Members.Count == 0) continue;
 
