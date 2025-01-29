@@ -108,6 +108,8 @@ public sealed partial class DecompositionSummaryViewModel(
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)
     {
         SearchText = string.Empty;
+        FilteredDecomposedObjects.Clear();
+
         OnSearchTextChanged(SearchText);
     }
 
@@ -147,19 +149,18 @@ public sealed partial class DecompositionSummaryViewModel(
     {
         try
         {
-            var (filteredObjects, filteredMembers) = await Task.Run(() =>
-                searchService.Search(value, SelectedDecomposedObject, DecomposedObjects));
+            var results = await Task.Run(() => searchService.Search(value, SelectedDecomposedObject, DecomposedObjects));
 
-            if (FilteredDecomposedObjects.Sum(group => group.GroupItems.Count) != filteredObjects.Count)
+            if (FilteredDecomposedObjects.Sum(group => group.GroupItems.Count) != results.FilteredObjects.Count)
             {
-                FilteredDecomposedObjects = await Task.Run(() => ApplyGrouping(filteredObjects));
+                FilteredDecomposedObjects = await Task.Run(() => ApplyGrouping(results.FilteredObjects));
             }
 
             if (SelectedDecomposedObject is not null)
             {
-                if (filteredObjects.Contains(SelectedDecomposedObject))
+                if (results.FilteredObjects.Contains(SelectedDecomposedObject))
                 {
-                    SelectedDecomposedObject.FilteredMembers = filteredMembers;
+                    SelectedDecomposedObject.FilteredMembers = results.FilteredMembers;
                 }
             }
         }

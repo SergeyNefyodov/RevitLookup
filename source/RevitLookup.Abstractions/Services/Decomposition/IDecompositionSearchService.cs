@@ -4,7 +4,7 @@ namespace RevitLookup.Abstractions.Services.Decomposition;
 
 public interface IDecompositionSearchService
 {
-    (List<ObservableDecomposedObject>, List<ObservableDecomposedMember>) Search(
+    (List<ObservableDecomposedObject> FilteredObjects, List<ObservableDecomposedMember> FilteredMembers) Search(
         string query,
         ObservableDecomposedObject? selectedObject,
         List<ObservableDecomposedObject> objects);

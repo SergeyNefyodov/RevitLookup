@@ -11,9 +11,6 @@ using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Decomposition;
-#if NETFRAMEWORK
-using RevitLookup.UI.Framework.Extensions;
-#endif
 
 namespace RevitLookup.UI.Playground.Mockups.ViewModels.Decomposition;
 
@@ -21,6 +18,7 @@ namespace RevitLookup.UI.Playground.Mockups.ViewModels.Decomposition;
 public sealed partial class MockEventsSummaryViewModel(
     IServiceProvider serviceProvider,
     INotificationService notificationService,
+    IDecompositionSearchService searchService,
     IDecompositionService decompositionService,
     ILogger<MockDecompositionSummaryViewModel> logger)
     : ObservableObject, IEventsSummaryViewModel
@@ -86,8 +84,15 @@ public sealed partial class MockEventsSummaryViewModel(
             var decomposedObject = await GenerateRandomObjectAsync(faker);
             DecomposedObjects.Insert(0, decomposedObject);
 
-            if (SearchText == string.Empty) FilteredDecomposedObjects.Insert(0, decomposedObject);
-            else OnSearchTextChanged(SearchText);
+            var results = await SearchObjectsAsync(SearchText);
+            if (results.FilteredObjects.Contains(decomposedObject))
+            {
+                FilteredDecomposedObjects.Insert(0, decomposedObject);
+            }
+            else
+            {
+                OnSearchTextChanged(SearchText);
+            }
 
             await Task.Delay(1000, cancellationToken);
         }
@@ -106,51 +111,20 @@ public sealed partial class MockEventsSummaryViewModel(
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)
     {
+        SearchText = string.Empty;
+        FilteredDecomposedObjects.Clear();
+
         OnSearchTextChanged(SearchText);
-    }
-
-    async partial void OnSearchTextChanged(string value)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(SearchText))
-            {
-                FilteredDecomposedObjects = DecomposedObjects.ToObservableCollection();
-                return;
-            }
-
-            FilteredDecomposedObjects = await Task.Run(() =>
-            {
-                var formattedText = value.Trim();
-                var searchResults = new List<ObservableDecomposedObject>();
-                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-                foreach (var item in DecomposedObjects)
-                {
-                    if (item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase) || item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
-                    {
-                        searchResults.Add(item);
-                    }
-                }
-
-                return searchResults.ToObservableCollection();
-            });
-
-            if (FilteredDecomposedObjects.Count == 0)
-            {
-                SelectedDecomposedObject = null;
-            }
-        }
-        catch
-        {
-            // ignored
-        }
     }
 
     async partial void OnSelectedDecomposedObjectChanged(ObservableDecomposedObject? value)
     {
         try
         {
+            if (value is null) return;
+
             await FetchMembersAsync(value);
+            value.FilteredMembers = searchService.SearchMembers(SearchText, value);
         }
         catch (Exception exception)
         {
@@ -159,12 +133,42 @@ public sealed partial class MockEventsSummaryViewModel(
         }
     }
 
-    private async Task FetchMembersAsync(ObservableDecomposedObject? decomposedObject)
+    async partial void OnSearchTextChanged(string value)
     {
-        if (decomposedObject is null) return;
-        if (decomposedObject.Members.Count > 0) return;
+        try
+        {
+            var results = await SearchObjectsAsync(value);
+            if (results.FilteredObjects.Count != FilteredDecomposedObjects.Count)
+            {
+                FilteredDecomposedObjects = results.FilteredObjects.ToObservableCollection();
+            }
 
-        decomposedObject.Members = await decompositionService.DecomposeMembersAsync(decomposedObject);
+            if (SelectedDecomposedObject is not null)
+            {
+                if (results.FilteredObjects.Contains(SelectedDecomposedObject))
+                {
+                    SelectedDecomposedObject.FilteredMembers = results.FilteredMembers;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Search error");
+            notificationService.ShowError("Search error", exception);
+        }
+    }
+
+    private async Task<(List<ObservableDecomposedObject> FilteredObjects, List<ObservableDecomposedMember> FilteredMembers)> SearchObjectsAsync(string query)
+    {
+        return await Task.Run(() => searchService.Search(query, SelectedDecomposedObject, DecomposedObjects));
+    }
+
+    private async Task FetchMembersAsync(ObservableDecomposedObject? value)
+    {
+        if (value is null) return;
+        if (value.Members.Count > 0) return;
+
+        value.Members = await decompositionService.DecomposeMembersAsync(value);
     }
 
     private async Task<ObservableDecomposedObject> GenerateRandomObjectAsync(Faker faker)

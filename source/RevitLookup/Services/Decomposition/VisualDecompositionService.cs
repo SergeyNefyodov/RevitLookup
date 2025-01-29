@@ -38,7 +38,6 @@ public sealed class VisualDecompositionService(
             }
 
             var objects = await RevitShell.AsyncCollectionHandler.RaiseAsync(_ => RevitObjectsCollector.GetObjects(decompositionObject));
-            summaryViewModel.SelectedDecomposedObject = null;
             summaryViewModel.DecomposedObjects = await decompositionService.DecomposeAsync(objects);
         }
         catch (OperationCanceledException)

@@ -16,6 +16,7 @@ public sealed partial class EventsSummaryViewModel(
     IServiceProvider serviceProvider,
     INotificationService notificationService,
     IDecompositionService decompositionService,
+    IDecompositionSearchService searchService,
     EventsMonitoringService monitoringService,
     ILogger<DecompositionSummaryViewModel> logger)
     : ObservableObject, IEventsSummaryViewModel
@@ -61,7 +62,10 @@ public sealed partial class EventsSummaryViewModel(
 
         try
         {
+            if (SelectedDecomposedObject is null) return;
+
             await FetchMembersAsync(SelectedDecomposedObject);
+            SelectedDecomposedObject.FilteredMembers = searchService.SearchMembers(SearchText, SelectedDecomposedObject);
         }
         catch (Exception exception)
         {
@@ -84,86 +88,67 @@ public sealed partial class EventsSummaryViewModel(
 
     partial void OnDecomposedObjectsChanged(List<ObservableDecomposedObject> value)
     {
+        SearchText = string.Empty;
+        FilteredDecomposedObjects.Clear();
+
         OnSearchTextChanged(SearchText);
-    }
-
-    async partial void OnSearchTextChanged(string value)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(SearchText))
-            {
-                FilteredDecomposedObjects = DecomposedObjects.ToObservableCollection();
-                return;
-            }
-
-            FilteredDecomposedObjects = await Task.Run(() =>
-            {
-                var formattedText = value.Trim();
-                var searchResults = new List<ObservableDecomposedObject>();
-                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-                foreach (var item in DecomposedObjects)
-                {
-                    if (IsSearchValueMatching(item, formattedText))
-                    {
-                        searchResults.Add(item);
-                    }
-                }
-
-                return searchResults.ToObservableCollection();
-            });
-
-            if (FilteredDecomposedObjects.Count == 0)
-            {
-                SelectedDecomposedObject = null;
-            }
-        }
-        catch
-        {
-            // ignored
-        }
-    }
-
-    private bool IsSearchValueMatching(ObservableDecomposedObject item, string formattedText)
-    {
-        return item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase) ||
-               item.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase);
     }
 
     async partial void OnSelectedDecomposedObjectChanged(ObservableDecomposedObject? value)
     {
         try
         {
+            if (value is null) return;
+
             await FetchMembersAsync(value);
+            value.FilteredMembers = searchService.SearchMembers(SearchText, value);
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Members decomposing failed");
-            notificationService.ShowError("Lookup engine error", exception);
+            logger.LogError(exception, "Search error");
+            notificationService.ShowError("Search error", exception);
         }
     }
 
-    private async void OnEventInvoked(object value, string eventName)
+    async partial void OnSearchTextChanged(string value)
     {
         try
         {
-            var decomposedObject = await decompositionService.DecomposeAsync(value);
+            var results = await SearchObjectsAsync(value);
+            if (results.FilteredObjects.Count != FilteredDecomposedObjects.Count)
+            {
+                FilteredDecomposedObjects = results.FilteredObjects.ToObservableCollection();
+            }
 
+            if (SelectedDecomposedObject is not null)
+            {
+                if (results.FilteredObjects.Contains(SelectedDecomposedObject))
+                {
+                    SelectedDecomposedObject.FilteredMembers = results.FilteredMembers;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Search error");
+            notificationService.ShowError("Search error", exception);
+        }
+    }
+
+    private async Task<(List<ObservableDecomposedObject> FilteredObjects, List<ObservableDecomposedMember> FilteredMembers)> SearchObjectsAsync(string query)
+    {
+        return await Task.Run(() => searchService.Search(query, SelectedDecomposedObject, DecomposedObjects));
+    }
+
+    private void OnEventInvoked(object value, string eventName)
+    {
+        try
+        {
+            var decomposedObject = decompositionService.DecomposeAsync(value).Result;
             _synchronizationContext.Post(state =>
             {
                 var viewModel = (EventsSummaryViewModel) state!;
-
-                decomposedObject.Name = $"{eventName} {DateTime.Now:HH:mm:ss}";
-                viewModel.DecomposedObjects.Insert(0, decomposedObject);
-
-                if (viewModel.IsSearchValueMatching(decomposedObject, viewModel.SearchText))
-                {
-                    viewModel.FilteredDecomposedObjects.Insert(0, decomposedObject);
-                }
-                else
-                {
-                    viewModel.OnSearchTextChanged(viewModel.SearchText);
-                }
+                viewModel.PushEvent(eventName, decomposedObject);
             }, this);
         }
         catch (Exception exception)
@@ -173,11 +158,35 @@ public sealed partial class EventsSummaryViewModel(
         }
     }
 
-    private async Task FetchMembersAsync(ObservableDecomposedObject? decomposedObject)
+    private async void PushEvent(string eventName, ObservableDecomposedObject decomposedObject)
     {
-        if (decomposedObject is null) return;
-        if (decomposedObject.Members.Count > 0) return;
+        try
+        {
+            decomposedObject.Name = $"{eventName} {DateTime.Now:HH:mm:ss}";
+            DecomposedObjects.Insert(0, decomposedObject);
 
-        decomposedObject.Members = await decompositionService.DecomposeMembersAsync(decomposedObject);
+            var results = await SearchObjectsAsync(SearchText);
+            if (results.FilteredObjects.Contains(decomposedObject))
+            {
+                FilteredDecomposedObjects.Insert(0, decomposedObject);
+            }
+            else
+            {
+                OnSearchTextChanged(SearchText);
+            }
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Events data parsing error");
+            notificationService.ShowError("Events data parsing error", exception);
+        }
+    }
+
+    private async Task FetchMembersAsync(ObservableDecomposedObject? value)
+    {
+        if (value is null) return;
+        if (value.Members.Count > 0) return;
+
+        value.Members = await decompositionService.DecomposeMembersAsync(value);
     }
 }
