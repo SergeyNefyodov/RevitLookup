@@ -37,11 +37,16 @@ public sealed class PlanViewRangeDescriptor(PlanViewRange viewRange) : Descripto
 
         IVariant ResolveGetOffset()
         {
+            var topOffset = viewRange.GetOffset(PlanViewPlane.TopClipPlane);
+            var cutOffset = viewRange.GetOffset(PlanViewPlane.CutPlane);
+            var bottomOffset = viewRange.GetOffset(PlanViewPlane.BottomClipPlane);
+            var underlayOffset = viewRange.GetOffset(PlanViewPlane.UnderlayBottom);
+
             return Variants.Values<double>(4)
-                .Add(viewRange.GetOffset(PlanViewPlane.TopClipPlane), "Top clip plane")
-                .Add(viewRange.GetOffset(PlanViewPlane.CutPlane), "Cut plane")
-                .Add(viewRange.GetOffset(PlanViewPlane.BottomClipPlane), "Bottom clip plane")
-                .Add(viewRange.GetOffset(PlanViewPlane.UnderlayBottom), "Underlay bottom")
+                .Add(topOffset, $"Top clip plane: {topOffset}")
+                .Add(cutOffset, $"Cut plane: {cutOffset}")
+                .Add(bottomOffset, $"Bottom clip plane: {bottomOffset}")
+                .Add(underlayOffset, $"Underlay bottom: {underlayOffset}")
                 .Consume();
         }
 
