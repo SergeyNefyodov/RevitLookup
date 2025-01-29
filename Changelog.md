@@ -1,5 +1,14 @@
 # Changelog
 
+# 2025-01-29 **2026.0.0-preview.1.250129**
+
+A preview version of RevitLookup is available for public testing 🎉
+
+More than 50k changes, redesigned application architecture, component portability, accelerated application responsiveness.
+No more details, we'll come back at the release.
+
+Feedback: https://github.com/jeremytammik/RevitLookup/pull/296
+
 # 2025-09-29 **2025.0.10**
 
 - Fixed placeholder for the Dark theme https://github.com/jeremytammik/RevitLookup/issues/291
