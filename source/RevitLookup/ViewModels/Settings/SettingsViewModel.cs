@@ -29,7 +29,6 @@ using RevitLookup.UI.Framework.Views.Settings;
 using RevitLookup.UI.Framework.Views.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Animations;
-using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using ApplicationTheme = Wpf.Ui.Appearance.ApplicationTheme;
 
@@ -146,7 +145,7 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
         if (!_initialized) return;
 
         _settingsService.GeneralSettings.Background = value;
-        WindowBackgroundManager.UpdateBackground(_intercomService.GetHost(), _settingsService.GeneralSettings.Theme, value);
+        _themeWatcherService.ApplyTheme();
     }
 
     partial void OnUseTransitionChanged(bool value)
