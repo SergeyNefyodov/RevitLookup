@@ -33,8 +33,8 @@ sealed partial class Build
 
         changelogBuilder.Append("Full changelog: ");
         changelogBuilder.Append(GitRepository.GetGitHubCompareTagsUrl(tags[^1].Text, tags[^2].Text));
-
         if (IsPrerelease) return;
+
         changelogBuilder.AppendLine();
         changelogBuilder.Append("RevitLookup versioning: https://github.com/jeremytammik/RevitLookup/wiki/Versions");
     }
