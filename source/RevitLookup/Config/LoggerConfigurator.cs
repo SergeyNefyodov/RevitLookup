@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -14,6 +15,7 @@ public static class LoggerConfigurator
         var logger = CreateDefaultLogger();
         builder.AddSerilog(logger);
 
+        PresentationTraceSources.ResourceDictionarySource.Switch.Level = SourceLevels.Critical;
         AppDomain.CurrentDomain.UnhandledException += OnOnUnhandledException;
     }
 
