@@ -36,8 +36,8 @@ internal sealed class Variants<T>(int capacity) : IVariant, IVariantsCollection<
     /// </summary>
     public int Count => _items.Count;
 
-    public object Value => _items;
-    public string? Description => null;
+    public object Value => _items.Count == 1 ? _items[0].Value! : this;
+    public string? Description => _items.Count == 1 ? _items[0].Description : null;
 
     /// <summary>
     ///     Adds a new variant
