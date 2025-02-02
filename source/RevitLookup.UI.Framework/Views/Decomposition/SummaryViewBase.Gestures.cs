@@ -51,13 +51,13 @@ public partial class SummaryViewBase : INavigationAware
     /// </summary>
     private void OnPageKeyPressed(object sender, KeyEventArgs args)
     {
-        AddRefreshShortcut(args);
+        HandleRefreshShortcut(args);
         if (args.Handled) return;
 
-        AddFocusSearchShortcut(sender, args);
+        HandleFocusSearchShortcut(sender, args);
     }
 
-    private void AddRefreshShortcut(KeyEventArgs args)
+    private void HandleRefreshShortcut(KeyEventArgs args)
     {
         if (args.Key != Key.F5) return;
 
@@ -65,7 +65,7 @@ public partial class SummaryViewBase : INavigationAware
         args.Handled = true;
     }
 
-    private void AddFocusSearchShortcut(object sender, KeyEventArgs args)
+    private void HandleFocusSearchShortcut(object sender, KeyEventArgs args)
     {
         if (SearchBoxControl.IsKeyboardFocused) return;
         if (args.KeyboardDevice.Modifiers != ModifierKeys.None) return;
@@ -76,7 +76,6 @@ public partial class SummaryViewBase : INavigationAware
         if (args.Key is >= Key.D0 and <= Key.Z or >= Key.NumPad0 and <= Key.NumPad9)
         {
             SearchBoxControl.Focus();
-            args.Handled = true;
         }
     }
 }
