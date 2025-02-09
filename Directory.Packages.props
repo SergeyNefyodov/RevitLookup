@@ -26,11 +26,9 @@
         <!-- IOC -->
         <PackageVersion Include="Scrutor" Version="5.0.2"/>
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.0"/>
-        <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.0"/>
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0"/>
-        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0"/>
 
         <!-- Logging -->
+        <PackageVersion Include="Serilog" Version="4.2.0"/>
         <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0"/>
         <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0"/>
         <PackageVersion Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
@@ -58,11 +56,7 @@
 
     <!-- Revit 2025 fixed references -->
     <ItemGroup Condition="$(DefineConstants.Contains('NET8_0'))">
-        <PackageVersion Update="Microsoft.Extensions.Hosting" Version="8.0.1"/>
-        <PackageVersion Update="Microsoft.Extensions.Options" Version="8.0.2"/>
-        <PackageVersion Update="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2"/>
-        <PackageVersion Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2"/>
-
+        <PackageVersion Update="Microsoft.Extensions.Hosting" Version="8.0.0"/>
         <PackageVersion Update="Serilog.Extensions.Hosting" Version="8.0.0"/>
     </ItemGroup>
 
