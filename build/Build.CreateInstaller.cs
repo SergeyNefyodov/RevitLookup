@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
+using Serilog.Events;
 
 sealed partial class Build
 {
@@ -13,11 +14,11 @@ sealed partial class Build
                 Log.Information("Project: {Name}", project.Name);
 
                 var exePattern = $"*{installer.Name}.exe";
-                var exeFile = Directory.EnumerateFiles(installer.Directory, exePattern, SearchOption.AllDirectories)
+                var exeFile = Directory.EnumerateFiles(installer.Directory / "bin", exePattern, SearchOption.AllDirectories)
                     .FirstOrDefault()
                     .NotNull($"No installer file was found for the project: {installer.Name}");
 
-                var directories = Directory.GetDirectories(project.Directory, "* Release *", SearchOption.AllDirectories);
+                var directories = Directory.GetDirectories(project.Directory / "bin", "* Release *", SearchOption.AllDirectories);
                 Assert.NotEmpty(directories, "No files were found to create an installer");
 
                 foreach (var directory in directories)
@@ -41,9 +42,16 @@ sealed partial class Build
         }
 
         var arguments = ArgumentsRegex.Matches(output);
+        var logLevel = arguments.Count switch
+        {
+            0 => LogEventLevel.Debug,
+            > 0 when output.Contains("error", StringComparison.OrdinalIgnoreCase) => LogEventLevel.Error,
+            _ => LogEventLevel.Information
+        };
+
         if (arguments.Count == 0)
         {
-            Log.Debug(output);
+            Log.Write(logLevel, output);
             return;
         }
 
@@ -53,6 +61,6 @@ sealed partial class Build
             .ToArray();
 
         var messageTemplate = ArgumentsRegex.Replace(output, match => $"{{Property{match.Index}}}");
-        Log.Information(messageTemplate, properties);
+        Log.Write(logLevel, messageTemplate, properties);
     }
 }
