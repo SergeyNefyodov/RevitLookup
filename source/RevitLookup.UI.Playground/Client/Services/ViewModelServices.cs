@@ -6,7 +6,7 @@ public static class ViewModelServices
 {
     public static void RegisterViewModels(this IServiceCollection services)
     {
-        services.Scan(selector => selector.FromCallingAssembly()
+        services.Scan(selector => selector.FromAssemblyOf<App>()
             .AddClasses(filter => filter.InNamespaces("RevitLookup.UI.Playground.Client.ViewModels"))
             .AsSelf()
             .WithScopedLifetime()

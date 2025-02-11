@@ -59,7 +59,7 @@
     <!-- Revit 2025 fixed references -->
     <ItemGroup Condition="$(DefineConstants.Contains('NET8_0'))">
         <PackageVersion Update="Microsoft.Extensions.Hosting" Version="[8.0.1]"/>
-        <PackageVersion Update="Serilog.Extensions.Hosting" Version="[8.0.1]"/>
+        <PackageVersion Update="Serilog.Extensions.Hosting" Version="[8.0.0]"/>
         <PackageVersion Update="Microsoft.Extensions.Logging" Version="[8.0.1]"/>
     </ItemGroup>
 

@@ -23,7 +23,7 @@ public static class ViewServices
                 filter.Where(type => !type.IsAssignableTo(typeof(INavigableView<object>)));
             }).AsSelf().WithTransientLifetime());
 
-        services.Scan(selector => selector.FromCallingAssembly()
+        services.Scan(selector => selector.FromAssemblyOf<App>()
             .AddClasses(filter => filter.AssignableTo<FluentWindow>()).AsSelf().WithScopedLifetime()
             .AddClasses(filter => filter.AssignableTo<Page>()).AsSelf().WithScopedLifetime());
     }
