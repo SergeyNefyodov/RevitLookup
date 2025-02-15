@@ -19,7 +19,6 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using System.Reflection;
-using Autodesk.Revit.DB.Electrical;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
@@ -31,10 +30,12 @@ public class WallDescriptor(Wall wall) : ElementDescriptor(wall)
     {
         return target switch
         {
+#if REVIT2022_OR_GREATER
             nameof(Wall.IsWallCrossSectionValid) => ResolveIsWallCrossSectionValid,
+#endif
             _ => null
         };
-
+#if REVIT2022_OR_GREATER
         IVariant ResolveIsWallCrossSectionValid()
         {
             var values = Enum.GetValues(typeof(WallCrossSection));
@@ -48,9 +49,22 @@ public class WallDescriptor(Wall wall) : ElementDescriptor(wall)
 
             return variants.Consume();
         }
+#endif
     }
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
+        manager.Register(nameof(WallUtils.IsWallJoinAllowedAtEnd), ResolveIsWallJoinAllowedAtEnd);
+    }
+
+    private IVariant ResolveIsWallJoinAllowedAtEnd()
+    {
+        var variants = Variants.Values<bool>(2);
+        var startResult = WallUtils.IsWallJoinAllowedAtEnd(wall, 0);
+        var endResult = WallUtils.IsWallJoinAllowedAtEnd(wall, 1);
+        variants.Add(startResult, $"Start: {startResult}");
+        variants.Add(endResult, $"End: {endResult}");
+
+        return variants.Consume();
     }
 }
